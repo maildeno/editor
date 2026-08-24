@@ -406,30 +406,25 @@ Useful when your ESP performs the conditional evaluation itself.
 
 ## Custom blocks
 
-Maildeno is designed to be extended rather than forked.
+Maildeno is designed to be extended.
 
 ```ts
 registerBlock({
   name: "product-card",
   label: "Product Card",
-
+  icon: "<svg …>",
   schema: {
     // block properties
   },
-
   renderCanvas: ProductCardCanvas,
-
   renderSettings: ProductCardPanel,
-
   renderEmail: {
     html: (props, ctx) => {
       return `<table>...</table>`;
     },
-
     mjml: (props, ctx) => {
       return `<mj-section>...</mj-section>`;
     },
-
     reactEmail: (props, ctx) => {
       return `<Section>...</Section>`;
     },
@@ -449,7 +444,6 @@ Maildeno can also be extended to support ESPs that aren't built in.
 registerESPSyntax("my-esp", {
   wrapOpenTag: (expr) => `{% if ${expr} %}`,
   wrapCloseTag: () => `{% endif %}`,
-
   wrapMergeTag: (key, fallback) =>
     fallback
       ? `{{ ${key} | default: "${fallback}" }}`
