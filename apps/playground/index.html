@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@maildeno/editor — playground</title>
+    <!-- Satoshi — matches exactly what the original app loaded (see
+         project notes: app.vue's own <head>, never a self-hosted
+         @font-face — no font files exist anywhere in the source this was
+         ported from). This is the playground's own responsibility, not
+         the package's: a real host embedding the editor is expected to
+         load their own brand fonts the same way they'd load any other
+         font on their page. element-demo.html deliberately omits this —
+         that page exists specifically to prove the editor needs nothing
+         from the host page at all. -->
+    <link
+      rel="stylesheet"
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,800,900&display=swap"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

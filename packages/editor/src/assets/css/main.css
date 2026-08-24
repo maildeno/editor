@@ -1,0 +1,389 @@
+@import "tailwindcss";
+
+/* The @tailwindcss/vite plugin scans relative to the Vite config root
+   (apps/playground) — it does NOT automatically reach into sibling
+   packages like this one, unlike the PostCSS-based Tailwind plugin's
+   broader default. This is a well-documented Tailwind v4 monorepo gap
+   (github.com/tailwindlabs/tailwindcss/issues/13136), confirmed here by
+   directly inspecting the compiled output: zero arbitrary-value bracket
+   classes (text-[11px] etc, used extensively throughout this package's
+   components) were present at all before this line was added, despite
+   this exact file being correctly imported. "../.." resolves relative to
+   THIS file's own location (src/assets/css/main.css → up to src/),
+   covering every component in the package, not just whatever the
+   consuming app's own Vite root happens to already include. */
+@source "../..";
+
+@custom-variant dark (&:where(.dark, .dark *, :host(.dark), :host(.dark) *));
+
+/* ─── Theme tokens ───────────────────────────────────────────────────────────
+   Semantic variables every themed surface reads. Two layers on purpose:
+
+     Core        primary / background / surface / text / border …
+     Semantic    header-bg, sidebar-bg, input-bg, overlay-bg …
+
+   Semantic tokens default to core ones, so setting `primary` alone re-themes
+   the whole editor coherently, while a host that wants only a different
+   header can set `headerBg` without touching anything else. Without that
+   split, customising one surface would mean redefining all of them — which
+   is how themes end up looking half-finished.
+
+   Everything is declared on both :root and :host so it works in the plain
+   Vue build (light DOM) and the custom-element build (shadow root), where
+   :root does not reach inside.
+   ──────────────────────────────────────────────────────────────────────── */
+:root,
+:host {
+  /* Core */
+  --md-primary: #111111;
+  --md-primary-hover: #000000;
+  --md-on-primary: #ffffff;
+
+  --md-background: #f8fafc;
+  --md-surface: #ffffff;
+  --md-surface-muted: #f3f4f6;
+  --md-surface-hover: #f9fafb;
+
+  --md-text: #111827;
+  --md-text-muted: #6b7280;
+  --md-text-subtle: #9ca3af;
+
+  --md-border: #e5e7eb;
+  --md-border-strong: #d1d5db;
+
+  --md-danger: #ef4444;
+  --md-on-danger: #ffffff;
+  --md-success: #22c55e;
+  --md-warning: #f59e0b;
+  --md-info: #0a5bdd;
+
+  --md-ring: var(--md-primary);
+  --md-shadow: 0 8px 30px rgb(0 0 0 / 0.12);
+  --md-radius: 0.5rem;
+
+  /* Semantic — each defaults to a core token */
+  --md-header-bg: var(--md-surface);
+  --md-header-text: var(--md-text);
+  --md-header-border: var(--md-border);
+
+  --md-sidebar-bg: var(--md-surface);
+  --md-sidebar-text: var(--md-text);
+  --md-sidebar-border: var(--md-border);
+  /* Selected tab / segment. Defaults to the brand colour so a single
+     `primary` still themes the whole control set coherently. */
+  --md-accent-bg: var(--md-primary);
+  --md-accent-text: var(--md-on-primary);
+
+  --md-canvas-bg: var(--md-background);
+
+  --md-input-bg: var(--md-surface);
+  --md-input-text: var(--md-text);
+  --md-input-border: var(--md-border);
+  --md-input-placeholder: var(--md-text-subtle);
+
+  /* Dialogs, toasts, dropdowns and floating toolbars share one surface so
+     they stay visually consistent when a host themes only one of them. */
+  --md-overlay-bg: var(--md-surface);
+  --md-overlay-text: var(--md-text);
+  --md-overlay-border: var(--md-border);
+  --md-overlay-shadow: var(--md-shadow);
+  --md-scrim: rgb(0 0 0 / 0.4);
+
+  --md-toolbar-bg: var(--md-surface);
+  --md-toolbar-text: var(--md-text);
+  --md-toolbar-border: var(--md-border);
+
+  /* The primary action (Save / Update) is called out separately because it is
+     the most commonly branded control in the UI. */
+  --md-button-primary-bg: var(--md-primary);
+  --md-button-primary-text: var(--md-on-primary);
+  --md-button-primary-hover-bg: var(--md-primary-hover);
+
+  --md-button-secondary-bg: var(--md-surface-muted);
+  --md-button-secondary-text: var(--md-text);
+  --md-button-secondary-hover-bg: var(--md-border);
+
+  /* Severity tints — used by toasts and inline messages. Declared as a set so
+     a dark theme can swap all of them at once instead of leaving pale
+     backgrounds sitting on a dark surface. */
+  --md-success-bg: #f0fdf4;
+  --md-success-fg: #166534;
+  --md-success-border: #bbf7d0;
+  --md-info-bg: #eff6ff;
+  --md-info-fg: #1e40af;
+  --md-info-border: #bfdbfe;
+  --md-warning-bg: #fffbeb;
+  --md-warning-fg: #92400e;
+  --md-warning-border: #fde68a;
+  --md-danger-bg: #fef2f2;
+  --md-danger-fg: #991b1b;
+  --md-danger-border: #fecaca;
+}
+
+/* Dark defaults. A host setting only `dark: { primary }` still gets a
+   coherent dark UI, because everything else here already holds. */
+:where(.dark, :host(.dark)) {
+  --md-primary: #818cf8;
+  --md-primary-hover: #a5b4fc;
+  --md-on-primary: #1e1b4b;
+
+  --md-background: #0b0f19;
+  --md-surface: #151b28;
+  --md-surface-muted: #1f2635;
+  --md-surface-hover: #1c2333;
+
+  --md-text: #e5e7eb;
+  --md-text-muted: #9ca3af;
+  --md-text-subtle: #6b7280;
+
+  --md-border: #2a3345;
+  --md-border-strong: #3b465c;
+
+  --md-danger: #f87171;
+  --md-on-danger: #450a0a;
+  --md-success: #4ade80;
+  --md-warning: #fbbf24;
+  --md-info: #60a5fa;
+
+  --md-shadow: 0 8px 30px rgb(0 0 0 / 0.5);
+  --md-scrim: rgb(0 0 0 / 0.6);
+
+  --md-success-bg: #0f2a1a;
+  --md-success-fg: #86efac;
+  --md-success-border: #166534;
+  --md-info-bg: #101f38;
+  --md-info-fg: #93c5fd;
+  --md-info-border: #1e40af;
+  --md-warning-bg: #2a1f08;
+  --md-warning-fg: #fcd34d;
+  --md-warning-border: #92400e;
+  --md-danger-bg: #2b1114;
+  --md-danger-fg: #fca5a5;
+  --md-danger-border: #991b1b;
+}
+
+
+
+/* ── Restore default list styles ── */
+@layer base {
+  /* :host is what makes this work in the custom-element build — a shadow
+     root has no <body>, so the body selector alone matched nothing there
+     and the font silently fell back while working fine in the plain Vue
+     path. :host targets the shadow host itself, and font-family inherits
+     from it into the whole shadow tree. */
+  :host,
+  body,
+  input,
+  textarea,
+  pre {
+    font-family: "Satoshi", sans-serif;
+  }
+
+  ul { list-style: disc; }
+  ol { list-style: decimal; }
+}
+
+
+/* ─────────────────────────────────────────
+   Native number input — hide spinners
+───────────────────────────────────────── */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   Range slider
+───────────────────────────────────────── */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 1.5px solid #d1d5db;
+  border-radius: 50%;
+  margin-top: -4.5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+  cursor: pointer;
+  transition: border-color 0.1s, transform 0.1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  border-color: #4ade80;
+  transform: scale(1.15);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 3px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 1.5px solid #d1d5db;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 3px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+}
+
+/* ─────────────────────────────────────────
+   Global focus suppression
+   No blue/green outlines on any button or interactive element —
+   keyboard users get focus-visible only where we explicitly opt in.
+───────────────────────────────────────── */
+button:focus,
+button:focus-visible,
+input[type="range"]:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ─── Themed surfaces ────────────────────────────────────────────────────────
+   Applied as classes on the structural elements (header, sidebars, overlays)
+   so those surfaces read their colours from tokens rather than fixed utility
+   classes. Utilities like `bg-white` cannot respond to a theme; a class that
+   resolves to a variable can.
+   ──────────────────────────────────────────────────────────────────────── */
+.md-surface-header {
+  background: var(--md-header-bg);
+  color: var(--md-header-text);
+  border-bottom: 1px solid var(--md-header-border);
+}
+
+.md-surface-sidebar {
+  background: var(--md-sidebar-bg);
+  color: var(--md-sidebar-text);
+  border: 1px solid var(--md-sidebar-border);
+}
+
+/* Dialogs, dropdowns, toasts and floating toolbars. One class keeps them
+   consistent, so theming "the popovers" is a single decision. */
+.md-surface-overlay {
+  background: var(--md-overlay-bg);
+  color: var(--md-overlay-text);
+  border: 1px solid var(--md-overlay-border);
+  box-shadow: var(--md-overlay-shadow);
+}
+
+.md-surface-toolbar {
+  background: var(--md-toolbar-bg);
+  color: var(--md-toolbar-text);
+  border: 1px solid var(--md-toolbar-border);
+  box-shadow: var(--md-overlay-shadow);
+}
+
+.md-surface-canvas {
+  background: var(--md-canvas-bg);
+}
+
+/* ─── Themed controls ────────────────────────────────────────────────────────
+   Class hooks for controls that were previously written with fixed utility
+   colours. A utility like `bg-white` or `bg-[#42389E]` cannot respond to a
+   theme; these resolve to tokens instead, so the same markup follows whatever
+   the host sets — including dark mode.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* Primary action — the Save / Update button. */
+.md-btn-primary {
+  background: var(--md-button-primary-bg);
+  color: var(--md-button-primary-text);
+}
+.md-btn-primary:not(:disabled):hover {
+  background: var(--md-button-primary-hover-bg);
+}
+
+/* Panel body inside the sidebar. Transparent rather than a second surface
+   colour, so it inherits `sidebarBg` instead of needing its own token — a
+   host setting one sidebar colour expects one sidebar colour. */
+.md-surface-sidebar-inner {
+  background: transparent;
+  color: var(--md-sidebar-text);
+}
+
+.md-tabstrip {
+  border-bottom: 1px solid var(--md-sidebar-border);
+}
+.md-tab-active {
+  color: var(--md-sidebar-text);
+}
+.md-tab-idle {
+  color: var(--md-text-subtle);
+}
+.md-tab-idle:hover {
+  color: var(--md-text-muted);
+}
+
+/* Segmented control (Content / Layout / General). */
+.md-segmented {
+  border: 1px solid var(--md-border);
+}
+.md-segment-active {
+  background: var(--md-accent-bg);
+  color: var(--md-accent-text);
+}
+.md-segment-idle {
+  background: var(--md-sidebar-bg);
+  color: var(--md-text-muted);
+}
+.md-segment-idle:hover {
+  background: var(--md-surface-hover);
+}
+.md-segment-divider {
+  border-right: 1px solid var(--md-border);
+}
+
+/* Merge Tag input style */
+.mg-md-input {
+  width: 100%;
+  padding: 0.325rem 0.625rem;
+  font-size: 13px;
+  line-height: 1.25rem;
+  color: var(--md-text);
+  background: var(--md-surface);
+  border: 1px solid var(--md-border);
+  border-radius: 0.375rem;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.mg-md-input::placeholder {
+  color: var(--md-text-subtle);
+}
+.mg-md-input:focus {
+  border-color: var(--md-primary);
+}
+.mg-md-input:disabled {
+  background: var(--md-surface-hover);
+  color: var(--md-text-subtle);
+  cursor: not-allowed;
+}
+.mg-md-input--invalid {
+  border-color: var(--md-danger);
+}
+.mg-md-input--invalid:focus {
+  border-color: var(--md-danger);
+  box-shadow: 0 0 0 1px var(--md-danger);
+}

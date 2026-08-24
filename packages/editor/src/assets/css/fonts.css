@@ -1,0 +1,11 @@
+/* Satoshi — matches exactly what the original app loaded (a Fontshare CDN
+   link, never a self-hosted @font-face — no font files exist anywhere in
+   the source this was ported from). Kept in its own, dedicated file
+   rather than combined with main.css — @import must
+   precede every other rule in the CSS it's part of, and a dedicated file
+   makes that trivially true regardless of how Vite later concatenates
+   multiple CSS sources into dist/editor.css (confirmed via a real build
+   warning that combining this into main.css alongside Tailwind's own
+   @import broke this rule, even with correct source-order, since
+   Tailwind's @import expands into @layer statements once processed). */
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,800,900&display=swap");

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@maildeno/editor — framework-free custom element demo</title>
+    <style>
+      /* Deliberately minimal light-DOM styling, and deliberately NOT
+         Tailwind — the whole point of this page is proving
+         the editor brings its own styling with it via Shadow DOM,
+         independent of whatever (or nothing) the host page uses. */
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      header {
+        padding: 12px 20px;
+        background: #18181b;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .note {
+        font-size: 12px;
+        opacity: 0.75;
+      }
+      header button {
+        cursor: pointer;
+      }
+      maildeno-editor {
+        flex: 1;
+        min-height: 0;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Framework-free demo</strong>
+      <span>— no Vue app mounted on this page, no Tailwind. Just the custom element.</span>
+      <button id="toggle-dark">Toggle .dark class</button>
+      <span id="dark-note" class="note"></span>
+    </header>
+
+    <maildeno-editor id="editor"></maildeno-editor>
+
+    <script type="module">
+      import { registerMaildenoEditorElement } from "@maildeno/editor/element";
+
+      registerMaildenoEditorElement();
+
+      // Demonstrates the mechanism a host uses to switch the editor's theme:
+      // a class on the custom element itself, which the stylesheet targets
+      // via :host(.dark). A class on <html> or <body> would NOT work — those
+      // sit outside the shadow boundary and cannot be matched from inside it.
+      //
+      // Note this currently has no visible effect: the editor ships no dark
+      // theme yet (zero `dark:` utilities in its components), so the variant
+      // compiles to nothing and there is nothing to switch. The wiring is
+      // here and correct, ready for when a dark theme is added.
+      const editorEl = document.getElementById("editor");
+      const note = document.getElementById("dark-note");
+      document.getElementById("toggle-dark").addEventListener("click", () => {
+        const on = editorEl.classList.toggle("dark");
+        note.textContent = on
+          ? ".dark is set on <maildeno-editor> — no visible change: no dark theme shipped yet"
+          : "";
+      });
+    </script>
+  </body>
+</html>

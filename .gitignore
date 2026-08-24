@@ -1,0 +1,25 @@
+# build outputs
+.data
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+script
+.wrangler/
+
+# Local env files
+.env
+.env.*
+!.env.example
+**/*.env
+.npmrc

@@ -1,0 +1,17 @@
+{
+  "name": "maildeno-editor-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/playground",
+    "build:editor": "npm run build --workspace=packages/editor"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1",
+    "tsx": "^4.23.12"
+  }
+}

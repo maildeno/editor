@@ -1,0 +1,99 @@
+{
+  "name": "@maildeno/editor",
+  "version": "0.1.1",
+  "description": "An open-source, framework-agnostic email template editor. Drag-and-drop block editing, HTML/MJML/React Email/JSON export, and a pluggable ESP-conditional-logic engine usable as a Vue component or a plain custom element with zero required backend.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./element": {
+      "types": "./dist/element.d.ts",
+      "import": "./dist/element.js"
+    },
+    "./init": {
+      "types": "./dist/init.d.ts",
+      "import": "./dist/init.js"
+    },
+    "./style.css": "./dist/editor.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite build --watch",
+    "dev:element": "vite build --config vite.config.element.ts --watch",
+    "build": "vite build && vite build --config vite.config.element.ts",
+    "typecheck": "vue-tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maildeno/editor.git"
+  },
+  "homepage": "https://github.com/maildeno/editor#readme",
+  "bugs": {
+    "url": "https://github.com/maildeno/editor/issues"
+  },
+  "keywords": [
+    "email-editor",
+    "email-builder",
+    "drag-and-drop",
+    "mjml",
+    "react-email",
+    "vue",
+    "custom-element",
+    "web-component",
+    "wysiwyg",
+    "email-template"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Noruwa Obaseki (Maildeno)",
+    "url": "https://maildeno.com"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "@internationalized/date": "^3.12.3",
+    "@tiptap/core": "^3.30.2",
+    "@tiptap/extension-color": "^3.30.2",
+    "@tiptap/extension-font-family": "^3.30.2",
+    "@tiptap/extension-highlight": "^3.30.2",
+    "@tiptap/extension-link": "^3.30.2",
+    "@tiptap/extension-list-item": "^3.30.2",
+    "@tiptap/extension-text-style": "^3.30.2",
+    "@tiptap/extension-underline": "^3.30.2",
+    "@tiptap/pm": "^3.30.2",
+    "@tiptap/starter-kit": "^3.30.2",
+    "@tiptap/vue-3": "^3.30.2",
+    "@vueuse/core": "^14.4.0",
+    "prettier": "^3.9.6",
+    "reka-ui": "^2.10.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.2.0",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.0",
+    "vite": "^8.2.2",
+    "vite-plugin-dts": "^5.0.3",
+    "vue-tsc": "^3.3.11"
+  }
+}
