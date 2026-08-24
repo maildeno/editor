@@ -1,7 +1,7 @@
 {
   "name": "@maildeno/editor",
   "version": "0.1.1",
-  "description": "An open-source, framework-agnostic email template editor. Drag-and-drop block editing, HTML/MJML/React Email/JSON export, and a pluggable ESP-conditional-logic engine usable as a Vue component or a plain custom element with zero required backend.",
+  "description": "An open-source, framework-agnostic email template editor. Drag-and-drop block editing, HTML/MJML/React Email/JSON export, and a pluggable ESP-conditional-logic engine with zero required backend.",
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
