@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { EmailEditor } from "@maildeno/editor";
+import { theme } from "./theme";
 
 // The playground has no real ESP to send through — this just shows what
 // the button looks like when a host provides the callback. The "Send
@@ -19,6 +20,6 @@ async function handleSendTestEmail(payload: {
 
 <template>
   <main style="height: 100vh">
-    <EmailEditor :on-send-test-email="handleSendTestEmail" />
+    <EmailEditor :on-send-test-email="handleSendTestEmail" :theme="theme" />
   </main>
 </template>

@@ -6,7 +6,7 @@
     <PropertySection v-if="editMode === 'desktop'" title="Content">
       <!-- Link Text -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">
           Link Text
         </label>
         <div class="relative">
@@ -28,7 +28,7 @@
 
       <!-- URL -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1">URL</label>
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">URL</label>
         <div class="relative">
           <InputText
             ref="linkInputRef"
@@ -115,11 +115,11 @@
 
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-gray-600">Text Decoration</span>
+          <span class="text-xs font-medium text-[var(--md-text-muted)]">Text Decoration</span>
           <button
             v-if="isOverridden('textDecoration')"
             @click="resetProp('textDecoration')"
-            class="text-xs text-green-400 hover:text-green-600"
+            class="text-xs text-[var(--md-selection)] hover:text-[var(--md-selection-fg)]"
           >
             ↩ Reset
           </button>
@@ -374,22 +374,22 @@ const textDecorationOptions = [
   outline: none;
 }
 .toggle-btn:focus-visible {
-  box-shadow: 0 0 0 2px oklch(52.7% 0.154 150.069);
+  box-shadow: 0 0 0 2px var(--md-selection);
 }
 .toggle-btn--idle {
-  border-color: #e5e7eb;
-  color: #6b7280;
+  border-color: var(--md-border);
+  color: var(--md-text-subtle);
 }
 .toggle-btn--idle:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: var(--md-surface-hover);
+  border-color: var(--md-border-strong);
 }
 .toggle-btn--active {
-  background: #eff6ff;
-  border-color: #05df72;
-  color: oklch(72.3% 0.219 149.579);
+  background: var(--md-selection-bg);
+  border-color: var(--md-selection);
+  color: var(--md-selection-fg);
 }
 .toggle-btn--active:hover {
-  background: #dbeafe;
+  background: color-mix(in srgb, var(--md-selection) 20%, var(--md-selection-bg));
 }
 </style>

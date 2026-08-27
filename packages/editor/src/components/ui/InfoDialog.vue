@@ -21,19 +21,19 @@ const emit = defineEmits(["update:visible"]);
   >
     <template #header>
       <div class="flex items-center gap-2">
-        <Icon name="info-circle" class="text-blue-500" />
+        <Icon name="info-circle" class="text-[var(--md-info)]" />
         <span>{{ header ?? "Info" }}</span>
       </div>
     </template>
 
-    <p class="text-base text-gray-700">
+    <p class="text-base text-[var(--md-text-muted)]">
       {{ message }}
     </p>
 
     <template #footer>
       <Button
         label="Ok"
-        class="!bg-blue-500 !hover:bg-blue-700 !border-blue-600 !px-5"
+        class="!bg-[var(--md-info)] !hover:opacity-90 !border-[var(--md-info)] !px-5"
         @click="emit('update:visible', false)"
       />
     </template>

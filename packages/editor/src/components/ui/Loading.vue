@@ -30,7 +30,7 @@ const teleportTarget = useTeleportTarget();
   width: 50px;
   height: 50px;
   border: 5px solid rgba(0, 0, 0, 0.2);
-  border-top-color: #05df72;
+  border-top-color: var(--md-selection);
   border-radius: 50%;
   margin: 0 auto;
   animation: spin 1s linear infinite;

@@ -23,7 +23,7 @@
               @drop="handleLayoutDrop"
             />
             <div
-              class="flex flex-col items-center justify-center min-h-87.5 px-6 text-gray-600 pointer-events-none"
+              class="flex flex-col items-center justify-center min-h-87.5 px-6 text-[var(--md-text-muted)] pointer-events-none"
             >
               <div class="w-12 h-12 mx-auto mb-3">
                 <svg

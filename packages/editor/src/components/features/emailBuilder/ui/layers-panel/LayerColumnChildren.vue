@@ -10,8 +10,8 @@
       :class="[
         'flex items-center gap-1 pr-3 py-1 cursor-pointer transition-colors select-none',
         isColumnSelected(column.id)
-          ? 'bg-purple-50 text-purple-500'
-          : 'text-gray-500 hover:bg-gray-50',
+          ? 'bg-[var(--md-row-selection-bg)] text-[var(--md-row-selection-fg)]'
+          : 'text-[var(--md-text-subtle)] hover:bg-[var(--md-surface-hover)]',
       ]"
     >
       <!-- Grip-width spacer: columns aren't draggable, but reserving the slot
@@ -27,7 +27,7 @@
         stroke-linejoin="round"
         class="w-3.25 h-3.25 shrink-0"
         :class="
-          isColumnSelected(column.id) ? 'text-purple-400' : 'text-gray-600'
+          isColumnSelected(column.id) ? 'text-[var(--md-row-selection)]' : 'text-[var(--md-text-muted)]'
         "
       >
         <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -36,13 +36,13 @@
       </svg>
 
       <span
-        class="text-sm text-gray-600 tracking-wider truncate flex-1 min-w-0"
+        class="text-sm text-[var(--md-text-muted)] tracking-wider truncate flex-1 min-w-0"
       >
         Column {{ colIndex + 1 }}
       </span>
       <span
         v-if="getDirectComponents(column).length > 0"
-        class="shrink-0 size-5 grid place-content-center rounded-full bg-gray-100 text-gray-500 text-[10px]"
+        class="shrink-0 size-5 grid place-content-center rounded-full bg-[var(--md-surface-muted)] text-[var(--md-text-subtle)] text-[10px]"
       >
         {{ getDirectComponents(column).length }}
       </span>
@@ -106,14 +106,14 @@
         :class="[
           'group/leaf flex items-center gap-1 pr-3 py-1 cursor-pointer transition-colors select-none',
           isComponentSelected(child.id)
-            ? 'bg-green-50 text-green-600'
-            : 'text-gray-400 hover:bg-gray-50 hover:text-gray-500',
+            ? 'bg-[var(--md-selection-bg)] text-[var(--md-selection-fg)]'
+            : 'text-[var(--md-text-subtle)] hover:bg-[var(--md-surface-hover)] hover:text-[var(--md-text-subtle)]',
           isDragSource(child.id) ? 'opacity-40' : '',
         ]"
       >
         <!-- Drag grip -->
         <span
-          class="size-3 mr-0.5 text-gray-700 hover:text-gray-800 shrink-0 cursor-grab active:cursor-grabbing opacity-0 group-hover/leaf:opacity-100 transition-opacity"
+          class="size-3 mr-0.5 text-[var(--md-text-muted)] hover:text-[var(--md-text)] shrink-0 cursor-grab active:cursor-grabbing opacity-0 group-hover/leaf:opacity-100 transition-opacity"
         >
           <svg viewBox="0 0 20 20" fill="currentColor">
             <path
@@ -128,7 +128,7 @@
           />
         </div>
         <span
-          class="text-gray-600 text-sm tracking-wider truncate flex-1 min-w-0 capitalize"
+          class="text-[var(--md-text-muted)] text-sm tracking-wider truncate flex-1 min-w-0 capitalize"
         >
           {{ getComponentLabel(child) }}
         </span>
@@ -137,7 +137,7 @@
           class="shrink-0 size-3.5"
         >
           <svg
-            class="size-3.5 text-green-400"
+            class="size-3.5 text-[var(--md-selection)]"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
@@ -201,14 +201,14 @@
           :class="[
             'group/nestedrow flex items-center gap-1 pr-3 py-1.5 cursor-pointer transition-colors select-none',
             isRowSelected(child.id)
-              ? 'bg-purple-50 text-purple-400'
-              : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700',
+              ? 'bg-[var(--md-row-selection-bg)] text-[var(--md-row-selection)]'
+              : 'text-[var(--md-text-subtle)] hover:bg-[var(--md-surface-hover)] hover:text-[var(--md-text-muted)]',
             isDragSource(child.id) ? 'opacity-40' : '',
           ]"
         >
           <!-- Drag grip -->
           <span
-            class="size-3 mr-0.5 text-gray-700 hover:text-gray-800 shrink-0 cursor-grab active:cursor-grabbing opacity-0 group-hover/nestedrow:opacity-100 transition-opacity"
+            class="size-3 mr-0.5 text-[var(--md-text-muted)] hover:text-[var(--md-text)] shrink-0 cursor-grab active:cursor-grabbing opacity-0 group-hover/nestedrow:opacity-100 transition-opacity"
           >
             <svg viewBox="0 0 20 20" fill="currentColor">
               <path
@@ -220,7 +220,7 @@
           <button
             v-if="child.type === 'row'"
             @click.stop="toggleExpanded(child.id)"
-            class="w-4.75 h-4.75 flex items-center justify-center text-gray-400 hover:text-gray-500 transition-transform shrink-0"
+            class="w-4.75 h-4.75 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text-subtle)] transition-transform shrink-0"
             :class="isExpanded(child.id) ? 'rotate-90' : ''"
           >
             <svg class="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
@@ -242,7 +242,7 @@
             stroke-linejoin="round"
             class="size-3.25 shrink-0"
             :class="
-              isRowSelected(child.id) ? 'text-purple-400' : 'text-gray-500'
+              isRowSelected(child.id) ? 'text-[var(--md-row-selection)]' : 'text-[var(--md-text-subtle)]'
             "
           >
             <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -256,7 +256,7 @@
               :ref="(el) => mountRenameInput(el as HTMLInputElement | null)"
               :value="pendingRenameValue"
               type="text"
-              class="flex-1 min-w-0 px-2 py-0.75 text-sm outline-1 outline-gray-200 rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-purple-400 translate-y-px text-gray-700"
+              class="flex-1 min-w-0 px-2 py-0.75 text-sm outline-1 outline-[var(--md-border)] rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-[var(--md-row-selection)] translate-y-px text-[var(--md-text-muted)]"
               @click.stop
               @mousedown.stop
               @keydown.enter.prevent="commitRename(child)"
@@ -265,7 +265,7 @@
           </template>
           <template v-else>
             <span
-              class="text-sm text-gray-600 tracking-wider truncate flex-1 min-w-0"
+              class="text-sm text-[var(--md-text-muted)] tracking-wider truncate flex-1 min-w-0"
             >
               {{ getRowLabel(child) }}
             </span>
@@ -273,7 +273,7 @@
           <!-- Column count badge -->
           <span
             v-if="child.columns?.length > 1"
-            class="shrink-0 size-5 grid place-content-center rounded-full bg-gray-100 text-gray-500 text-[10px]"
+            class="shrink-0 size-5 grid place-content-center rounded-full bg-[var(--md-surface-muted)] text-[var(--md-text-subtle)] text-[10px]"
           >
             {{ child.columns.length }}
           </span>
@@ -283,7 +283,7 @@
             class="shrink-0 size-3.5"
           >
             <svg
-              class="size-3.5 text-purple-400"
+              class="size-3.5 text-[var(--md-row-selection)]"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
@@ -364,7 +364,7 @@
       :class="[
         'flex items-center gap-2 pr-3 py-1 select-none transition-colors rounded-sm',
         emptyColumnDragOver === column.id
-          ? 'bg-purple-50 outline outline-1 outline-dashed outline-purple-300'
+          ? 'bg-[var(--md-row-selection-bg)] outline outline-1 outline-dashed outline-[var(--md-row-selection)]'
           : '',
       ]"
     >
@@ -373,8 +373,8 @@
         class="text-[11px] italic transition-colors"
         :class="
           emptyColumnDragOver === column.id
-            ? 'text-purple-400'
-            : 'text-gray-500'
+            ? 'text-[var(--md-row-selection)]'
+            : 'text-[var(--md-text-subtle)]'
         "
       >
         {{ emptyColumnDragOver === column.id ? "Drop here" : "Empty" }}

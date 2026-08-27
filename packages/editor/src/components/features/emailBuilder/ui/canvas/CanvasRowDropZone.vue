@@ -162,8 +162,12 @@ const handleDrop = (e: DragEvent) => {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  background: linear-gradient(135deg, #faf9ff 0%, #f5f3ff 100%);
-  border: 2px dashed #e0e7ff;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--md-row-selection) 4%, var(--md-surface)) 0%,
+    color-mix(in srgb, var(--md-row-selection) 8%, var(--md-surface)) 100%
+  );
+  border: 2px dashed color-mix(in srgb, var(--md-row-selection) 22%, var(--md-surface));
   border-radius: 6px;
   transition: all 0.2s ease;
 }
@@ -192,21 +196,21 @@ const handleDrop = (e: DragEvent) => {
   width: 48px;
   height: 48px;
   margin: 0 auto 12px;
-  color: #94a3b8;
+  color: var(--md-text-subtle);
   stroke-width: 1.5;
 }
 
 .cdz-empty-title {
   font-size: 1.125rem;
   font-weight: 500;
-  color: #02bb4c;
+  color: var(--md-selection-fg);
   margin-bottom: 8px;
   letter-spacing: -0.01em;
 }
 
 .cdz-empty-subtitle {
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--md-text-subtle);
   line-height: 1.4;
 }
 
@@ -245,7 +249,7 @@ const handleDrop = (e: DragEvent) => {
 .canvas-drop-zone--full.canvas-drop-zone--receptive .cdz-empty-state,
 .canvas-drop-zone--full.canvas-drop-zone--active .cdz-empty-state {
   opacity: 0.5;
-  background: rgba(139, 92, 246, 0.04);
+  background: color-mix(in srgb, var(--md-row-selection) 4%, transparent);
 }
 
 /* ── Ghost line (receptive but not hovered) ─────────────────── */
@@ -258,8 +262,8 @@ const handleDrop = (e: DragEvent) => {
   transform: translateY(-50%);
   background: repeating-linear-gradient(
     90deg,
-    rgba(139, 92, 246, 0.25) 0px,
-    rgba(139, 92, 246, 0.25) 6px,
+    color-mix(in srgb, var(--md-row-selection) 25%, transparent) 0px,
+    color-mix(in srgb, var(--md-row-selection) 25%, transparent) 6px,
     transparent 6px,
     transparent 12px
   );
@@ -281,9 +285,9 @@ const handleDrop = (e: DragEvent) => {
   align-items: center;
   gap: 10px;
   padding: 0 20px;
-  background: rgba(139, 92, 246, 0.06);
+  background: color-mix(in srgb, var(--md-row-selection) 6%, transparent);
   border-radius: 8px;
-  border: 1.5px dashed rgba(139, 92, 246, 0.35);
+  border: 1.5px dashed color-mix(in srgb, var(--md-row-selection) 35%, transparent);
   pointer-events: none; /* let drag events fall through to the parent drop zone */
 }
 
@@ -293,9 +297,9 @@ const handleDrop = (e: DragEvent) => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(139, 92, 246, 0.6),
-    rgba(139, 92, 246, 0.8),
-    rgba(139, 92, 246, 0.6),
+    color-mix(in srgb, var(--md-row-selection) 60%, transparent),
+    color-mix(in srgb, var(--md-row-selection) 80%, transparent),
+    color-mix(in srgb, var(--md-row-selection) 60%, transparent),
     transparent
   );
   border-radius: 2px;
@@ -314,14 +318,14 @@ const handleDrop = (e: DragEvent) => {
   gap: 5px;
   font-size: 11px;
   font-weight: 600;
-  color: #7c3aed;
+  color: var(--md-row-selection-fg);
   letter-spacing: 0.01em;
   white-space: nowrap;
   padding: 5px 14px;
-  background: rgba(139, 92, 246, 0.08);
-  border: 1.5px solid rgba(139, 92, 246, 0.35);
+  background: color-mix(in srgb, var(--md-row-selection) 8%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--md-row-selection) 35%, transparent);
   border-radius: 100px;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--md-row-selection) 15%, transparent);
   animation: pill-pop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 

@@ -93,6 +93,22 @@
   --md-toolbar-text: var(--md-text);
   --md-toolbar-border: var(--md-border);
 
+  /* Canvas interaction accents. Two independent families so a component
+     selection and a row selection stay visually distinct, exactly as they
+     do today (green vs purple) — see the comments on ThemeTokens. */
+  --md-selection: #4ade80;
+  --md-selection-bg: #f0fdf4;
+  --md-selection-fg: #16a34a;
+
+  --md-row-selection: #a855f7;
+  --md-row-selection-bg: #faf5ff;
+  --md-row-selection-fg: #9333ea;
+
+  /* Small dark icon-button tooltips. Deliberately not derived from
+     `overlay` — see the ThemeTokens comment on `tooltipBg`. */
+  --md-tooltip-bg: #111827;
+  --md-tooltip-text: #ffffff;
+
   /* The primary action (Save / Update) is called out separately because it is
      the most commonly branded control in the UI. */
   --md-button-primary-bg: var(--md-primary);
@@ -147,6 +163,19 @@
 
   --md-shadow: 0 8px 30px rgb(0 0 0 / 0.5);
   --md-scrim: rgb(0 0 0 / 0.6);
+
+  --md-selection: #4ade80;
+  --md-selection-bg: #0f2a1a;
+  --md-selection-fg: #86efac;
+
+  --md-row-selection: #c084fc;
+  --md-row-selection-bg: #2e1065;
+  --md-row-selection-fg: #d8b4fe;
+
+  /* Flipped light-on-dark in dark mode — a near-black tooltip would sit
+     almost flush against an already-dark canvas. */
+  --md-tooltip-bg: #f3f4f6;
+  --md-tooltip-text: #111827;
 
   --md-success-bg: #0f2a1a;
   --md-success-fg: #86efac;
@@ -208,8 +237,8 @@ input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 12px;
   height: 12px;
-  background: white;
-  border: 1.5px solid #d1d5db;
+  background: var(--md-on-primary);
+  border: 1.5px solid var(--md-border-strong);
   border-radius: 50%;
   margin-top: -4.5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
@@ -218,14 +247,14 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  border-color: #4ade80;
+  border-color: var(--md-selection);
   transform: scale(1.15);
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 3px;
-  background: #e5e7eb;
+  background: var(--md-border);
   border-radius: 9999px;
 }
 
@@ -233,8 +262,8 @@ input[type="range"]::-webkit-slider-runnable-track {
 input[type="range"]::-moz-range-thumb {
   width: 12px;
   height: 12px;
-  background: white;
-  border: 1.5px solid #d1d5db;
+  background: var(--md-on-primary);
+  border: 1.5px solid var(--md-border-strong);
   border-radius: 50%;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
   cursor: pointer;
@@ -242,7 +271,7 @@ input[type="range"]::-moz-range-thumb {
 
 input[type="range"]::-moz-range-track {
   height: 3px;
-  background: #e5e7eb;
+  background: var(--md-border);
   border-radius: 9999px;
 }
 

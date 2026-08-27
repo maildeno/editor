@@ -2,14 +2,14 @@
 <template>
   <div class="space-y-1.5">
     <div class="flex items-center justify-between">
-      <label class="flex items-center gap-1.5 text-xs font-medium text-gray-600">
+      <label class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]">
         Alignment
         <OverrideBadge :show="isOverridden" />
       </label>
       <button
         v-if="isOverridden"
         @click="$emit('reset')"
-        class="text-[11px] text-green-500 hover:text-green-700 transition-colors"
+        class="text-[11px] text-[var(--md-selection-fg)] hover:opacity-80 transition-colors"
       >
         ↩ Reset
       </button>
@@ -25,8 +25,8 @@
           @click="$emit('update:modelValue', option.value)"
           class="w-full h-7 flex items-center justify-center rounded-md border transition-all duration-100 focus:outline-none"
           :class="modelValue === option.value
-            ? 'bg-green-50 border-green-400 text-green-600'
-            : 'border-gray-200/80 text-gray-400 hover:bg-gray-50 hover:text-gray-600 hover:border-gray-300'"
+            ? 'bg-[var(--md-selection-bg)] border-[var(--md-selection)] text-[var(--md-selection-fg)]'
+            : 'border-[var(--md-border)]/80 text-[var(--md-text-subtle)] hover:bg-[var(--md-surface-hover)] hover:text-[var(--md-text-muted)] hover:border-[var(--md-border-strong)]'"
         >
           <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
             <template v-if="option.value === 'left'">
@@ -45,7 +45,7 @@
         </button>
 
         <!-- Tooltip -->
-        <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900">
+        <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]">
           {{ option.label }}
         </div>
       </div>

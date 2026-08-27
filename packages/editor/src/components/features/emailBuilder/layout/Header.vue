@@ -422,15 +422,15 @@ onUnmounted(() => {
         v-model="templateName"
         type="text"
         placeholder="New Template"
-        class="w-50 px-2.5 py-1.25 outline-1 outline-gray-50 rounded-lg shadow-xs focus:outline-none focus:ring-[1px] focus:ring-gray-50 placeholder:text-sm bg-gray-50"
+        class="w-50 px-2.5 py-1.25 outline-1 outline-[var(--md-surface-hover)] rounded-lg shadow-xs focus:outline-none focus:ring-[1px] focus:ring-[var(--md-selection)] placeholder:text-sm bg-[var(--md-surface-hover)] text-[var(--md-text)]"
       />
       <button
         @click="linksActive = !linksActive"
         class="relative group flex items-center gap-1.5 px-2 py-1 text-xs font-medium rounded-full transition-all"
         :class="
           linksActive
-            ? 'bg-green-50 text-green-600'
-            : 'bg-gray-100/75 text-gray-500'
+            ? 'bg-[var(--md-selection-bg)] text-[var(--md-selection-fg)]'
+            : 'bg-[var(--md-surface-muted)]/75 text-[var(--md-text-subtle)]'
         "
       >
         <Icon :name="linksActive ? 'link' : 'lock'" style="font-size: 10px" />
@@ -438,11 +438,11 @@ onUnmounted(() => {
 
         <!-- Tooltip below -->
         <div
-          class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-gray-800 text-white text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
         >
           {{ linksActive ? "Lock links" : "Enable links" }}
           <div
-            class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-gray-800 rotate-45"
+            class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[var(--md-tooltip-bg)] rotate-45"
           ></div>
         </div>
       </button>
@@ -459,7 +459,7 @@ onUnmounted(() => {
         :aria-pressed="previewOverlayOpen"
         :aria-label="previewOverlayOpen ? 'Close preview' : 'Open preview'"
         @click="togglePreviewOverlay"
-        class="relative group flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 p-1 transition-colors"
+        class="relative group flex items-center justify-center rounded-md text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-muted)] p-1 transition-colors"
         :class="
           previewOverlayOpen
             ? 'bg-violet-50 text-[#42389E] hover:bg-violet-100 hover:text-[#42389E]'
@@ -487,11 +487,11 @@ onUnmounted(() => {
 
         <!-- Tooltip below — same shape/timing as the Links/Locked button -->
         <div
-          class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-gray-800 text-white text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
         >
           {{ previewOverlayOpen ? "Close preview" : "Preview" }}
           <div
-            class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-gray-800 rotate-45"
+            class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[var(--md-tooltip-bg)] rotate-45"
           ></div>
         </div>
       </button>
@@ -510,14 +510,14 @@ onUnmounted(() => {
     <div class="w-[28%] flex flex-row items-center justify-between">
       <HealthIndicator />
 
-      <div class="flex bg-gray-50 rounded-lg p-1">
+      <div class="flex bg-[var(--md-surface-hover)] rounded-lg p-1">
         <button
           @click="previewMode = 'desktop'"
           :class="[
             'px-3 py-1 text-sm rounded transition-colors',
             previewMode === 'desktop'
-              ? 'bg-white shadow text-gray-900'
-              : 'text-gray-600',
+              ? 'bg-[var(--md-surface)] shadow text-[var(--md-text)]'
+              : 'text-[var(--md-text-muted)]',
           ]"
         >
           <svg
@@ -540,8 +540,8 @@ onUnmounted(() => {
           :class="[
             'px-3 py-1 text-sm rounded transition-colors',
             previewMode === 'mobile'
-              ? 'bg-white shadow text-gray-900'
-              : 'text-gray-600',
+              ? 'bg-[var(--md-surface)] shadow text-[var(--md-text)]'
+              : 'text-[var(--md-text-muted)]',
           ]"
         >
           <svg
@@ -569,8 +569,8 @@ onUnmounted(() => {
           :class="[
             'p-1.25 rounded transition-colors',
             canUndo
-              ? 'hover:bg-gray-200 text-gray-700'
-              : 'text-gray-300 cursor-not-allowed',
+              ? 'hover:bg-[var(--md-surface-muted)] text-[var(--md-text-muted)]'
+              : 'text-[var(--md-text-subtle)] cursor-not-allowed',
           ]"
         >
           <svg
@@ -593,8 +593,8 @@ onUnmounted(() => {
           :class="[
             'p-1.25 rounded transition-colors',
             canRedo
-              ? 'hover:bg-gray-200 text-gray-700'
-              : 'text-gray-300 cursor-not-allowed',
+              ? 'hover:bg-[var(--md-surface-muted)] text-[var(--md-text-muted)]'
+              : 'text-[var(--md-text-subtle)] cursor-not-allowed',
           ]"
         >
           <svg
@@ -625,7 +625,7 @@ onUnmounted(() => {
           :aria-pressed="props.savedTemplatesOpen"
           aria-label="Saved templates"
           @click="emit('toggle-saved-templates')"
-          class="relative group flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 p-1 transition-colors"
+          class="relative group flex items-center justify-center rounded-md text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-muted)] p-1 transition-colors"
           :class="
             props.savedTemplatesOpen
               ? 'bg-violet-50 text-[#42389E] hover:bg-violet-100 hover:text-[#42389E]'
@@ -634,11 +634,11 @@ onUnmounted(() => {
         >
           <Icon name="th-large" style="font-size: 14px" />
           <div
-            class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-gray-800 text-white text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
+            class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
           >
             Saved templates
             <div
-              class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-gray-800 rotate-45"
+              class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[var(--md-tooltip-bg)] rotate-45"
             ></div>
           </div>
         </button>
@@ -649,7 +649,7 @@ onUnmounted(() => {
           type="button"
           aria-label="New template"
           @click="emit('new-template')"
-          class="relative group flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 p-1 transition-colors"
+          class="relative group flex items-center justify-center rounded-md text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-muted)] p-1 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -668,11 +668,11 @@ onUnmounted(() => {
             <path d="M8 16H3v5" />
           </svg>
           <div
-            class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-gray-800 text-white text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
+            class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
           >
             New template
             <div
-              class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-gray-800 rotate-45"
+              class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[var(--md-tooltip-bg)] rotate-45"
             ></div>
           </div>
         </button>
@@ -688,12 +688,12 @@ onUnmounted(() => {
         <div
           v-if="saveStatus === 'saving'"
           key="saving"
-          class="flex items-center gap-1.5 text-[11px] font-medium text-gray-400 select-none"
+          class="flex items-center gap-1.5 text-[11px] font-medium text-[var(--md-text-subtle)] select-none"
           aria-live="polite"
           aria-label="Saving draft…"
         >
           <svg
-            class="w-3 h-3 animate-spin text-gray-400"
+            class="w-3 h-3 animate-spin text-[var(--md-text-subtle)]"
             fill="none"
             viewBox="0 0 24 24"
           >
@@ -718,7 +718,7 @@ onUnmounted(() => {
         <div
           v-else-if="saveStatus === 'saved'"
           key="saved"
-          class="flex items-center gap-1.5 text-[11px] font-medium text-green-500 select-none"
+          class="flex items-center gap-1.5 text-[11px] font-medium text-[var(--md-selection-fg)] select-none"
           aria-live="polite"
           aria-label="Draft saved"
         >
@@ -746,7 +746,7 @@ onUnmounted(() => {
         <div
           v-else-if="saveStatus === 'error'"
           key="error"
-          class="flex items-center gap-1.5 text-[11px] font-medium text-red-400 select-none"
+          class="flex items-center gap-1.5 text-[11px] font-medium text-[var(--md-danger)] select-none"
           aria-live="assertive"
           aria-label="Auto-save failed"
         >
@@ -770,7 +770,7 @@ onUnmounted(() => {
         <div
           v-else-if="saveStatus === 'idle' && lastSavedDisplay"
           key="idle"
-          class="flex items-center gap-1 text-[11px] text-gray-300 select-none"
+          class="flex items-center gap-1 text-[11px] text-[var(--md-text-subtle)] select-none"
           :aria-label="`Last saved ${lastSavedDisplay}`"
         >
           <svg
@@ -811,7 +811,7 @@ onUnmounted(() => {
       <button
         v-if="props.onSendTestEmail"
         @click="sendEmailVisible = true"
-        class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors"
+        class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[var(--md-text-muted)] hover:text-[var(--md-text)] rounded-md bg-[var(--md-surface-hover)] hover:bg-[var(--md-surface-muted)] transition-colors"
       >
         <svg
           class="w-3.5 h-3.5"
@@ -887,7 +887,7 @@ onUnmounted(() => {
         <button
           @click="isDropdownOpen = !isDropdownOpen"
           :aria-expanded="isDropdownOpen"
-          class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md bg-gray-50 transition-colors"
+          class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[var(--md-text-muted)] hover:text-[var(--md-text)] rounded-md bg-[var(--md-surface-hover)] transition-colors"
         >
           Export
           <svg
@@ -913,7 +913,7 @@ onUnmounted(() => {
           <div>
             <!-- Import -->
             <label
-              class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 cursor-pointer transition-colors text-sm text-gray-500"
+              class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] cursor-pointer transition-colors text-sm text-[var(--md-text-subtle)]"
             >
               <Icon name="download" class="shrink-0" style="font-size: 13px" />
               Import JSON
@@ -925,17 +925,17 @@ onUnmounted(() => {
               />
             </label>
 
-            <div class="border-t border-gray-100 mx-3 my-1.5"></div>
+            <div class="border-t border-[var(--md-border)] mx-3 my-1.5"></div>
           </div>
 
           <!-- Minify toggle -->
           <div class="flex items-center justify-between px-3.5 py-2">
             <div class="flex items-center gap-2">
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-gray-100 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-[var(--md-surface-muted)] shrink-0"
               >
                 <svg
-                  class="w-3.5 h-3.5 text-gray-500"
+                  class="w-3.5 h-3.5 text-[var(--md-text-subtle)]"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -949,10 +949,10 @@ onUnmounted(() => {
                 </svg>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >Minify output</span
                 >
-                <span class="text-[11px] text-gray-400"
+                <span class="text-[11px] text-[var(--md-text-subtle)]"
                   >Strip whitespace before download</span
                 >
               </div>
@@ -964,29 +964,29 @@ onUnmounted(() => {
               @click="toggleMinify"
               :class="[
                 'relative inline-flex h-4.5 w-8 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200',
-                minifyEnabled ? 'bg-[#42389E]' : 'bg-gray-200',
+                minifyEnabled ? 'bg-[var(--md-selection)]' : 'bg-[var(--md-border)]',
               ]"
             >
               <span
                 :class="[
-                  'pointer-events-none inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform duration-200',
+                  'pointer-events-none inline-block h-3.5 w-3.5 rounded-full bg-[var(--md-surface)] shadow transition-transform duration-200',
                   minifyEnabled ? 'translate-x-3.5' : 'translate-x-0',
                 ]"
               />
             </button>
           </div>
 
-          <div class="border-t border-gray-100 mx-3 my-1.5"></div>
+          <div class="border-t border-[var(--md-border)] mx-3 my-1.5"></div>
 
           <!-- Snapshot / Master tabs -->
-          <div class="flex mx-3 mb-2 bg-gray-50 rounded-lg p-0.5 gap-0.5">
+          <div class="flex mx-3 mb-2 bg-[var(--md-surface-hover)] rounded-lg p-0.5 gap-0.5">
             <button
               @click="exportTab = 'snap'"
               :class="[
                 'flex-1 py-1 text-[11px] font-medium rounded-md transition-all',
                 exportTab === 'snap'
-                  ? 'bg-white text-gray-800 shadow-sm'
-                  : 'text-gray-400',
+                  ? 'bg-[var(--md-surface)] text-[var(--md-text)] shadow-sm'
+                  : 'text-[var(--md-text-subtle)]',
               ]"
             >
               Snapshot · prune
@@ -996,8 +996,8 @@ onUnmounted(() => {
               :class="[
                 'flex-1 py-1 text-[11px] font-medium rounded-md transition-all',
                 exportTab === 'master'
-                  ? 'bg-white text-gray-800 shadow-sm'
-                  : 'text-gray-400',
+                  ? 'bg-[var(--md-surface)] text-[var(--md-text)] shadow-sm'
+                  : 'text-[var(--md-text-subtle)]',
               ]"
             >
               Master · wrap
@@ -1010,7 +1010,7 @@ onUnmounted(() => {
             <button
               v-if="exportFormats.includes('html')"
               @click="exportHTMLSnapshotFn"
-              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 transition-colors text-left"
+              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] transition-colors text-left"
             >
               <span
                 class="flex items-center justify-center w-7 h-7 rounded-md bg-amber-50 shrink-0"
@@ -1027,10 +1027,10 @@ onUnmounted(() => {
                 </svg>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >HTML</span
                 >
-                <span class="text-[11px] text-gray-400 line-clamp-3"
+                <span class="text-[11px] text-[var(--md-text-subtle)] line-clamp-3"
                   >Strips rows, comps that don't match preview context</span
                 >
               </div>
@@ -1039,7 +1039,7 @@ onUnmounted(() => {
             <button
               v-if="exportFormats.includes('react')"
               @click="exportReactSnapshotFn"
-              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 transition-colors text-left"
+              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] transition-colors text-left"
             >
               <span
                 class="flex items-center justify-center w-7 h-7 rounded-md bg-sky-50 shrink-0"
@@ -1060,13 +1060,13 @@ onUnmounted(() => {
                 </div>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >React Email
-                  <span class="font-normal text-gray-400 text-[11px]"
+                  <span class="font-normal text-[var(--md-text-subtle)] text-[11px]"
                     >.tsx</span
                   ></span
                 >
-                <span class="text-[11px] text-gray-400 line-clamp-3"
+                <span class="text-[11px] text-[var(--md-text-subtle)] line-clamp-3"
                   >Strips rows, comps that don't match preview context</span
                 >
               </div>
@@ -1075,7 +1075,7 @@ onUnmounted(() => {
             <button
               v-if="exportFormats.includes('mjml')"
               @click="exportMJMLSnapshotFn"
-              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 transition-colors text-left"
+              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] transition-colors text-left"
             >
               <span
                 class="flex items-center justify-center w-7 h-7 rounded-md bg-red-50 shrink-0"
@@ -1124,10 +1124,10 @@ onUnmounted(() => {
                 </div>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >MJML</span
                 >
-                <span class="text-[11px] text-gray-400 line-clamp-3"
+                <span class="text-[11px] text-[var(--md-text-subtle)] line-clamp-3"
                   >Strips rows, comps that don't match preview context</span
                 >
               </div>
@@ -1140,7 +1140,7 @@ onUnmounted(() => {
             <button
               v-if="exportFormats.includes('html')"
               @click="exportHTMLMasterFn"
-              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 transition-colors text-left"
+              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] transition-colors text-left"
             >
               <span
                 class="flex items-center justify-center w-7 h-7 rounded-md bg-amber-50 shrink-0"
@@ -1157,10 +1157,10 @@ onUnmounted(() => {
                 </svg>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >HTML</span
                 >
-                <span class="text-[11px] text-gray-400 line-clamp-3"
+                <span class="text-[11px] text-[var(--md-text-subtle)] line-clamp-3"
                   >All rows, comps kept, ESP conditional tags added</span
                 >
               </div>
@@ -1169,7 +1169,7 @@ onUnmounted(() => {
             <button
               v-if="exportFormats.includes('react')"
               @click="exportReactMasterFn"
-              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 transition-colors text-left"
+              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] transition-colors text-left"
             >
               <span
                 class="flex items-center justify-center w-7 h-7 rounded-md bg-sky-50 shrink-0"
@@ -1190,13 +1190,13 @@ onUnmounted(() => {
                 </div>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >React Email
-                  <span class="font-normal text-gray-400 text-[11px]"
+                  <span class="font-normal text-[var(--md-text-subtle)] text-[11px]"
                     >.tsx</span
                   ></span
                 >
-                <span class="text-[11px] text-gray-400 line-clamp-3"
+                <span class="text-[11px] text-[var(--md-text-subtle)] line-clamp-3"
                   >JSX conditionals via props, all rows, comps kept</span
                 >
               </div>
@@ -1206,7 +1206,7 @@ onUnmounted(() => {
             <button
               v-if="exportFormats.includes('mjml')"
               @click="exportMJMLMasterFn"
-              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 transition-colors text-left"
+              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] transition-colors text-left"
             >
               <span
                 class="flex items-center justify-center w-7 h-7 rounded-md bg-red-50 shrink-0"
@@ -1255,24 +1255,24 @@ onUnmounted(() => {
                 </div>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >MJML</span
                 >
-                <span class="text-[11px] text-gray-400 line-clamp-3"
+                <span class="text-[11px] text-[var(--md-text-subtle)] line-clamp-3"
                   >All rows, comps kept, ESP conditional tags added</span
                 >
               </div>
             </button>
           </template>
 
-          <div class="border-t border-gray-100 mx-3 my-1.5"></div>
+          <div class="border-t border-[var(--md-border)] mx-3 my-1.5"></div>
 
           <div>
             <!-- JSON export -->
             <button
               v-if="exportFormats.includes('json')"
               @click="exportJSONFn"
-              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-gray-50 transition-colors text-left"
+              class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-surface-hover)] transition-colors text-left"
             >
               <span
                 class="flex items-center justify-center w-7 h-7 rounded-md bg-violet-50 shrink-0"
@@ -1291,29 +1291,29 @@ onUnmounted(() => {
                 </svg>
               </span>
               <div>
-                <span class="block text-sm font-medium text-gray-800"
+                <span class="block text-sm font-medium text-[var(--md-text)]"
                   >Export JSON</span
                 >
-                <span class="text-[11px] text-gray-400 line-clamp-3"
+                <span class="text-[11px] text-[var(--md-text-subtle)] line-clamp-3"
                   >Raw template, merge tags intact</span
                 >
               </div>
             </button>
 
-            <div class="border-t border-gray-100 mx-3 my-1.5"></div>
+            <div class="border-t border-[var(--md-border)] mx-3 my-1.5"></div>
           </div>
 
           <!-- Clear -->
           <button
             @click="clearTemplateFn"
-            class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-red-50 transition-colors text-left"
+            class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-[var(--md-danger-bg)] transition-colors text-left"
           >
             <span
-              class="flex items-center justify-center w-7 h-7 rounded-md bg-red-50 shrink-0"
+              class="flex items-center justify-center w-7 h-7 rounded-md bg-[var(--md-danger-bg)] shrink-0"
             >
-              <Icon name="trash" class="text-red-400" style="font-size: 13px" />
+              <Icon name="trash" class="text-[var(--md-danger)]" style="font-size: 13px" />
             </span>
-            <span class="text-sm font-medium text-red-500">Clear template</span>
+            <span class="text-sm font-medium text-[var(--md-danger)]">Clear template</span>
           </button>
         </div>
       </div>

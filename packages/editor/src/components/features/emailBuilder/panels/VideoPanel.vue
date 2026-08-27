@@ -6,7 +6,7 @@
     <PropertySection v-if="editMode === 'desktop'" title="Content">
       <!-- Video URL -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1"
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1"
           >Video URL</label
         >
         <InputText
@@ -23,16 +23,16 @@
           :resolved="resolvedSrc"
           :raw="component.props.src"
         />
-        <p class="text-xs text-gray-500 mt-1">
+        <p class="text-xs text-[var(--md-text-subtle)] mt-1">
           Supports YouTube, Vimeo, or direct video links
         </p>
       </div>
 
       <!-- Fallback Link -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">
           Fallback Link
-          <span class="font-normal text-gray-400"
+          <span class="font-normal text-[var(--md-text-subtle)]"
             >(YouTube, Vimeo, or any URL)</span
           >
         </label>
@@ -54,9 +54,9 @@
 
       <!-- Cover Image -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">
           Cover Image URL
-          <span class="font-normal text-gray-400">(optional)</span>
+          <span class="font-normal text-[var(--md-text-subtle)]">(optional)</span>
         </label>
         <InputText
           ref="coverInputRef"
@@ -72,7 +72,7 @@
           :resolved="resolvedCoverImage"
           :raw="component.props.coverImage"
         />
-        <p class="text-xs text-gray-500 mt-1">
+        <p class="text-xs text-[var(--md-text-subtle)] mt-1">
           Email clients cannot play video — a cover image with a play button
           will be shown as a fallback.
         </p>
@@ -80,7 +80,7 @@
 
       <!-- Alt Text -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1"
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1"
           >Alt Text</label
         >
         <InputText
@@ -149,13 +149,13 @@
     <!-- Border -->
     <PropertySection title="Border">
       <div class="flex items-center justify-between mb-1">
-        <span class="text-xs font-medium text-gray-600 italic"
+        <span class="text-xs font-medium text-[var(--md-text-muted)] italic"
           >Mobile override</span
         >
         <button
           v-if="isBorderOverridden()"
           @click="resetBorder"
-          class="text-xs text-gray-500 hover:text-gray-700"
+          class="text-xs text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)]"
         >
           Reset All
         </button>
@@ -175,14 +175,14 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label
-              class="flex items-center gap-1.5 text-xs font-medium text-gray-600"
+              class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]"
             >
               Color <OverrideBadge :show="isBorderPropOverridden('color')" />
             </label>
             <button
               v-if="isBorderPropOverridden('color')"
               @click="resetBorderProp('color')"
-              class="text-xs text-green-500 hover:text-green-700"
+              class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
             >
               Reset
             </button>
@@ -197,14 +197,14 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label
-              class="flex items-center gap-1.5 text-xs font-medium text-gray-600"
+              class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]"
             >
               Style <OverrideBadge :show="isBorderPropOverridden('style')" />
             </label>
             <button
               v-if="isBorderPropOverridden('style')"
               @click="resetBorderProp('style')"
-              class="text-xs text-green-500 hover:text-green-700"
+              class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
             >
               Reset
             </button>
@@ -218,7 +218,7 @@
             placeholder="Select style"
             class="w-full text-sm capitalize"
             :class="{
-              'ring-1 ring-green-500 rounded': isBorderPropOverridden('style'),
+              'ring-1 ring-[var(--md-selection)] rounded': isBorderPropOverridden('style'),
             }"
           />
         </div>

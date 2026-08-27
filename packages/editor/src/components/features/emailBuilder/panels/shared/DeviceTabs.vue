@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center bg-gray-100/80 border border-gray-200/60 rounded-xl p-0.5 gap-0.5 -translate-y-0.5"
+    class="flex items-center bg-[var(--md-surface-muted)]/80 border border-[var(--md-border)]/60 rounded-xl p-0.5 gap-0.5 -translate-y-0.5"
     role="group"
     aria-label="Preview mode"
   >
@@ -55,6 +55,6 @@ const setMode = (mode) => {
 
 const buttonClass = (mode) =>
   props.modelValue === mode
-    ? 'bg-white text-gray-800 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_0_0_0.5px_rgba(0,0,0,0.08)]'
-    : 'text-gray-500 hover:text-gray-700'
+    ? 'bg-[var(--md-surface)] text-[var(--md-text)] shadow-[0_1px_3px_rgba(0,0,0,0.08),0_0_0_0.5px_rgba(0,0,0,0.08)]'
+    : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)]'
 </script>

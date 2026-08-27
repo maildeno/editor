@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center justify-between mb-1.5">
       <label
-        class="flex items-center gap-1.5 text-xs font-medium text-gray-600"
+        class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]"
       >
         {{ label }}
         <OverrideBadge :show="isOverridden" />
@@ -10,7 +10,7 @@
       <button
         v-if="isOverridden"
         @click="$emit('reset')"
-        class="text-xs text-green-500 hover:text-green-700"
+        class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
       >
         ↩ Reset
       </button>

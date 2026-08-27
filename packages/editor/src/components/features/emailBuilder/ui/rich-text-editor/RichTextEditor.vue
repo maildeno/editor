@@ -35,7 +35,7 @@
       <div
         v-if="editor && isFocused && !mergeTagPreviewActive"
         ref="toolbarRef"
-        class="fixed -translate-x-1/2 bg-white/95 backdrop-blur-md ring-1 ring-gray-200/80 shadow-[0_8px_24px_-4px_rgba(16,24,40,0.10),0_4px_8px_-2px_rgba(16,24,40,0.06)] rounded-xl px-1.5 py-1 flex gap-0.5 justify-center items-center z-50 w-max"
+        class="fixed -translate-x-1/2 bg-[var(--md-toolbar-bg)]/95 backdrop-blur-md ring-1 ring-[var(--md-toolbar-border)] shadow-[0_8px_24px_-4px_rgba(16,24,40,0.10),0_4px_8px_-2px_rgba(16,24,40,0.06)] rounded-xl px-1.5 py-1 flex gap-0.5 justify-center items-center z-50 w-max"
         :style="{ top: toolbarPos.top + 'px', left: toolbarPos.left + 'px' }"
         @focusout="handleToolbarFocusOut"
         @mousedown.prevent
@@ -61,7 +61,7 @@
             </svg>
           </button>
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900 tracking-normal"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)] tracking-normal"
           >
             Bold (Ctrl+B)
           </div>
@@ -89,7 +89,7 @@
             </svg>
           </button>
           <div
-            class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:bottom-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-b-gray-900 tracking-normal"
+            class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:bottom-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-b-[var(--md-tooltip-bg)] tracking-normal"
           >
             Italic (Ctrl+I)
           </div>
@@ -126,13 +126,13 @@
             </svg>
           </button>
           <div
-            class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:bottom-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-b-gray-900 tracking-normal"
+            class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:bottom-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-b-[var(--md-tooltip-bg)] tracking-normal"
           >
             Underline (Ctrl+U)
           </div>
         </div>
 
-        <div class="w-px h-5 bg-gray-200 mx-1.5" />
+        <div class="w-px h-5 bg-[var(--md-toolbar-border)] mx-1.5" />
 
         <!-- ── Text Color ────────────────────────────────────────────── -->
         <div class="relative flex items-center">
@@ -170,7 +170,7 @@
           />
         </div>
 
-        <div class="w-px h-5 bg-gray-200 mx-1.5" />
+        <div class="w-px h-5 bg-[var(--md-toolbar-border)] mx-1.5" />
 
         <!-- ── Font Family Picker ────────────────────────────────────── -->
         <div class="flex items-center toolbar-font-select" @mousedown.stop>
@@ -188,7 +188,7 @@
           >
             <template #value="{ value }">
               <span
-                class="text-xs text-gray-700 truncate max-w-[88px] block"
+                class="text-xs text-[var(--md-toolbar-text)] truncate max-w-[88px] block"
                 :style="value ? { fontFamily: value } : {}"
               >
                 {{ value ?? "Select font" }}
@@ -196,7 +196,7 @@
             </template>
             <template #option="{ option }">
               <span
-                class="text-xs text-gray-700"
+                class="text-xs text-[var(--md-toolbar-text)]"
                 :style="{ fontFamily: option }"
               >
                 {{ option }}
@@ -207,7 +207,7 @@
 
         <div
           v-if="props.component.type === 'list'"
-          class="w-px h-5 bg-gray-200 mx-1.5"
+          class="w-px h-5 bg-[var(--md-toolbar-border)] mx-1.5"
         />
 
         <!-- ── Bullet List ───────────────────────────────────────────── -->
@@ -238,7 +238,7 @@
             </svg>
           </button>
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900 tracking-normal"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)] tracking-normal"
           >
             Bullet list
           </div>
@@ -272,7 +272,7 @@
             </svg>
           </button>
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900 tracking-normal"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)] tracking-normal"
           >
             Numbered list
           </div>
@@ -283,7 +283,7 @@
             props.component.type === 'list' &&
             hasListContent(props.component.props.content)
           "
-          class="w-px h-5 bg-gray-200 mx-1.5"
+          class="w-px h-5 bg-[var(--md-toolbar-border)] mx-1.5"
         />
 
         <!-- ── Add/Edit Link ─────────────────────────────────────────── -->
@@ -309,7 +309,7 @@
             </div>
           </button>
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900 tracking-normal"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)] tracking-normal"
           >
             {{ editor.isActive("link") ? "Edit link" : "Add link" }}
           </div>
@@ -319,7 +319,7 @@
         <div v-if="editor.isActive('link')" class="relative group/btn">
           <button
             @click="editor.chain().focus().unsetLink().run()"
-            class="w-8 h-8 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors flex items-center justify-center"
+            class="w-8 h-8 rounded-xl text-[var(--md-danger)] hover:opacity-80 hover:bg-[var(--md-danger-bg)] transition-colors flex items-center justify-center"
           >
             <div class="size-4">
               <svg
@@ -338,7 +338,7 @@
             </div>
           </button>
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900 tracking-normal"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)] tracking-normal"
           >
             Remove link
           </div>
@@ -365,7 +365,7 @@
             </svg>
           </button>
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900 tracking-normal"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)] tracking-normal"
           >
             Toggle underline
           </div>
@@ -1307,10 +1307,10 @@ const handleLinkSubmit = ({ url }: { url: string }) => {
 //           competing with the rest of the toolbar.
 const buttonClass = (active: boolean) =>
   [
-    "w-8 h-8 flex items-center justify-center rounded-lg transition-colors text-gray-700",
+    "w-8 h-8 flex items-center justify-center rounded-lg transition-colors text-[var(--md-toolbar-text)]",
     active
-      ? "bg-purple-50 text-purple-600 ring-1 ring-purple-200"
-      : "hover:bg-gray-100 hover:text-gray-900",
+      ? "bg-[var(--md-row-selection-bg)] text-[var(--md-row-selection-fg)] ring-1 ring-[var(--md-row-selection)]/40"
+      : "hover:bg-[var(--md-surface-hover)] hover:text-[var(--md-text)]",
   ].join(" ");
 
 onBeforeUnmount(() => {
@@ -1371,7 +1371,7 @@ onBeforeUnmount(() => {
   min-width: 110px;
   max-width: 130px;
   border-radius: 6px;
-  border-color: #d1d5db; /* gray-300 — matches other toolbar button borders */
+  border-color: var(--md-toolbar-border); /* matches other toolbar button borders */
   padding: 0 6px;
   font-size: 0.75rem;
   display: flex;

@@ -11,11 +11,11 @@
     :class="[
       'canvas-column last:border-r-0 min-h-auto cursor-pointer relative outline outline-offset-0 rounded-sm',
       selectedColumn?.columnId === column.id
-        ? 'outline-purple-600/50'
+        ? 'outline-[var(--md-row-selection)]/50'
         : canvasHoveredId === column.id && !isAnyChildHovered
-          ? 'outline-gray-200/80'
+          ? 'outline-[var(--md-border)]/80'
           : isColumnLayerHovered
-            ? 'outline-purple-800 outline-dashed'
+            ? 'outline-[var(--md-row-selection-fg)] outline-dashed'
             : 'outline-transparent',
       hasSelectedChild ? 'has-selected-child' : '',
     ]"
@@ -26,7 +26,7 @@
     -->
     <div
       v-if="children.length === 0"
-      class="h-full flex items-center justify-center text-gray-500 text-xs text-center pb-3"
+      class="h-full flex items-center justify-center text-[var(--md-text-subtle)] text-xs text-center pb-3"
       style="min-height: 120px"
     >
       <div :class="{ 'opacity-0': isOver }">
@@ -74,11 +74,11 @@
     <Transition name="fade">
       <div
         v-if="isOver && (children.length === 0 || isLayoutDragForColumn)"
-        class="absolute inset-0 flex items-center justify-center pointer-events-none bg-green-50 bg-opacity-70 border-2 border-dashed border-green-400 rounded z-10"
+        class="absolute inset-0 flex items-center justify-center pointer-events-none bg-[var(--md-selection-bg)] bg-opacity-70 border-2 border-dashed border-[var(--md-selection)] rounded z-10"
       >
-        <div class="bg-white px-3 py-1.5 rounded-lg shadow-md">
+        <div class="bg-[var(--md-surface)] px-3 py-1.5 rounded-lg shadow-md">
           <span
-            class="text-green-600 text-xs font-medium flex items-center gap-1.5"
+            class="text-[var(--md-selection-fg)] text-xs font-medium flex items-center gap-1.5"
           >
             <svg
               class="w-4 h-4"

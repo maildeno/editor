@@ -1,11 +1,11 @@
 <template>
-  <div class="border border-gray-200/80 rounded-lg p-3 bg-white space-y-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+  <div class="border border-[var(--md-border)]/80 rounded-lg p-3 bg-[var(--md-surface)] space-y-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
     <!-- Header -->
     <div class="flex items-center justify-between">
-      <label class="text-[10px] font-medium uppercase tracking-[.06em] text-gray-600">
+      <label class="text-[10px] font-medium uppercase tracking-[.06em] text-[var(--md-text-muted)]">
         Personalization
       </label>
-      <span class="text-[10px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full tabular-nums">
+      <span class="text-[10px] text-[var(--md-text-subtle)] bg-[var(--md-surface-muted)] px-2 py-0.5 rounded-full tabular-nums">
         {{ defaultTags.length }} available
       </span>
     </div>
@@ -15,7 +15,7 @@
       v-if="resolvedFields.length > 1"
       class="flex items-center gap-1.5 flex-wrap"
     >
-      <span class="text-[10px] text-gray-400 shrink-0">Insert into:</span>
+      <span class="text-[10px] text-[var(--md-text-subtle)] shrink-0">Insert into:</span>
       <button
         v-for="field in resolvedFields"
         :key="field"
@@ -23,8 +23,8 @@
         class="text-[10px] px-2 py-0.5 rounded-full border transition-all focus:outline-none"
         :class="
           lastFocusedField === field
-            ? 'bg-gray-900 text-white border-gray-900'
-            : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
+            ? 'bg-[var(--md-text)] text-[var(--md-surface)] border-[var(--md-text)]'
+            : 'bg-[var(--md-surface)] text-[var(--md-text-subtle)] border-[var(--md-border)] hover:border-[var(--md-border-strong)]'
         "
       >
         {{ label(field) }}
@@ -40,12 +40,12 @@
       >
         <button
           @click="prefill(tag)"
-          class="px-2 py-1 text-xs bg-gray-50 text-gray-600 border border-gray-200 rounded-md hover:border-green-200 hover:bg-green-50 hover:text-green-700 transition-all focus:outline-none"
+          class="px-2 py-1 text-xs bg-[var(--md-surface-hover)] text-[var(--md-text-muted)] border border-[var(--md-border)] rounded-md hover:border-[var(--md-selection)] hover:bg-[var(--md-selection-bg)] hover:text-[var(--md-selection-fg)] transition-all focus:outline-none"
         >
           &#123;&#123; {{ tag }} &#125;&#125;
         </button>
         <!-- Tooltip -->
-        <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/pill:opacity-100 translate-y-1 group-hover/pill:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900">
+        <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/pill:opacity-100 translate-y-1 group-hover/pill:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]">
           Insert &#123;&#123; {{ tag }} &#125;&#125;
         </div>
       </div>
@@ -55,7 +55,7 @@
     <div class="space-y-1.5">
       <div class="flex items-center gap-1.5">
         <div class="relative flex-1">
-          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none select-none">
+          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--md-text-subtle)] text-xs pointer-events-none select-none">
             &#123;&#123;
           </span>
           <input
@@ -63,14 +63,14 @@
             v-model="customTag"
             type="text"
             placeholder="tag_name"
-            class="w-full h-[32px] pl-5 pr-2 text-[13px] border border-gray-200/80 rounded-md bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] focus:outline-none transition-colors"
+            class="w-full h-[32px] pl-5 pr-2 text-[13px] text-[var(--md-text)] border border-[var(--md-border)]/80 rounded-md bg-[var(--md-surface)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] focus:outline-none transition-colors"
             @keydown.enter.prevent="insertCustom"
           />
         </div>
         <button
           @click="insertCustom"
           :disabled="!customTag.trim()"
-          class="h-[32px] px-3 text-[13px] bg-gray-900 text-white rounded-md hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors whitespace-nowrap focus:outline-none"
+          class="md-btn-primary h-[32px] px-3 text-[13px] rounded-md disabled:opacity-30 disabled:cursor-not-allowed transition-colors whitespace-nowrap focus:outline-none"
         >
           Insert
         </button>
@@ -78,24 +78,24 @@
 
       <!-- Fallback default — only shown when a tag name is present -->
       <div v-if="customTag.trim()" class="relative mt-2">
-        <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-300 pointer-events-none select-none">
+        <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-[var(--md-text-subtle)] pointer-events-none select-none">
           default
         </span>
         <input
           v-model="customDefault"
           type="text"
           placeholder="fallback value (optional)"
-          class="w-full h-7 pl-14 pr-2 text-xs border border-gray-200/80 rounded-md bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-green-600 placeholder-gray-300 focus:outline-none transition-colors"
+          class="w-full h-7 pl-14 pr-2 text-xs border border-[var(--md-border)]/80 rounded-md bg-[var(--md-surface)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-[var(--md-selection-fg)] placeholder-[var(--md-text-subtle)] focus:outline-none transition-colors"
           @keydown.enter.prevent="insertCustom"
         />
       </div>
 
-      <p v-if="customTag.trim()" class="text-[10px] text-gray-500 break-all">
+      <p v-if="customTag.trim()" class="text-[10px] text-[var(--md-text-subtle)] break-all">
         {{ tokenPreview }}
       </p>
     </div>
 
-    <p class="text-[10px] text-gray-500">
+    <p class="text-[10px] text-[var(--md-text-subtle)]">
       Use underscores: <span class="font-mono">reset_token</span>, <span class="font-mono">confirm_url</span>
     </p>
   </div>

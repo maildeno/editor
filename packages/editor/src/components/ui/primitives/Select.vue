@@ -532,7 +532,7 @@ function openDropdown() {
 }
 
 .md-sel__item[data-state="checked"][data-highlighted] {
-  background: #dcfce7;
+  background: color-mix(in srgb, var(--md-success) 20%, var(--md-success-bg));
 }
 
 /* =========================================================

@@ -87,13 +87,13 @@ const fontStyleOptions = [
 <style scoped>
 .panel {
   padding: 10px 12px;
-  background: #ffffff;
-  border: 0.5px solid rgba(229, 231, 235, 0.8);
+  background: var(--md-surface);
+  border: 0.5px solid color-mix(in srgb, var(--md-border) 80%, transparent);
   border-radius: 10px;
 }
 .separator {
   height: 0.5px;
-  background: rgba(229, 231, 235, 0.8);
+  background: color-mix(in srgb, var(--md-border) 80%, transparent);
   margin-left: -12px;
   margin-right: -12px;
 }

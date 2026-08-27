@@ -3,7 +3,7 @@
      <!-- Row Name -->
     <PropertySection title="Name">
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1.5">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5">
           Row Spacer Name
         </label>
         <InputText
@@ -14,7 +14,7 @@
           @blur="onNameBlur"
           @keydown.enter="onNameBlur"
         />
-        <p class="mt-1 text-[10px] text-gray-500 font-mono">
+        <p class="mt-1 text-[10px] text-[var(--md-text-subtle)] font-mono">
           {{ spacer.name || "—" }}
         </p>
       </div>
@@ -34,7 +34,7 @@
 
       <!-- Solid / Gradient picker (replaces plain PropertyColor) -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1.5"
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
           >Background Color</label
         >
         <PropertyGradientColor

@@ -1,25 +1,25 @@
 <template>
   <div>
     <div class="flex items-center justify-between mb-1">
-      <label class="flex items-center gap-1.5 text-sm font-medium text-gray-700">
+      <label class="flex items-center gap-1.5 text-sm font-medium text-[var(--md-text-muted)]">
         {{ label }}
         <OverrideBadge :show="isOverridden" />
       </label>
       <button
         v-if="isOverridden"
         @click="$emit('reset')"
-        class="text-xs text-green-500 hover:text-green-700"
+        class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
       >
         ↩ Reset
       </button>
     </div>
-    <div class="flex items-center border border-gray-300 hover:border-gray-400 rounded">
+    <div class="flex items-center border border-[var(--md-border-strong)] hover:border-[var(--md-text-subtle)] rounded">
       <button
         @click="$emit('update:modelValue', clamp(modelValue - step))"
         type="button"
-        class="px-3 py-1.5 hover:bg-gray-100"
+        class="px-3 py-1.5 hover:bg-[var(--md-surface-hover)]"
       >
-        <Icon name="minus" class="text-gray-400" style="font-size: 13px" />
+        <Icon name="minus" class="text-[var(--md-text-subtle)]" style="font-size: 13px" />
       </button>
       <input
         :value="modelValue"
@@ -28,14 +28,14 @@
         :step="step"
         :min="min"
         :max="max"
-        class="flex-1 w-6 px-2 py-1.5 text-sm border-gray-300 border-l border-r text-center focus:outline-none"
+        class="flex-1 w-6 px-2 py-1.5 text-sm text-[var(--md-text)] border-[var(--md-border-strong)] border-l border-r text-center focus:outline-none"
       />
       <button
         @click="$emit('update:modelValue', clamp(modelValue + step))"
         type="button"
-        class="px-3 py-1.5 hover:bg-green-50"
+        class="px-3 py-1.5 hover:bg-[var(--md-selection-bg)]"
       >
-        <Icon name="plus" class="text-gray-400" style="font-size: 13px" />
+        <Icon name="plus" class="text-[var(--md-text-subtle)]" style="font-size: 13px" />
       </button>
     </div>
   </div>

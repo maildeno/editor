@@ -19,7 +19,7 @@
  v-if="isOpen"
  class="w-65 sticky top-16 h-[calc(100vh-5.25rem)] z-80"
  >
- <div class="bg-white flex flex-col h-full border-r border-gray-200/80">
+ <div class="bg-[var(--md-surface)] flex flex-col h-full border-r border-[var(--md-border)]/80">
 
  <!-- ─────────────────────────────────────────────────────────────────
  Header
@@ -27,10 +27,10 @@
  <div class="flex items-center justify-between px-3.5 py-3 shrink-0">
  <div class="flex items-center gap-2">
  <!-- Bookmark icon -->
- <svg class="w-3.5 h-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+ <svg class="w-3.5 h-3.5 text-[var(--md-text-subtle)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
  </svg>
- <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-[.08em]">
+ <span class="text-[11px] font-semibold text-[var(--md-text-subtle)] uppercase tracking-[.08em]">
  Saved Rows
  </span>
  </div>
@@ -39,13 +39,13 @@
  <div class="relative group/close">
  <button
  @click="close"
- class="w-6 h-6 flex items-center justify-center rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors focus:outline-none"
+ class="w-6 h-6 flex items-center justify-center rounded-md text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] hover:bg-[var(--md-surface-muted)] transition-colors focus:outline-none"
  >
  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
  <path d="M18 6 6 18M6 6l12 12"/>
  </svg>
  </button>
- <div class="pointer-events-none absolute right-0 top-full mt-1.5 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/close:opacity-100 -translate-y-0.5 group-hover/close:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:bottom-full after:right-2 after:border-4 after:border-transparent after:border-b-gray-900">
+ <div class="pointer-events-none absolute right-0 top-full mt-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/close:opacity-100 -translate-y-0.5 group-hover/close:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:bottom-full after:right-2 after:border-4 after:border-transparent after:border-b-[var(--md-tooltip-bg)]">
  Close panel
  </div>
  </div>
@@ -55,7 +55,7 @@
  Header label (was a two-tab selector — system tab removed)
  ───────────────────────────────────────────────────────────────────── -->
  <div class="px-3.5 pb-2 shrink-0">
- <span class="text-[11px] font-medium text-gray-500">My Rows</span>
+ <span class="text-[11px] font-medium text-[var(--md-text-subtle)]">My Rows</span>
  </div>
 
 
@@ -71,12 +71,12 @@
  <div
  v-for="n in 3"
  :key="n"
- class="rounded-lg border border-gray-100 overflow-hidden"
+ class="rounded-lg border border-[var(--md-border)] overflow-hidden"
  >
- <div class="bg-gray-100 animate-pulse" :style="{ height: (80 + n * 20) + 'px' }" />
+ <div class="bg-[var(--md-surface-muted)] animate-pulse" :style="{ height: (80 + n * 20) + 'px' }" />
  <div class="flex items-center gap-2 px-2.5 py-2">
- <div class="h-2 flex-1 rounded-full bg-gray-100 animate-pulse" />
- <div class="h-2 w-7 rounded-full bg-gray-100 animate-pulse" />
+ <div class="h-2 flex-1 rounded-full bg-[var(--md-surface-muted)] animate-pulse" />
+ <div class="h-2 w-7 rounded-full bg-[var(--md-surface-muted)] animate-pulse" />
  </div>
  </div>
  </div>
@@ -86,16 +86,16 @@
  v-else-if="current.rows.value.length === 0"
  class="flex flex-col items-center gap-3 px-5 py-12 text-center"
  >
- <div class="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200/80 flex items-center justify-center">
- <svg class="w-5 h-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+ <div class="w-10 h-10 rounded-xl bg-[var(--md-surface-hover)] border border-[var(--md-border)]/80 flex items-center justify-center">
+ <svg class="w-5 h-5 text-[var(--md-text-subtle)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
  </svg>
  </div>
  <div class="space-y-1">
- <p class="text-xs font-medium text-gray-500">No saved rows yet</p>
- <p class="text-[11px] text-gray-400 leading-relaxed">
+ <p class="text-xs font-medium text-[var(--md-text-subtle)]">No saved rows yet</p>
+ <p class="text-[11px] text-[var(--md-text-subtle)] leading-relaxed">
  Select a row on the canvas,<br>then click
- <span class="text-[#42389E] font-medium">Save</span> in the toolbar.
+ <span class="text-[var(--md-row-selection-fg)] font-medium">Save</span> in the toolbar.
  </p>
  </div>
  </div>
@@ -107,11 +107,11 @@
  v-for="entry in filteredRows"
  :key="entry.id"
  draggable="true"
- class="group relative rounded-lg border bg-white overflow-hidden transition-all duration-150 select-none cursor-grab active:cursor-grabbing"
+ class="group relative rounded-lg border bg-[var(--md-surface)] overflow-hidden transition-all duration-150 select-none cursor-grab active:cursor-grabbing"
  :class="[
  draggingId === entry.id
- ? 'ring-2 ring-purple-400 ring-offset-1 opacity-60 border-purple-300'
- : 'border-gray-200/80 hover:border-gray-300 hover:shadow-[0_2px_8px_rgba(0,0,0,0.07)]'
+ ? 'ring-2 ring-[var(--md-row-selection)] ring-offset-1 opacity-60 border-[var(--md-row-selection)]'
+ : 'border-[var(--md-border)]/80 hover:border-[var(--md-border-strong)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.07)]'
  ]"
  @click="handleInsertRow(entry.id)"
  @dragstart="onDragStart($event, entry.id)"
@@ -120,7 +120,7 @@
  <!-- ── Preview area ── -->
  <div
  :ref="(el) => observeContainerEl(el as Element | null, entry.id)"
- class="relative overflow-hidden border-b border-gray-100"
+ class="relative overflow-hidden border-b border-[var(--md-border)]"
  :style="{
  height: previewHeight(entry.id) + 'px',
  backgroundColor: entry.row.backgroundColor || '#f9fafb',
@@ -139,12 +139,12 @@
  </div>
 
  <!-- Hover overlay: drag hint + insert hint -->
- <div class="absolute inset-0 bg-gray-900/0 group-hover:bg-gray-900/[0.03] transition-colors duration-150 flex items-center justify-center">
- <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full px-2.5 py-1 shadow-sm">
- <svg class="w-3 h-3 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+ <div class="absolute inset-0 bg-[var(--md-text)]/0 group-hover:bg-[var(--md-text)]/[0.03] transition-colors duration-150 flex items-center justify-center">
+ <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center gap-1.5 bg-[var(--md-surface)]/90 backdrop-blur-sm border border-[var(--md-border)] rounded-full px-2.5 py-1 shadow-sm">
+ <svg class="w-3 h-3 text-[var(--md-text-subtle)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
  <path d="M12 5v14M5 12l7-7 7 7"/>
  </svg>
- <span class="text-[10px] font-medium text-gray-600">Click to insert</span>
+ <span class="text-[10px] font-medium text-[var(--md-text-muted)]">Click to insert</span>
  </div>
  </div>
  </div>
@@ -156,7 +156,7 @@
  class="flex items-center gap-1.5 px-2 py-1.5"
  >
  <!-- Drag handle -->
- <div class="shrink-0 text-gray-300 group-hover:text-gray-400 transition-colors cursor-grab active:cursor-grabbing">
+ <div class="shrink-0 text-[var(--md-text-subtle)] group-hover:text-[var(--md-text-muted)] transition-colors cursor-grab active:cursor-grabbing">
  <svg class="w-3 h-3" viewBox="0 0 16 16" fill="currentColor">
  <circle cx="5" cy="4" r="1.2"/><circle cx="11" cy="4" r="1.2"/>
  <circle cx="5" cy="8" r="1.2"/><circle cx="11" cy="8" r="1.2"/>
@@ -169,7 +169,7 @@
  v-if="editingId !== entry.id"
  @dblclick.stop="startRename(entry)"
  @click.stop
- class="flex-1 text-[11px] font-medium text-gray-700 truncate cursor-text"
+ class="flex-1 text-[11px] font-medium text-[var(--md-text-muted)] truncate cursor-text"
  >{{ entry.name }}</span>
 
  <input
@@ -179,11 +179,11 @@
  @keyup.enter="commitRename(entry.id)"
  @keyup.escape="editingId = null"
  @click.stop
- class="flex-1 text-[11px] border border-purple-300 bg-purple-50/40 rounded-md px-1.5 py-0.5 focus:outline-none focus:border-purple-400"
+ class="flex-1 text-[11px] text-[var(--md-text)] border border-[var(--md-row-selection)] bg-[var(--md-row-selection-bg)]/40 rounded-md px-1.5 py-0.5 focus:outline-none focus:border-[var(--md-row-selection)]"
  ref="renameInputRef"
  />
 
- <span class="text-[10px] text-gray-400 shrink-0 tabular-nums">
+ <span class="text-[10px] text-[var(--md-text-subtle)] shrink-0 tabular-nums">
  {{ formatDate(entry.createdAt) }}
  </span>
 
@@ -191,14 +191,14 @@
  <div v-if="canDeleteEntry" class="relative group/del">
  <button
  @click.stop="handleDelete(entry.id)"
- class="hidden group-hover:flex items-center justify-center w-5 h-5 shrink-0 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors focus:outline-none"
+ class="hidden group-hover:flex items-center justify-center w-5 h-5 shrink-0 rounded-md text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] transition-colors focus:outline-none"
  >
  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
  <path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
  <path d="M10 11v6M14 11v6"/>
  </svg>
  </button>
- <div class="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/del:opacity-100 translate-y-0.5 group-hover/del:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:border-4 after:border-transparent after:border-t-gray-900">
+ <div class="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/del:opacity-100 translate-y-0.5 group-hover/del:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]">
  Remove
  </div>
  </div>
@@ -206,10 +206,10 @@
 
  <!-- ── Name + meta row (read-only) ── -->
  <div v-else class="flex items-center gap-1.5 px-2 py-1.5">
- <span class="flex-1 text-[11px] font-medium text-gray-700 truncate">
+ <span class="flex-1 text-[11px] font-medium text-[var(--md-text-muted)] truncate">
  {{ entry.name }}
  </span>
- <span class="text-[10px] text-gray-400 shrink-0 tabular-nums">
+ <span class="text-[10px] text-[var(--md-text-subtle)] shrink-0 tabular-nums">
  {{ formatDate(entry.createdAt) }}
  </span>
  </div>
@@ -405,9 +405,9 @@ function handleDelete(entryId: string) {
  acceptLabel: "Yes",
  rejectLabel: "Cancel",
  acceptClass:
- "!bg-red-600 !hover:bg-red-700 !border-red-600 !px-6 !py-2",
+ "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
  rejectClass:
- "!bg-gray-200 !hover:bg-gray-300 !text-gray-800 !border-gray-200 !px-6 !py-2",
+ "!bg-[var(--md-border)] !hover:bg-[var(--md-border-strong)] !text-[var(--md-text)] !border-[var(--md-border)] !px-6 !py-2",
  accept: () => current.value.remove(entryId),
  reject: () => {},
  });
@@ -516,10 +516,10 @@ function formatDate(iso: string): string {
  background: transparent;
 }
 .overflow-y-auto::-webkit-scrollbar-thumb {
- background: #6a7282;
+ background: var(--md-border-strong);
  border-radius: 9999px;
 }
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
- background: #364153;
+ background: var(--md-text-subtle);
 }
 </style>

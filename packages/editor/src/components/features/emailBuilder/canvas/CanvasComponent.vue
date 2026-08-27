@@ -21,12 +21,12 @@
     <DropZone
       :is-active="isDragOver && dropPosition === 'before'"
       position="before"
-      color="#00c950"
+      color="var(--md-selection)"
     />
     <DropZone
       :is-active="isDragOver && dropPosition === 'after'"
       position="after"
-      color="#00c950"
+      color="var(--md-selection)"
     />
 
     <!-- Drag Handle moved into the floating action bar below.
@@ -40,7 +40,7 @@
       :style="{ top: badgePos.top + 'px', left: badgePos.left + 'px' }"
     >
       <div
-        class="flex items-center gap-1 bg-linear-to-br from-green-400 to-green-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-lg cursor-default select-none ring-2 ring-white"
+        class="flex items-center gap-1 bg-linear-to-br from-[var(--md-selection)] to-[var(--md-selection-fg)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-lg cursor-default select-none ring-2 ring-[var(--md-surface)]"
       >
         <svg
           class="w-2 h-2 shrink-0"
@@ -107,7 +107,7 @@
         :style="{ top: toolbarPos.top + 'px', left: toolbarPos.left + 'px' }"
       >
         <div
-          class="flex flex-row items-center bg-white/95 backdrop-blur-sm ring-1 ring-green-400/70 rounded-xl px-1.5 py-1 gap-0.5 shadow-[0_2px_8px_-1px_rgba(16,24,40,0.08)]"
+          class="flex flex-row items-center bg-[var(--md-toolbar-bg)]/95 backdrop-blur-sm ring-1 ring-[var(--md-selection)]/70 rounded-xl px-1.5 py-1 gap-0.5 shadow-[0_2px_8px_-1px_rgba(16,24,40,0.08)]"
         >
           <!-- Drag handle -->
           <div class="relative group/btn">
@@ -116,7 +116,7 @@
               @dragstart.stop="handleDragStart"
               @dragend.stop="handleDragEnd"
               @click.stop
-              class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 active:bg-gray-200 active:cursor-grabbing rounded-lg cursor-grab transition-colors"
+              class="w-7 h-7 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)] active:bg-[var(--md-border)] active:cursor-grabbing rounded-lg cursor-grab transition-colors"
               aria-label="Drag to reorder"
             >
               <svg
@@ -134,13 +134,13 @@
               </svg>
             </div>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Drag to reorder
             </div>
           </div>
 
-          <div class="w-px h-4 bg-gray-200 mx-1" />
+          <div class="w-px h-4 bg-[var(--md-border)] mx-1" />
 
           <!-- Move up -->
           <div class="relative group/btn">
@@ -150,8 +150,8 @@
               :class="[
                 'w-7 h-7 flex items-center justify-center rounded-lg transition-colors',
                 isFirst
-                  ? 'text-gray-200 cursor-not-allowed'
-                  : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100',
+                  ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
+                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]',
               ]"
               aria-label="Move up"
             >
@@ -169,7 +169,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Move up
             </div>
@@ -183,8 +183,8 @@
               :class="[
                 'w-7 h-7 flex items-center justify-center rounded-lg transition-colors',
                 isLast
-                  ? 'text-gray-200 cursor-not-allowed'
-                  : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100',
+                  ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
+                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]',
               ]"
               aria-label="Move down"
             >
@@ -202,19 +202,19 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Move down
             </div>
           </div>
 
-          <div class="w-px h-4 bg-gray-200 mx-1" />
+          <div class="w-px h-4 bg-[var(--md-border)] mx-1" />
 
           <!-- Duplicate -->
           <div class="relative group/btn">
             <button
               @click.stop="handleDuplicate"
-              class="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
+              class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-selection-fg)] hover:bg-[var(--md-selection-bg)] transition-colors"
               aria-label="Duplicate"
             >
               <svg
@@ -234,7 +234,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Duplicate
             </div>
@@ -244,7 +244,7 @@
           <div class="relative group/btn">
             <button
               @click.stop="deleteComponent(component.id)"
-              class="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+              class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] transition-colors"
               aria-label="Delete"
             >
               <svg
@@ -265,7 +265,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Delete
             </div>
@@ -285,15 +285,15 @@
     -->
     <div
       v-if="isSelected"
-      class="absolute inset-0 pointer-events-none border border-green-400 rounded"
+      class="absolute inset-0 pointer-events-none border border-[var(--md-selection)] rounded"
     />
     <div
       v-else-if="isCanvasHovered"
-      class="absolute inset-0 pointer-events-none border border-dashed border-green-400 rounded"
+      class="absolute inset-0 pointer-events-none border border-dashed border-[var(--md-selection)] rounded"
     />
     <div
       v-else-if="isLayerHovered"
-      class="absolute inset-0 pointer-events-none border border-dashed border-green-600/60 rounded"
+      class="absolute inset-0 pointer-events-none border border-dashed border-[var(--md-selection-fg)]/60 rounded"
     />
   </div>
 </template>

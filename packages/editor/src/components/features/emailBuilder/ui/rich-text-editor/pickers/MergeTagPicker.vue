@@ -6,7 +6,7 @@
       data-merge-picker
       role="listbox"
       aria-label="Merge tag picker"
-      class="fixed z-50 w-56 bg-white border border-gray-200 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.10)] overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
+      class="fixed z-50 w-56 bg-[var(--md-overlay-bg)] border border-[var(--md-overlay-border)] rounded-xl shadow-[var(--md-overlay-shadow)] overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150"
       :style="{ top: `${position.top}px`, left: `${position.left}px` }"
       @mousedown.prevent
     >
@@ -14,7 +14,7 @@
       <div class="px-2 pt-2 pb-1">
         <div class="relative">
           <span
-            class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"
+            class="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--md-text-subtle)] text-xs pointer-events-none"
           >
             &#123;&#123;
           </span>
@@ -24,7 +24,7 @@
             type="text"
             placeholder="tag_name"
             aria-autocomplete="list"
-            class="w-full pl-6 pr-2 py-1.5 text-xs bg-gray-50 rounded-md outline-none focus:ring-1 focus:ring-green-400 placeholder-gray-300"
+            class="w-full pl-6 pr-2 py-1.5 text-xs bg-[var(--md-surface-hover)] text-[var(--md-text)] rounded-md outline-none focus:ring-1 focus:ring-[var(--md-selection)] placeholder-[var(--md-text-subtle)]"
             @keydown="handleInputKeydown"
           />
         </div>
@@ -41,14 +41,14 @@
           class="flex items-center justify-between px-3 py-1.5 text-xs cursor-pointer transition-colors"
           :class="
             i === activeIndex
-              ? 'bg-green-50 text-green-700'
-              : 'text-gray-700 hover:bg-gray-50'
+              ? 'bg-[var(--md-selection-bg)] text-[var(--md-selection-fg)]'
+              : 'text-[var(--md-text-muted)] hover:bg-[var(--md-surface-hover)]'
           "
           @mouseenter="activeIndex = i"
           @click="commitTag(tag)"
         >
           <span>&#123;&#123; {{ tag }} &#125;&#125;</span>
-          <span v-if="i === activeIndex" class="text-[9px] text-gray-400"
+          <span v-if="i === activeIndex" class="text-[9px] text-[var(--md-text-subtle)]"
             >↵ insert</span
           >
         </li>
@@ -58,23 +58,23 @@
           v-if="showCustomEntry"
           role="option"
           :aria-selected="activeIndex === filteredTags.length"
-          class="flex items-center justify-between px-3 py-1.5 text-xs cursor-pointer transition-colors border-t border-gray-100"
+          class="flex items-center justify-between px-3 py-1.5 text-xs cursor-pointer transition-colors border-t border-[var(--md-border)]"
           :class="
             activeIndex === filteredTags.length
-              ? 'bg-green-50 text-green-700'
-              : 'text-gray-500 hover:bg-gray-50'
+              ? 'bg-[var(--md-selection-bg)] text-[var(--md-selection-fg)]'
+              : 'text-[var(--md-text-subtle)] hover:bg-[var(--md-surface-hover)]'
           "
           @mouseenter="activeIndex = filteredTags.length"
           @click="commitCustom"
         >
           <span>&#123;&#123; {{ normalizedQuery }} &#125;&#125;</span>
-          <span class="text-[9px] text-gray-400 ml-1 shrink-0">custom</span>
+          <span class="text-[9px] text-[var(--md-text-subtle)] ml-1 shrink-0">custom</span>
         </li>
 
         <!-- Empty state -->
         <li
           v-if="filteredTags.length === 0 && !showCustomEntry"
-          class="px-3 py-2 text-xs text-gray-400 text-center"
+          class="px-3 py-2 text-xs text-[var(--md-text-subtle)] text-center"
         >
           Type a tag name
         </li>
@@ -82,9 +82,9 @@
 
       <!-- Footer hint -->
       <div
-        class="px-3 py-1.5 border-t border-gray-100 flex items-center justify-between"
+        class="px-3 py-1.5 border-t border-[var(--md-border)] flex items-center justify-between"
       >
-        <span class="text-[9px] text-gray-400"
+        <span class="text-[9px] text-[var(--md-text-subtle)]"
           >↑↓ navigate · ↵ insert · Esc cancel</span
         >
       </div>

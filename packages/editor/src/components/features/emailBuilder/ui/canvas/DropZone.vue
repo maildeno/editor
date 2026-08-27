@@ -4,13 +4,7 @@
       v-if="isActive"
       class="row-drop-bar"
       :class="`row-drop-bar--${position}`"
-      :style="{
-        '--drop-color': color,
-        '--drop-color-bg': color + '0d',
-        '--drop-color-line': color + '80',
-        '--drop-color-pill-bg': color + '1a',
-        '--drop-color-pill-border': color + '4d',
-      }"
+      :style="{ '--drop-color': color }"
     >
       <div class="row-drop-bar-line" />
       <div class="row-drop-bar-label">
@@ -37,7 +31,11 @@ withDefaults(
     color?: string;
   }>(),
   {
-    color: "#7c3aed", // purple default — matches row / spacer
+    // Row/spacer default — matches the row-selection accent. Any valid CSS
+    // colour works here (hex or var()): the alpha tints below are derived
+    // with color-mix() rather than hex-string concatenation, which is what
+    // makes a var(--md-*) reference work exactly like a literal hex value.
+    color: "var(--md-row-selection)",
   },
 );
 </script>
@@ -52,7 +50,7 @@ withDefaults(
   align-items: center;
   gap: 8px;
   padding: 0 16px;
-  background: var(--drop-color-bg);
+  background: color-mix(in srgb, var(--drop-color) 5%, transparent);
   border-radius: 6px;
   z-index: 20;
   pointer-events: none;
@@ -69,7 +67,7 @@ withDefaults(
 .row-drop-bar-line {
   flex: 1;
   height: 2px;
-  background: var(--drop-color-line);
+  background: color-mix(in srgb, var(--drop-color) 50%, transparent);
   border-radius: 2px;
   /* animation: bar-expand 0.18s ease forwards; */
 }
@@ -94,8 +92,8 @@ withDefaults(
   color: var(--drop-color);
   white-space: nowrap;
   padding: 4px 12px;
-  background: var(--drop-color-pill-bg);
-  border: 1px solid var(--drop-color-pill-border);
+  background: color-mix(in srgb, var(--drop-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--drop-color) 30%, transparent);
   border-radius: 24px;
   /* animation: label-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; */
 }

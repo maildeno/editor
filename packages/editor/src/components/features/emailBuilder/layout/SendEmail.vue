@@ -141,7 +141,7 @@ async function handleSubmit() {
  :invalid="submitted && !emailValid"
  autofocus
  />
- <small v-if="submitted && !emailValid" class="text-red-500 text-xs">
+ <small v-if="submitted && !emailValid" class="text-[var(--md-danger)] text-xs">
  Enter a valid email address.
  </small>
  </div>
@@ -158,7 +158,7 @@ async function handleSubmit() {
  :disabled="isSending"
  :invalid="submitted && !subjectValid"
  />
- <small v-if="submitted && !subjectValid" class="text-red-500 text-xs">
+ <small v-if="submitted && !subjectValid" class="text-[var(--md-danger)] text-xs">
  Subject is required.
  </small>
  </div>

@@ -2,7 +2,7 @@
   <div class="h-[calc(100vh-7.5rem)] overflow-y-auto">
     <div class="px-4 pt-3 pb-4">
       <!-- Tabs - Minimal Pill Style -->
-      <div class="flex gap-1 p-0.5 bg-gray-100 rounded-lg">
+      <div class="flex gap-1 p-0.5 bg-[var(--md-surface-muted)] rounded-lg">
         <button
           v-for="tab in tabs"
           :key="tab"
@@ -10,8 +10,8 @@
           class="flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all"
           :class="
             activeTab === tab
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              ? 'bg-[var(--md-surface)] text-[var(--md-text)] shadow-sm'
+              : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] hover:bg-[var(--md-surface-hover)]'
           "
         >
           {{ tab }}

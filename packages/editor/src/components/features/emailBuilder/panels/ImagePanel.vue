@@ -7,7 +7,7 @@
     <!-- Source (desktop only) -->
     <PropertySection v-if="editMode === 'desktop'" title="Image Source">
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1"
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1"
           >Image URL</label
         >
         <InputText
@@ -26,7 +26,7 @@
         />
 
         <div
-          class="relative group w-full h-20 border border-gray-200 rounded-lg overflow-hidden cursor-pointer hover:border-green-200 transition flex items-center justify-center bg-gray-50/30"
+          class="relative group w-full h-20 border border-[var(--md-border)] rounded-lg overflow-hidden cursor-pointer hover:border-[var(--md-selection)] transition flex items-center justify-center bg-[var(--md-surface-hover)]/30"
           @click="triggerImageUpload"
         >
           <img
@@ -34,7 +34,7 @@
             :src="resolvedSrc"
             class="max-h-full object-contain"
           />
-          <span v-else class="text-xs text-gray-500"
+          <span v-else class="text-xs text-[var(--md-text-subtle)]"
             >Click to upload image</span
           >
         </div>
@@ -47,13 +47,13 @@
         />
 
         <!-- Upload error feedback -->
-        <p v-if="uploadError" class="mt-1 text-xs text-red-500">
+        <p v-if="uploadError" class="mt-1 text-xs text-[var(--md-danger)]">
           {{ uploadError }}
         </p>
       </div>
 
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1"
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1"
           >Alt Text</label
         >
         <InputText
@@ -154,11 +154,11 @@
     <!-- Border -->
     <PropertySection title="Border">
       <div class="flex items-center justify-between mb-1">
-        <span class="text-xs font-medium text-gray-600 italic">Mobile override</span>
+        <span class="text-xs font-medium text-[var(--md-text-muted)] italic">Mobile override</span>
         <button
           v-if="isBorderOverridden()"
           @click="resetBorder"
-          class="text-xs text-gray-500 hover:text-gray-700"
+          class="text-xs text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)]"
         >
           Reset All
         </button>
@@ -178,14 +178,14 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label
-              class="flex items-center gap-1.5 text-xs font-medium text-gray-600"
+              class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]"
             >
               Color <OverrideBadge :show="isBorderPropOverridden('color')" />
             </label>
             <button
               v-if="isBorderPropOverridden('color')"
               @click="resetBorderProp('color')"
-              class="text-xs text-green-500 hover:text-green-700"
+              class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
             >
               Reset
             </button>
@@ -200,14 +200,14 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label
-              class="flex items-center gap-1.5 text-xs font-medium text-gray-600"
+              class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]"
             >
               Style <OverrideBadge :show="isBorderPropOverridden('style')" />
             </label>
             <button
               v-if="isBorderPropOverridden('style')"
               @click="resetBorderProp('style')"
-              class="text-xs text-green-500 hover:text-green-700"
+              class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
             >
               Reset
             </button>
@@ -221,7 +221,7 @@
             placeholder="Select style"
             class="w-full text-sm capitalize"
             :class="{
-              'ring-1 ring-green-500 rounded': isBorderPropOverridden('style'),
+              'ring-1 ring-[var(--md-selection)] rounded': isBorderPropOverridden('style'),
             }"
           />
         </div>

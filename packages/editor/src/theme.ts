@@ -85,6 +85,32 @@ export interface ThemeTokens {
   toolbarText?: string;
   toolbarBorder?: string;
 
+  /** Canvas component-selection accent. Drives hover/selected outlines on
+   *  canvas components, the floating action bar's ring, and drag/drop
+   *  indicators. Kept independent of `primary` so the brand button and the
+   *  canvas's own interaction colour can differ — as they do by default
+   *  (a dark brand button, a green canvas accent). */
+  selection?: string;
+  /** Pale fill for `selection` — hover backgrounds on the same controls. */
+  selectionBg?: string;
+  /** Readable text/icon tone for `selection` when placed on `selectionBg`. */
+  selectionFg?: string;
+
+  /** Same role as `selection`, one level up: row outlines, the row's
+   *  floating toolbar, and "this is a row" indicators in the Layout tab
+   *  and Layers panel. Separate token so components and rows can be told
+   *  apart at a glance, as they are by default (green vs purple). */
+  rowSelection?: string;
+  rowSelectionBg?: string;
+  rowSelectionFg?: string;
+
+  /** Small dark tooltips on icon buttons throughout the canvas and
+   *  toolbars. Kept distinct from `overlay` because tooltips are
+   *  conventionally dark even in an otherwise light theme; set both if you
+   *  want them to follow the rest of the theme instead. */
+  tooltipBg?: string;
+  tooltipText?: string;
+
   /** The Save / Update button — the most commonly branded control. */
   buttonPrimaryBg?: string;
   buttonPrimaryText?: string;
@@ -167,6 +193,14 @@ const VAR_NAMES: Record<keyof ThemeTokens, string> = {
   toolbarBg: "--md-toolbar-bg",
   toolbarText: "--md-toolbar-text",
   toolbarBorder: "--md-toolbar-border",
+  selection: "--md-selection",
+  selectionBg: "--md-selection-bg",
+  selectionFg: "--md-selection-fg",
+  rowSelection: "--md-row-selection",
+  rowSelectionBg: "--md-row-selection-bg",
+  rowSelectionFg: "--md-row-selection-fg",
+  tooltipBg: "--md-tooltip-bg",
+  tooltipText: "--md-tooltip-text",
   buttonPrimaryBg: "--md-button-primary-bg",
   buttonPrimaryText: "--md-button-primary-text",
   buttonPrimaryHoverBg: "--md-button-primary-hover-bg",

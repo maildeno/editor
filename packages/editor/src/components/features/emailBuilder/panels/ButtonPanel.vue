@@ -6,7 +6,7 @@
     <PropertySection v-if="editMode === 'desktop'" title="Content">
       <!-- Button text -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">
           Button Text
         </label>
         <div class="relative">
@@ -28,7 +28,7 @@
 
       <!-- URL -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1">URL</label>
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">URL</label>
         <div class="relative">
           <InputText
             ref="linkInputRef"
@@ -55,17 +55,17 @@
       />
 
       <!-- ── Icon ───────────────────────────────────────────────────── -->
-      <div class="pt-3 border-t border-gray-100">
-        <label class="block text-xs font-medium text-gray-600 mb-2">
+      <div class="pt-3 border-t border-[var(--md-border)]">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-2">
           Button Icon
         </label>
 
         <!-- Preview + clear -->
         <div
           v-if="component.props.icon"
-          class="flex items-center gap-2 mb-2 px-2 py-1.5 bg-gray-50 border border-gray-100 rounded"
+          class="flex items-center gap-2 mb-2 px-2 py-1.5 bg-[var(--md-surface-hover)] border border-[var(--md-border)] rounded"
         >
-          <div class="w-6 h-6 overflow-hidden bg-white shrink-0">
+          <div class="w-6 h-6 overflow-hidden bg-[var(--md-surface)] shrink-0">
             <img
               :src="component.props.icon"
               alt="icon preview"
@@ -73,7 +73,7 @@
               @error="component.props.icon = ''"
             />
           </div>
-          <span class="text-[10px] text-gray-400 truncate flex-1">
+          <span class="text-[10px] text-[var(--md-text-subtle)] truncate flex-1">
             {{
               component.props.icon.startsWith("data:")
                 ? "✓ Image uploaded"
@@ -82,7 +82,7 @@
           </span>
           <button
             @click="onIconClear"
-            class="text-gray-300 hover:text-red-400 text-xs shrink-0"
+            class="text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] text-xs shrink-0"
             title="Remove icon"
           >
             <Icon name="times" style="font-size: 8px" />
@@ -103,7 +103,7 @@
           type="button"
           :disabled="isIconUploading"
           @click="openIconPicker"
-          class="flex items-center justify-center gap-1.5 w-full py-1.5 text-[10px] border border-dashed border-gray-200 rounded hover:border-green-300 hover:bg-green-50 hover:text-green-600 text-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-3"
+          class="flex items-center justify-center gap-1.5 w-full py-1.5 text-[10px] border border-dashed border-[var(--md-border)] rounded hover:border-[var(--md-selection)] hover:bg-[var(--md-selection-bg)] hover:text-[var(--md-selection-fg)] text-[var(--md-text-subtle)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-3"
         >
           <span
             v-if="isIconUploading"
@@ -119,9 +119,9 @@
         <template v-if="component.props.icon">
           <!-- Alt text (accessibility) -->
           <div class="mb-3">
-            <label class="text-xs font-medium text-gray-600 mb-1 block">
+            <label class="text-xs font-medium text-[var(--md-text-muted)] mb-1 block">
               Alt Text
-              <span class="text-gray-500 font-normal"
+              <span class="text-[var(--md-text-subtle)] font-normal"
                 >(leave empty if decorative)</span
               >
             </label>
@@ -135,7 +135,7 @@
 
           <!-- Position: Before / After -->
           <div class="mb-3">
-            <label class="text-xs font-medium text-gray-600 mb-1.5 block"
+            <label class="text-xs font-medium text-[var(--md-text-muted)] mb-1.5 block"
               >Icon Position</label
             >
             <div class="grid grid-cols-2 gap-1.5">
@@ -147,8 +147,8 @@
                 class="flex items-center justify-center gap-1 py-1 text-xs rounded border transition-colors"
                 :class="
                   component.props.iconPosition === pos.value
-                    ? 'bg-green-50 border-green-400 text-green-700 font-medium'
-                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                    ? 'bg-[var(--md-selection-bg)] border-[var(--md-selection)] text-[var(--md-selection-fg)] font-medium'
+                    : 'border-[var(--md-border)] text-[var(--md-text-subtle)] hover:border-[var(--md-border-strong)]'
                 "
               >
                 <Icon :name="pos.icon" style="font-size: 10px" />
@@ -246,12 +246,12 @@
     <PropertySection title="Appearance">
       <div>
         <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-medium text-gray-600">Background</label>
+          <label class="text-xs font-medium text-[var(--md-text-muted)]">Background</label>
           <button
             v-if="isBackgroundOverridden()"
             type="button"
             @click="resetBackground"
-            class="text-xs text-green-500 hover:text-green-700"
+            class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
           >
             ↩ Reset
           </button>
@@ -291,13 +291,13 @@
     <!-- Border -->
     <PropertySection title="Border">
       <div class="flex items-center justify-between mb-1">
-        <span class="text-xs font-medium text-gray-600 italic"
+        <span class="text-xs font-medium text-[var(--md-text-muted)] italic"
           >Mobile override</span
         >
         <button
           v-if="isBorderOverridden()"
           @click="resetBorder"
-          class="text-xs text-gray-500 hover:text-gray-700"
+          class="text-xs text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)]"
         >
           Reset All
         </button>
@@ -319,7 +319,7 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label
-              class="flex items-center gap-1.5 text-xs font-medium text-gray-600"
+              class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]"
             >
               Color
               <OverrideBadge :show="isBorderPropOverridden('color')" />
@@ -327,7 +327,7 @@
             <button
               v-if="isBorderPropOverridden('color')"
               @click="resetBorderProp('color')"
-              class="text-xs text-green-500 hover:text-green-700"
+              class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
             >
               Reset
             </button>
@@ -343,7 +343,7 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label
-              class="flex items-center gap-1.5 text-xs font-medium text-gray-600"
+              class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]"
             >
               Style
               <OverrideBadge :show="isBorderPropOverridden('style')" />
@@ -351,7 +351,7 @@
             <button
               v-if="isBorderPropOverridden('style')"
               @click="resetBorderProp('style')"
-              class="text-xs text-green-500 hover:text-green-700"
+              class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
             >
               Reset
             </button>
@@ -365,7 +365,7 @@
             placeholder="Select style"
             class="w-full text-sm capitalize"
             :class="{
-              'ring-1 ring-green-500 rounded': isBorderPropOverridden('style'),
+              'ring-1 ring-[var(--md-selection)] rounded': isBorderPropOverridden('style'),
             }"
           />
         </div>

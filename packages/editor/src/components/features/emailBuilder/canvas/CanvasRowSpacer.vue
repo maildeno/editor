@@ -14,12 +14,12 @@
       class="pointer-events-none absolute -left-3 -right-3 top-0 bottom-0 border rounded transition-colors"
       :class="[
         selectedRowId === spacer.id
-          ? 'border-purple-500'
+          ? 'border-[var(--md-row-selection)]'
           : layerHoveredId === spacer.id
-            ? 'border-purple-500 border-dashed'
+            ? 'border-[var(--md-row-selection)] border-dashed'
             : isLayerHovered
-              ? 'border-purple-800 border-dashed opacity-60'
-              : 'border-transparent group-hover:border-gray-400',
+              ? 'border-[var(--md-row-selection-fg)] border-dashed opacity-60'
+              : 'border-transparent group-hover:border-[var(--md-border-strong)]',
       ]"
     />
 
@@ -44,7 +44,7 @@
         class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
       >
         <span
-          class="text-xs text-white bg-purple-600 px-1.5 py-px rounded shadow-sm"
+          class="text-xs text-white bg-[var(--md-row-selection-fg)] px-1.5 py-px rounded shadow-sm"
         >
           {{ spacer.height }}px
         </span>
@@ -60,7 +60,7 @@
     >
       <!-- Pill trigger -->
       <div
-        class="flex items-center gap-1 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
+        class="flex items-center gap-1 bg-gradient-to-r from-[var(--md-row-selection)] to-[var(--md-row-selection-fg)] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
       >
         <svg
           class="w-2.5 h-2.5 shrink-0"
@@ -123,7 +123,7 @@
         class="absolute -top-4 left-1/2 -translate-x-1/2 z-50"
       >
         <div
-          class="flex items-center bg-white/95 backdrop-blur-sm ring-1 ring-purple-500/70 rounded-xl p-1 shadow-[0_4px_12px_-2px_rgba(16,24,40,0.08),0_2px_4px_-1px_rgba(16,24,40,0.04)]"
+          class="flex items-center bg-[var(--md-toolbar-bg)]/95 backdrop-blur-sm ring-1 ring-[var(--md-row-selection)]/70 rounded-xl p-1 shadow-[0_4px_12px_-2px_rgba(16,24,40,0.08),0_2px_4px_-1px_rgba(16,24,40,0.04)]"
         >
           <!-- Integrated drag handle -->
           <div class="relative group/btn">
@@ -132,7 +132,7 @@
               @dragstart.stop="handleDragStart"
               @dragend.stop="handleDragEnd"
               @click.stop
-              class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 active:bg-gray-200 active:cursor-grabbing rounded-lg cursor-grab transition-colors"
+              class="w-7 h-7 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)] active:bg-[var(--md-border)] active:cursor-grabbing rounded-lg cursor-grab transition-colors"
             >
               <svg
                 class="w-3.5 h-3.5"
@@ -150,13 +150,13 @@
             </div>
 
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Drag to reorder
             </div>
           </div>
 
-          <div class="w-px h-4 bg-gray-200/80 mx-0.5" />
+          <div class="w-px h-4 bg-[var(--md-border)]/80 mx-0.5" />
 
           <!-- Move up button -->
           <div class="relative group/btn">
@@ -166,8 +166,8 @@
               class="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
               :class="
                 isFirst
-                  ? 'text-gray-200 cursor-not-allowed'
-                  : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+                  ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
+                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]'
               "
             >
               <svg
@@ -184,7 +184,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Move spacer up
             </div>
@@ -198,8 +198,8 @@
               class="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
               :class="
                 isLast
-                  ? 'text-gray-200 cursor-not-allowed'
-                  : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+                  ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
+                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]'
               "
             >
               <svg
@@ -216,28 +216,28 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Move spacer down
             </div>
           </div>
 
-          <div class="w-px h-4 bg-gray-200/80 mx-0.5" />
+          <div class="w-px h-4 bg-[var(--md-border)]/80 mx-0.5" />
 
           <!-- Spacer label chip -->
           <span
-            class="px-2 text-[11px] font-semibold text-purple-600 tracking-wide uppercase select-none"
+            class="px-2 text-[11px] font-semibold text-[var(--md-row-selection-fg)] tracking-wide uppercase select-none"
           >
             Spacer
           </span>
 
-          <div class="w-px h-4 bg-gray-200/80 mx-0.5" />
+          <div class="w-px h-4 bg-[var(--md-border)]/80 mx-0.5" />
 
           <!-- Duplicate spacer button -->
           <div class="relative group/btn">
             <button
               @click.stop="handleDuplicate"
-              class="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-purple-600 hover:bg-purple-50 transition-colors"
+              class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-row-selection-fg)] hover:bg-[var(--md-row-selection-bg)] transition-colors"
             >
               <!-- Lucide: copy -->
               <svg
@@ -257,7 +257,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Duplicate spacer
             </div>
@@ -267,7 +267,7 @@
           <div class="relative group/btn">
             <button
               @click.stop="handleDelete"
-              class="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+              class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] transition-colors"
             >
               <!-- Lucide: trash-2 -->
               <svg
@@ -289,7 +289,7 @@
             </button>
 
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
             >
               Delete spacer
             </div>
@@ -367,9 +367,9 @@ const handleDelete = () => {
     header: "Confirm Delete",
     acceptLabel: "Delete",
     rejectLabel: "Cancel",
-    acceptClass: "!bg-red-600 !hover:bg-red-700 !border-red-600 !px-6 !py-2",
+    acceptClass: "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
     rejectClass:
-      "!bg-gray-200 !hover:bg-gray-300 !text-gray-800 !border-gray-200 !px-6 !py-2",
+      "!bg-[var(--md-border)] !hover:bg-[var(--md-border-strong)] !text-[var(--md-text)] !border-[var(--md-border)] !px-6 !py-2",
     accept: () => deleteRow(props.spacer.id),
   });
 };

@@ -1,12 +1,12 @@
 <template>
-  <div class="border border-gray-200 rounded-lg bg-white overflow-hidden">
+  <div class="border border-[var(--md-border)] rounded-lg bg-[var(--md-surface)] overflow-hidden">
     <!-- Header -->
     <div
-      class="flex items-center justify-between px-3 py-2 bg-gray-50 border-b border-gray-200"
+      class="flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)] border-b border-[var(--md-border)]"
     >
       <div class="flex items-center gap-2">
-        <Icon name="code" class="text-gray-400" style="font-size: 11px" />
-        <span class="text-xs font-medium text-gray-600">ESP Wrap Config</span>
+        <Icon name="code" class="text-[var(--md-text-subtle)]" style="font-size: 11px" />
+        <span class="text-xs font-medium text-[var(--md-text-muted)]">ESP Wrap Config</span>
       </div>
       <span
         class="text-[10px] px-1.5 py-0.5 rounded-full border font-mono"
@@ -20,14 +20,14 @@
     <div class="p-3 space-y-3">
       <div>
         <label
-          class="block text-[10px] text-gray-500 mb-1.5 uppercase tracking-wide"
+          class="block text-[10px] text-[var(--md-text-subtle)] mb-1.5 uppercase tracking-wide"
         >
           Target ESP Syntax
         </label>
         <div class="relative">
           <select
             v-model="espConfig.syntax"
-            class="w-full text-sm px-2.5 py-1.5 pr-7 outline-1 outline-gray-200 rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-green-400 bg-white appearance-none cursor-pointer"
+            class="w-full text-sm px-2.5 py-1.5 pr-7 outline-1 outline-[var(--md-border)] rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-[var(--md-selection)] bg-[var(--md-surface)] text-[var(--md-text)] appearance-none cursor-pointer"
           >
             <optgroup
               v-for="group in syntaxGroups"
@@ -45,14 +45,14 @@
           </select>
           <Icon
             name="chevron-down"
-            class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
+            class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[var(--md-text-subtle)]"
             style="font-size: 10px"
           />
         </div>
 
         <!-- Description + docs link -->
         <div class="mt-1.5 flex items-center justify-between">
-          <p class="text-[10px] text-gray-500 leading-relaxed">
+          <p class="text-[10px] text-[var(--md-text-subtle)] leading-relaxed">
             {{ currentMeta.description }}
           </p>
           <a
@@ -60,7 +60,7 @@
             :href="currentMeta.docsUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-[10px] text-blue-400 hover:text-blue-600 flex items-center gap-0.5 ml-2 shrink-0"
+            class="text-[10px] text-[var(--md-info)] hover:text-[var(--md-info-fg)] flex items-center gap-0.5 ml-2 shrink-0"
           >
             docs
             <Icon name="external-link" style="font-size: 8px" />
@@ -71,25 +71,25 @@
       <!-- ── Nesting / group-flattening warning ─────────────────────────────── -->
       <div
         v-if="nestingWarning"
-        class="flex items-start gap-2 bg-orange-50 border border-orange-200 rounded-md px-3 py-2.5"
+        class="flex items-start gap-2 bg-[var(--md-warning-bg)] border border-[var(--md-warning-border)] rounded-md px-3 py-2.5"
       >
-        <span class="text-orange-500 mt-0.5 shrink-0" style="font-size: 11px"
+        <span class="text-[var(--md-warning)] mt-0.5 shrink-0" style="font-size: 11px"
           >⚠</span
         >
-        <div class="text-[10px] text-orange-700 leading-relaxed space-y-1">
+        <div class="text-[10px] text-[var(--md-warning-fg)] leading-relaxed space-y-1">
           <p>
             <strong class="font-semibold"
               >Group structure will be flattened</strong
             >
             — {{ currentMeta.label }} does not support nested boolean groups.
           </p>
-          <p class="text-orange-600/80">
+          <p class="text-[var(--md-warning-fg)]/80">
             All rules inside your groups will be merged into a single flat list
             and evaluated using the top-level
-            <code class="font-mono bg-orange-100 rounded px-0.5">match</code>
+            <code class="font-mono bg-[var(--md-warning-border)] rounded px-0.5">match</code>
             mode (<strong>{{ firstActiveMatchMode }}</strong
             >). Group-level
-            <code class="font-mono bg-orange-100 rounded px-0.5"
+            <code class="font-mono bg-[var(--md-warning-border)] rounded px-0.5"
               >any / all</code
             >
             settings will be ignored. Simplify your rules or switch to an ESP
@@ -101,12 +101,12 @@
       <!-- ── Skipped-operators warning (none) ──────────────────────────────── -->
       <div
         v-if="skippedOperators.length > 0"
-        class="flex items-start gap-2 bg-red-50 border border-red-200 rounded-md px-3 py-2.5"
+        class="flex items-start gap-2 bg-[var(--md-danger-bg)] border border-[var(--md-danger-border)] rounded-md px-3 py-2.5"
       >
-        <span class="text-red-500 mt-0.5 shrink-0" style="font-size: 11px"
+        <span class="text-[var(--md-danger)] mt-0.5 shrink-0" style="font-size: 11px"
           >✕</span
         >
-        <div class="text-[10px] text-red-700 leading-relaxed space-y-0.5">
+        <div class="text-[10px] text-[var(--md-danger-fg)] leading-relaxed space-y-0.5">
           <p>
             <strong class="font-semibold"
               >{{ skippedOperators.length }} operator{{
@@ -120,12 +120,12 @@
             <li
               v-for="item in skippedOperators"
               :key="item.key"
-              class="font-mono bg-red-100 rounded px-1.5 py-0.5 inline-flex items-center gap-1 mr-1"
+              class="font-mono bg-[var(--md-danger-border)] rounded px-1.5 py-0.5 inline-flex items-center gap-1 mr-1"
             >
-              <span class="text-red-500">✕</span> {{ item.label }}
+              <span class="text-[var(--md-danger)]">✕</span> {{ item.label }}
             </li>
           </ul>
-          <p class="mt-1 text-red-600/80">
+          <p class="mt-1 text-[var(--md-danger)]/80">
             Rules using these operators will be silently dropped from the
             exported tags.
           </p>
@@ -135,12 +135,12 @@
       <!-- ── Degraded-operators warning (fallback) ────────────────────────── -->
       <div
         v-if="degradedOperators.length > 0"
-        class="flex items-start gap-2 bg-orange-50 border border-orange-200 rounded-md px-3 py-2.5"
+        class="flex items-start gap-2 bg-[var(--md-warning-bg)] border border-[var(--md-warning-border)] rounded-md px-3 py-2.5"
       >
-        <span class="text-orange-500 mt-0.5 shrink-0" style="font-size: 11px"
+        <span class="text-[var(--md-warning)] mt-0.5 shrink-0" style="font-size: 11px"
           >⚠</span
         >
-        <div class="text-[10px] text-orange-700 leading-relaxed space-y-0.5">
+        <div class="text-[10px] text-[var(--md-warning-fg)] leading-relaxed space-y-0.5">
           <p>
             <strong class="font-semibold"
               >{{ degradedOperators.length }} operator{{
@@ -154,22 +154,22 @@
             <li
               v-for="item in degradedOperators"
               :key="item.key"
-              class="font-mono bg-orange-100 rounded px-1.5 py-0.5 inline-flex items-center gap-1 mr-1"
+              class="font-mono bg-[var(--md-warning-border)] rounded px-1.5 py-0.5 inline-flex items-center gap-1 mr-1"
             >
-              <span class="text-orange-500">⚠</span> {{ item.label }}
+              <span class="text-[var(--md-warning)]">⚠</span> {{ item.label }}
             </li>
           </ul>
-          <p class="mt-1 text-orange-600/80">
+          <p class="mt-1 text-[var(--md-warning-fg)]/80">
             {{ degradedOperators[0]?.hint }}
           </p>
           <p
             v-if="degradedOperators.some((o) => o.key === 'date')"
-            class="mt-1.5 text-orange-700 font-medium flex items-start gap-1"
+            class="mt-1.5 text-[var(--md-warning-fg)] font-medium flex items-start gap-1"
           >
             <span class="shrink-0">📅</span>
             <span>
               Date fields must be in
-              <code class="font-mono bg-orange-100 rounded px-0.5"
+              <code class="font-mono bg-[var(--md-warning-border)] rounded px-0.5"
                 >YYYY-MM-DD</code
               >
               format. Other formats (MM/DD/YYYY, DD-MM-YYYY) will silently fail
@@ -182,15 +182,15 @@
       <!-- ── Mailchimp OR duplicate-render notice ─────────────────────────── -->
       <div
         v-if="mailchimpOrWarning"
-        class="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-md px-3 py-2.5"
+        class="flex items-start gap-2 bg-[var(--md-info-bg)] border border-[var(--md-info-border)] rounded-md px-3 py-2.5"
       >
-        <span class="text-blue-500 mt-0.5 shrink-0" style="font-size: 11px"
+        <span class="text-[var(--md-info)] mt-0.5 shrink-0" style="font-size: 11px"
           >ℹ</span
         >
-        <p class="text-[10px] text-blue-700 leading-relaxed">
+        <p class="text-[10px] text-[var(--md-info-fg)] leading-relaxed">
           <strong class="font-semibold">Mailchimp OR logic:</strong> each
           condition is wrapped in its own
-          <code class="font-mono bg-blue-100 px-0.5 rounded">*|IF|*</code>
+          <code class="font-mono bg-[var(--md-info-border)] px-0.5 rounded">*|IF|*</code>
           block. If more than one condition is true, the subscriber may see the
           content more than once. This is a Mailchimp limitation for complex OR
           rules.
@@ -199,7 +199,7 @@
 
       <!-- Live tag preview -->
       <div v-if="firstBlockPreview" class="space-y-1">
-        <label class="block text-[10px] text-gray-400 uppercase tracking-wide"
+        <label class="block text-[10px] text-[var(--md-text-subtle)] uppercase tracking-wide"
           >Tag Preview</label
         >
         <div class="bg-gray-950 rounded-md p-2.5 space-y-1 overflow-x-auto">
@@ -216,16 +216,16 @@
       </div>
 
       <!-- No conditional blocks -->
-      <div v-else class="bg-gray-50 rounded-md px-3 py-2.5 text-center">
-        <p class="text-[10px] text-gray-500 leading-relaxed">
+      <div v-else class="bg-[var(--md-surface-hover)] rounded-md px-3 py-2.5 text-center">
+        <p class="text-[10px] text-[var(--md-text-subtle)] leading-relaxed">
           No conditional blocks found.<br />
           Add a visibility rule to a row or component to see a preview.
         </p>
       </div>
 
       <!-- Info callout -->
-      <div class="bg-amber-50 border border-amber-100 rounded-md px-3 py-2.5">
-        <p class="text-[10px] text-amber-700 leading-relaxed">
+      <div class="bg-[var(--md-warning-bg)] border border-[var(--md-warning-border)] rounded-md px-3 py-2.5">
+        <p class="text-[10px] text-[var(--md-warning-fg)] leading-relaxed">
           <strong class="font-semibold">Wrap mode</strong> keeps every row in
           the exported HTML and adds ESP conditional tags so your mail server
           evaluates them at send time. Use
@@ -236,17 +236,17 @@
     </div>
 
     <!-- Operator support matrix -->
-    <div class="border-t border-gray-100">
+    <div class="border-t border-[var(--md-border)]">
       <button
         @click="showMatrix = !showMatrix"
         @keydown.enter.space.prevent="showMatrix = !showMatrix"
         :aria-expanded="showMatrix"
         aria-label="Toggle operator support matrix"
-        class="w-full flex items-center justify-between px-3 py-2 bg-gray-50/50 hover:bg-gray-100 transition-colors"
+        class="w-full flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)]/50 hover:bg-[var(--md-surface-muted)] transition-colors"
       >
-        <span class="text-xs font-medium text-gray-600">Operator Support</span>
+        <span class="text-xs font-medium text-[var(--md-text-muted)]">Operator Support</span>
         <svg
-          class="w-3 h-3 text-gray-400 transition-transform"
+          class="w-3 h-3 text-[var(--md-text-subtle)] transition-transform"
           :class="showMatrix ? 'rotate-180' : ''"
           fill="none"
           stroke="currentColor"
@@ -264,8 +264,8 @@
       <div v-if="showMatrix" class="p-3 overflow-x-auto">
         <table class="text-[10px] border-collapse min-w-full">
           <thead>
-            <tr class="text-left text-gray-400">
-              <th class="pb-1.5 font-medium pr-2 sticky left-0 bg-white">
+            <tr class="text-left text-[var(--md-text-subtle)]">
+              <th class="pb-1.5 font-medium pr-2 sticky left-0 bg-[var(--md-surface)]">
                 ESP
               </th>
               <th
@@ -283,14 +283,14 @@
               v-for="row in OPERATOR_SUPPORT_MATRIX"
               :key="row.syntax"
               :class="[
-                row.syntax === espConfig.syntax ? 'bg-green-50' : '',
-                'hover:bg-gray-50/50 transition-colors',
+                row.syntax === espConfig.syntax ? 'bg-[var(--md-selection-bg)]' : '',
+                'hover:bg-[var(--md-surface-hover)]/50 transition-colors',
               ]"
             >
               <td
-                class="py-1 font-mono text-gray-600 pr-2 sticky left-0 whitespace-nowrap"
+                class="py-1 font-mono text-[var(--md-text-muted)] pr-2 sticky left-0 whitespace-nowrap"
                 :class="
-                  row.syntax === espConfig.syntax ? 'bg-green-50' : 'bg-white'
+                  row.syntax === espConfig.syntax ? 'bg-[var(--md-selection-bg)]' : 'bg-[var(--md-surface)]'
                 "
               >
                 {{ row.label }}
@@ -319,7 +319,7 @@
 
         <!-- Legend -->
         <div
-          class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-gray-500"
+          class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-[var(--md-text-subtle)]"
         >
           <span class="flex items-center gap-1">
             <span class="font-mono font-bold text-emerald-500">✓</span> Native
@@ -337,7 +337,7 @@
             supported
           </span>
           <span
-            class="flex items-center gap-1 text-gray-400 border-t border-gray-100 pt-1 w-full mt-0.5"
+            class="flex items-center gap-1 text-[var(--md-text-subtle)] border-t border-[var(--md-border)] pt-1 w-full mt-0.5"
           >
             Highlighted cells = operators actively used in this email
           </span>
@@ -347,7 +347,7 @@
         <p
           class="mt-2 text-[10px]"
           :class="
-            currentMeta.supportsNesting ? 'text-gray-400' : 'text-orange-500'
+            currentMeta.supportsNesting ? 'text-[var(--md-text-subtle)]' : 'text-[var(--md-warning)]'
           "
         >
           {{ currentMeta.label }}:

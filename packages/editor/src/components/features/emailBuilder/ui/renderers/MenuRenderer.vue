@@ -71,7 +71,7 @@ function handleLinkClick(event: MouseEvent) {
   <div :style="containerStyles" :class="hideClass">
     <div
       v-if="!component.props.items.some((i: any) => i.enabled && i.label)"
-      class="text-gray-400 text-sm italic py-4 text-center"
+      class="text-[var(--md-text-subtle)] text-sm italic py-4 text-center"
     >
       Add menu items from panel
     </div>

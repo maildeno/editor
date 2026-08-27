@@ -5,7 +5,7 @@
     <!-- Row Name -->
     <PropertySection title="Name">
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1.5">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5">
           Row Name
         </label>
         <InputText
@@ -16,7 +16,7 @@
           @blur="onNameBlur"
           @keydown.enter="onNameBlur"
         />
-        <p class="mt-1 text-[10px] text-gray-500 font-mono">
+        <p class="mt-1 text-[10px] text-[var(--md-text-subtle)] font-mono">
           {{ row.name || "—" }}
         </p>
       </div>
@@ -25,7 +25,7 @@
     <!-- Background -->
     <PropertySection title="Background">
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1.5"
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
           >Background Color</label
         >
         <PropertyGradientColor
@@ -36,7 +36,7 @@
 
       <!-- Background Image -->
       <div>
-        <label class="block text-xs font-medium text-gray-600 mb-1.5">
+        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5">
           Background Image
         </label>
         <div class="space-y-2">
@@ -48,7 +48,7 @@
           />
 
           <div
-            class="relative group w-full h-20 border border-gray-200 rounded-lg overflow-hidden cursor-pointer hover:border-green-200 transition flex items-center justify-center bg-gray-50/30"
+            class="relative group w-full h-20 border border-[var(--md-border)] rounded-lg overflow-hidden cursor-pointer hover:border-[var(--md-selection)] transition flex items-center justify-center bg-[var(--md-surface-hover)]/30"
             @click="triggerBodyBgUpload"
           >
             <img
@@ -57,8 +57,8 @@
               class="max-h-full object-contain"
             />
             <div v-else class="flex flex-col items-center gap-1">
-              <Icon name="image" class="text-gray-300" style="font-size: 16px" />
-              <span class="text-[9px] text-gray-400">Click to upload</span>
+              <Icon name="image" class="text-[var(--md-text-subtle)]" style="font-size: 16px" />
+              <span class="text-[9px] text-[var(--md-text-subtle)]">Click to upload</span>
             </div>
           </div>
           <input
@@ -70,7 +70,7 @@
           />
 
           <!-- Upload error feedback -->
-          <p v-if="bgUploadError" class="text-xs text-red-500">
+          <p v-if="bgUploadError" class="text-xs text-[var(--md-danger)]">
             {{ bgUploadError }}
           </p>
         </div>
@@ -80,7 +80,7 @@
       <template v-if="row.backgroundImage">
         <!-- Background Size -->
         <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1.5"
+          <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
             >Size</label
           >
           <div class="flex gap-1">
@@ -91,8 +91,8 @@
               class="flex-1 flex flex-col items-center gap-1 px-2 py-1.5 border rounded-md transition-all text-[10px]"
               :class="
                 row.backgroundSize === opt.value
-                  ? 'border-green-400 bg-gray-50 text-gray-600'
-                  : 'border-gray-200/75 text-gray-500 hover:border-gray-200 hover:bg-gray-50'
+                  ? 'border-[var(--md-selection)] bg-[var(--md-surface-hover)] text-[var(--md-text-muted)]'
+                  : 'border-[var(--md-border)]/75 text-[var(--md-text-subtle)] hover:border-[var(--md-border)] hover:bg-[var(--md-surface-hover)]'
               "
             >
               <Icon :name="getSizeIcon(opt.value)" style="font-size: 13px" />
@@ -103,7 +103,7 @@
 
         <!-- Background Repeat -->
         <div class="mt-3">
-          <label class="block text-xs font-medium text-gray-600 mb-1.5"
+          <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
             >Repeat</label
           >
           <div class="flex gap-1">
@@ -114,8 +114,8 @@
               class="flex-1 flex flex-col items-center gap-1 px-0.5 py-1.5 border rounded-md transition-all text-[10px]"
               :class="
                 row.backgroundRepeat === opt.value
-                  ? 'border-green-400 bg-gray-50 text-gray-600'
-                  : 'border-gray-200/75 text-gray-500 hover:border-gray-200 hover:bg-gray-50'
+                  ? 'border-[var(--md-selection)] bg-[var(--md-surface-hover)] text-[var(--md-text-muted)]'
+                  : 'border-[var(--md-border)]/75 text-[var(--md-text-subtle)] hover:border-[var(--md-border)] hover:bg-[var(--md-surface-hover)]'
               "
             >
               <Icon :name="getRepeatIcon(opt.value)" style="font-size: 13px" />
@@ -126,7 +126,7 @@
 
         <!-- Background Position -->
         <div class="mt-3">
-          <label class="block text-xs font-medium text-gray-600 mb-1.5"
+          <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
             >Position</label
           >
           <div class="grid grid-cols-3 gap-1">
@@ -137,8 +137,8 @@
               class="px-2 py-1.5 text-sm border rounded-md transition-all flex items-center justify-center"
               :class="
                 row.backgroundPosition === pos.value
-                  ? 'border-green-400 bg-gray-50 text-gray-600'
-                  : 'border-gray-200/75 text-gray-400 hover:border-gray-200 hover:bg-gray-50'
+                  ? 'border-[var(--md-selection)] bg-[var(--md-surface-hover)] text-[var(--md-text-muted)]'
+                  : 'border-[var(--md-border)]/75 text-[var(--md-text-subtle)] hover:border-[var(--md-border)] hover:bg-[var(--md-surface-hover)]'
               "
             >
               {{ pos.symbol }}
@@ -196,7 +196,7 @@
       />
       <div class="grid grid-cols-4 gap-2">
         <div class="col-span-2">
-          <label class="text-xs font-medium text-gray-600">Color</label>
+          <label class="text-xs font-medium text-[var(--md-text-muted)]">Color</label>
           <PropertyColor
             label="Color"
             bare
@@ -206,7 +206,7 @@
           />
         </div>
         <div class="col-span-2">
-          <label class="text-xs font-medium text-gray-600">Style</label>
+          <label class="text-xs font-medium text-[var(--md-text-muted)]">Style</label>
           <Select
             :model-value="row.border.style"
             :options="borderStyleOptions"
@@ -240,7 +240,7 @@
         label="Stack Columns on Mobile"
         description="Columns will stack vertically on screens ≤600px"
         :model-value="row.mobileStack"
-        active-color="bg-green-400"
+        active-color="bg-[var(--md-selection)]"
         @update:model-value="onMobileStackChange"
       />
     </PropertySection>

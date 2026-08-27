@@ -9,8 +9,8 @@
         class="text-xs font-medium transition-colors pb-1"
         :class="
           activeTab === tab
-            ? 'text-gray-900 border-b-2 border-gray-900'
-            : 'text-gray-300 hover:text-gray-500 border-b-2 border-transparent'
+            ? 'text-[var(--md-text)] border-b-2 border-[var(--md-text)]'
+            : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] border-b-2 border-transparent'
         "
       >
         {{ tab }}

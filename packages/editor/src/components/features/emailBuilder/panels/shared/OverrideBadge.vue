@@ -1,5 +1,5 @@
 <template>
-  <span v-if="show" class="w-1 h-1 bg-green-400 rounded-full inline-block" />
+  <span v-if="show" class="w-1 h-1 bg-[var(--md-selection)] rounded-full inline-block" />
 </template>
 
 <script setup>

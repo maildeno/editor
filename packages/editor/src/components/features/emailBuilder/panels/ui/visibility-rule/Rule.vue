@@ -3,7 +3,7 @@
     class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center px-3 py-3.25 text-xs min-w-75 sm:min-w-105 mb-2"
   >
     <!-- Tag -->
-    <div class="flex sm:hidden text-[10px] text-gray-400 -mb-1">Tag</div>
+    <div class="flex sm:hidden text-[10px] text-[var(--md-text-subtle)] -mb-1">Tag</div>
     <div class="sm:col-span-3">
       <input
         :value="rule.tag"
@@ -16,7 +16,7 @@
     </div>
 
     <!-- Operator -->
-    <div class="flex sm:hidden text-[10px] text-gray-400 -mb-1">Operator</div>
+    <div class="flex sm:hidden text-[10px] text-[var(--md-text-subtle)] -mb-1">Operator</div>
     <div class="sm:col-span-4 relative">
       <Select
         :model-value="rule.operator"
@@ -47,7 +47,7 @@
       </p>
       <p
         v-else-if="isValueless(rule.operator)"
-        class="absolute -bottom-3.5 text-[9px] text-gray-400 leading-snug"
+        class="absolute -bottom-3.5 text-[9px] text-[var(--md-text-subtle)] leading-snug"
       >
         no value required
       </p>
@@ -55,7 +55,7 @@
 
     <!-- Value -->
     <div
-      class="flex sm:hidden text-[10px] text-gray-400 -mb-1"
+      class="flex sm:hidden text-[10px] text-[var(--md-text-subtle)] -mb-1"
       v-if="!isValueless(rule.operator)"
     >
       Value
@@ -73,7 +73,7 @@
         placeholder="YYYY-MM-DD"
         showIcon
         iconDisplay="input"
-        inputClass="w-full h-[32px] py-[8px] px-2 text-[13px] outline-1 outline-gray-200 rounded-md focus:outline-none focus:ring-[1px] focus:ring-green-500 text-sm"
+        inputClass="w-full h-[32px] py-[8px] px-2 text-[13px] outline-1 outline-[var(--md-border)] rounded-md focus:outline-none focus:ring-[1px] focus:ring-[var(--md-selection)] text-sm"
         class="w-full"
       />
       <!-- Standard input for all other operators -->
@@ -95,13 +95,13 @@
         <button
           type="button"
           @click="$emit('remove')"
-          class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors focus:outline-none"
+          class="w-7 h-7 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] rounded-md transition-colors focus:outline-none"
           aria-label="Remove rule"
         >
           <Icon name="times" style="font-size: 13px" />
         </button>
         <div
-          class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-900"
+          class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
         >
           Remove rule
         </div>

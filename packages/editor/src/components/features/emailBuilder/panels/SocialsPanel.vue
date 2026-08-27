@@ -40,7 +40,7 @@
     <!-- Social Platforms (desktop only — content editing) -->
     <PropertySection v-if="editMode === 'desktop'" title="Social Platforms">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs text-gray-400">
+        <span class="text-xs text-[var(--md-text-subtle)]">
           {{ component.props.platforms.length }}
           {{
             component.props.platforms.length === 1 ? "platform" : "platforms"
@@ -48,7 +48,7 @@
         </span>
         <button
           @click="addPlatform"
-          class="text-xs text-green-400 hover:text-green-600 flex items-center gap-1 transition-colors"
+          class="text-xs text-[var(--md-selection)] hover:text-[var(--md-selection-fg)] flex items-center gap-1 transition-colors"
         >
           <Icon name="plus" style="font-size: 9px" /> Add
         </button>
@@ -58,16 +58,16 @@
         <div
           v-for="(platform, index) in component.props.platforms"
           :key="platform._id ?? index"
-          class="border border-gray-100 rounded-lg shadow-xs overflow-hidden"
+          class="border border-[var(--md-border)] rounded-lg shadow-xs overflow-hidden"
         >
           <div
-            class="flex items-center justify-between p-2 bg-white hover:bg-green-100/50 transition-colors"
+            class="flex items-center justify-between p-2 bg-[var(--md-surface)] hover:bg-[var(--md-selection-bg)] transition-colors"
           >
             <div class="flex items-center gap-2 flex-1 min-w-0">
               <button
                 @click="onPlatformEnabledToggle(platform)"
                 class="relative w-7 h-4 rounded-full transition-colors shrink-0"
-                :class="platform.enabled ? 'bg-green-400/75' : 'bg-gray-200'"
+                :class="platform.enabled ? 'bg-[var(--md-selection)]/75' : 'bg-[var(--md-border)]'"
               >
                 <span
                   class="absolute top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-all"
@@ -80,7 +80,7 @@
                 class="flex items-center gap-1.5 flex-1 min-w-0 text-left"
               >
                 <Icon
-                  class="text-gray-400 transition-transform"
+                  class="text-[var(--md-text-subtle)] transition-transform"
                   :name="
                     isPlatformCollapsed(Number(index))
                       ? 'chevron-right'
@@ -90,7 +90,7 @@
                 />
                 <div
                   v-if="platform.icon"
-                  class="w-4 h-4 overflow-hidden bg-gray-50 shrink-0"
+                  class="w-4 h-4 overflow-hidden bg-[var(--md-surface-hover)] shrink-0"
                 >
                   <img
                     :src="platform.icon"
@@ -101,15 +101,15 @@
                 </div>
                 <div
                   v-else
-                  class="w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center shrink-0"
+                  class="w-4 h-4 rounded-full bg-[var(--md-surface-muted)] flex items-center justify-center shrink-0"
                 >
                   <Icon
                     name="image"
-                    class="text-gray-300"
+                    class="text-[var(--md-text-subtle)]"
                     style="font-size: 8px"
                   />
                 </div>
-                <span class="text-xs font-medium truncate text-gray-700">
+                <span class="text-xs font-medium truncate text-[var(--md-text-muted)]">
                   {{ platform.name || "Untitled" }}
                 </span>
               </button>
@@ -119,7 +119,7 @@
               <button
                 @click="movePlatform(Number(index), -1)"
                 :disabled="index === 0"
-                class="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                class="w-6 h-6 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Move up"
               >
                 <Icon name="chevron-up" style="font-size: 10px" />
@@ -127,14 +127,14 @@
               <button
                 @click="movePlatform(Number(index), 1)"
                 :disabled="index === component.props.platforms.length - 1"
-                class="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-gray-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                class="w-6 h-6 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Move down"
               >
                 <Icon name="chevron-down" style="font-size: 10px" />
               </button>
               <button
                 @click="removePlatform(Number(index))"
-                class="p-1.25 text-gray-400 hover:text-red-400 rounded-md hover:bg-red-50 transition-colors"
+                class="p-1.25 text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] rounded-md hover:bg-[var(--md-danger-bg)] transition-colors"
                 title="Delete platform"
               >
                 <svg
@@ -159,10 +159,10 @@
 
           <div
             v-show="!isPlatformCollapsed(Number(index))"
-            class="p-3 pt-0 space-y-2 border-t border-gray-100"
+            class="p-3 pt-0 space-y-2 border-t border-[var(--md-border)]"
           >
             <div class="mt-2">
-              <label class="text-[10px] text-gray-500 mb-1 block"
+              <label class="text-[10px] text-[var(--md-text-subtle)] mb-1 block"
                 >Platform Name</label
               >
               <InputText
@@ -175,7 +175,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] text-gray-500 mb-1 block"
+              <label class="text-[10px] text-[var(--md-text-subtle)] mb-1 block"
                 >Profile URL</label
               >
               <InputText
@@ -189,13 +189,13 @@
               />
             </div>
             <div>
-              <label class="text-[10px] text-gray-400 mb-1 block">Icon</label>
+              <label class="text-[10px] text-[var(--md-text-subtle)] mb-1 block">Icon</label>
 
               <div
                 v-if="platform.icon"
-                class="flex items-center gap-2 mb-2 px-2 py-1.5 bg-gray-50 border border-gray-100 rounded"
+                class="flex items-center gap-2 mb-2 px-2 py-1.5 bg-[var(--md-surface-hover)] border border-[var(--md-border)] rounded"
               >
-                <div class="w-6 h-6 overflow-hidden bg-white shrink-0">
+                <div class="w-6 h-6 overflow-hidden bg-[var(--md-surface)] shrink-0">
                   <img
                     :src="platform.icon"
                     :alt="platform.name"
@@ -203,7 +203,7 @@
                     @error="platform.icon = ''"
                   />
                 </div>
-                <span class="text-[10px] text-gray-400 truncate flex-1">
+                <span class="text-[10px] text-[var(--md-text-subtle)] truncate flex-1">
                   {{
                     platform.icon.startsWith("data:")
                       ? "✓ Image uploaded"
@@ -212,7 +212,7 @@
                 </span>
                 <button
                   @click="onPlatformIconClear(Number(index))"
-                  class="text-gray-300 hover:text-red-400 text-xs shrink-0"
+                  class="text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] text-xs shrink-0"
                   title="Clear"
                 >
                   <Icon name="times" style="font-size: 8px" />
@@ -233,7 +233,7 @@
                 type="button"
                 :disabled="isIconUploading"
                 @click="openIconPicker(Number(index))"
-                class="flex items-center justify-center gap-1.5 w-full py-1.5 text-[10px] border border-dashed border-gray-300 rounded hover:border-green-300 hover:bg-green-50 hover:text-green-600 text-gray-500 transition-colors"
+                class="flex items-center justify-center gap-1.5 w-full py-1.5 text-[10px] border border-dashed border-[var(--md-border-strong)] rounded hover:border-[var(--md-selection)] hover:bg-[var(--md-selection-bg)] hover:text-[var(--md-selection-fg)] text-[var(--md-text-subtle)] transition-colors"
               >
                 <Icon name="image" style="font-size: 10px" />
                 Click to upload icon image
@@ -244,7 +244,7 @@
 
         <div
           v-if="component.props.platforms.length === 0"
-          class="text-center py-6 text-[10px] text-gray-300"
+          class="text-center py-6 text-[10px] text-[var(--md-text-subtle)]"
         >
           No platforms. Click "Add" to get started.
         </div>

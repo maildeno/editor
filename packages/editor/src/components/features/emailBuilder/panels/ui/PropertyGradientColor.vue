@@ -1,12 +1,12 @@
 <template>
   <div class="space-y-4">
     <!-- Solid / Gradient toggle -->
-    <div class="flex bg-gray-100 p-0.5 rounded-lg">
+    <div class="flex bg-[var(--md-surface-muted)] p-0.5 rounded-lg">
       <button
         type="button"
         @click="setMode('solid')"
         class="flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all"
-        :class="!localValue.useGradient ? 'bg-white shadow-sm' : 'text-gray-500'"
+        :class="!localValue.useGradient ? 'bg-[var(--md-surface)] shadow-sm' : 'text-[var(--md-text-subtle)]'"
       >
         Solid
       </button>
@@ -14,7 +14,7 @@
         type="button"
         @click="setMode('gradient')"
         class="flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all"
-        :class="localValue.useGradient ? 'bg-white shadow-sm' : 'text-gray-500'"
+        :class="localValue.useGradient ? 'bg-[var(--md-surface)] shadow-sm' : 'text-[var(--md-text-subtle)]'"
       >
         Gradient
       </button>
@@ -37,24 +37,24 @@
     <div v-else class="space-y-3">
       <!-- Preview bar -->
       <div
-        class="h-8 rounded-lg border border-gray-200"
+        class="h-8 rounded-lg border border-[var(--md-border)]"
         :style="{ background: previewStyle }"
       />
 
       <!-- Type & Direction -->
       <div class="flex items-center gap-2">
-        <div class="flex bg-gray-100 rounded-lg p-1.25">
+        <div class="flex bg-[var(--md-surface-muted)] rounded-lg p-1.25">
           <button
             @click="updateGradientField('type', 'linear')"
             class="px-3 py-0.75 text-xs rounded-md transition-all"
-            :class="localValue.gradient.type === 'linear' ? 'bg-white shadow-sm' : 'text-gray-500'"
+            :class="localValue.gradient.type === 'linear' ? 'bg-[var(--md-surface)] shadow-sm' : 'text-[var(--md-text-subtle)]'"
           >
             Linear
           </button>
           <button
             @click="updateGradientField('type', 'radial')"
             class="px-3 py-0.75 text-xs rounded-md transition-all"
-            :class="localValue.gradient.type === 'radial' ? 'bg-white shadow-sm' : 'text-gray-500'"
+            :class="localValue.gradient.type === 'radial' ? 'bg-[var(--md-surface)] shadow-sm' : 'text-[var(--md-text-subtle)]'"
           >
             Radial
           </button>
@@ -76,10 +76,10 @@
       <!-- Color stops -->
       <div>
         <div class="flex items-center justify-between mb-2">
-          <label class="text-xs font-medium text-gray-500">Color stops</label>
+          <label class="text-xs font-medium text-[var(--md-text-subtle)]">Color stops</label>
           <button
             @click="addStop"
-            class="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"
+            class="text-xs text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] flex items-center gap-1"
           >
             <Icon name="plus" style="font-size: 9px" />
             Add stop
@@ -90,7 +90,7 @@
           <div
             v-for="(stop, index) in localValue.gradient.colors"
             :key="index"
-            class="flex items-center gap-1 bg-white border border-gray-200 rounded-full pl-1 pr-2 py-0.5 shadow-sm hover:border-gray-300 transition-colors"
+            class="flex items-center gap-1 bg-[var(--md-surface)] border border-[var(--md-border)] rounded-full pl-1 pr-2 py-0.5 shadow-sm hover:border-[var(--md-border-strong)] transition-colors"
           >
             <PropertyColor
               :bare="true"
@@ -110,14 +110,14 @@
                 step="1"
                 class="w-10 px-1 py-0 text-xs text-center border-0 focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
-              <span class="text-xs text-gray-400">%</span>
+              <span class="text-xs text-[var(--md-text-subtle)]">%</span>
             </div>
 
             <!-- Remove (only when > 2 stops) -->
             <button
               v-if="localValue.gradient.colors.length > 2"
               @click.stop="removeStop(index)"
-              class="flex items-center text-gray-300 hover:text-red-500 ml-0.5 transition-colors leading-none"
+              class="flex items-center text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] ml-0.5 transition-colors leading-none"
             >
               <Icon name="times" style="font-size: 8px" />
             </button>
