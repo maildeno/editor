@@ -6,7 +6,7 @@
     <PropertySection v-if="editMode === 'desktop'" title="Content">
       <!-- Link Text -->
       <div>
-        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">
+        <label class="block text-xs font-medium text-(--md-text-muted) mb-1">
           Link Text
         </label>
         <div class="relative">
@@ -28,7 +28,7 @@
 
       <!-- URL -->
       <div>
-        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">URL</label>
+        <label class="block text-xs font-medium text-(--md-text-muted) mb-1">URL</label>
         <div class="relative">
           <InputText
             ref="linkInputRef"
@@ -115,11 +115,11 @@
 
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-[var(--md-text-muted)]">Text Decoration</span>
+          <span class="text-xs font-medium text-(--md-text-muted)">Text Decoration</span>
           <button
             v-if="isOverridden('textDecoration')"
             @click="resetProp('textDecoration')"
-            class="text-xs text-[var(--md-selection)] hover:text-[var(--md-selection-fg)]"
+            class="text-xs text-(--md-selection) hover:text-(--md-selection-fg)"
           >
             ↩ Reset
           </button>

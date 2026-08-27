@@ -3,8 +3,8 @@
     <div class="p-4 space-y-5">
       <!-- Header -->
       <div>
-        <h3 class="text-sm font-medium text-[var(--md-text-muted)]">Add Layouts</h3>
-        <p class="text-xs text-[var(--md-text-subtle)] mt-0.5">
+        <h3 class="text-sm font-medium text-(--md-text-muted)">Add Layouts</h3>
+        <p class="text-xs text-(--md-text-subtle) mt-0.5">
           Click to append · Drag to position
         </p>
       </div>
@@ -13,12 +13,12 @@
       <div class="space-y-3">
         <button
           @click="equalOpen = !equalOpen"
-          class="w-full flex items-center justify-between text-[10px] font-semibold uppercase tracking-[.06em] text-[var(--md-text-subtle)] group-hover:text-[var(--md-text-muted)] transition-colors"
+          class="w-full flex items-center justify-between text-[10px] font-semibold uppercase tracking-[.06em] text-(--md-text-subtle) group-hover:text-(--md-text-muted) transition-colors"
         >
           <span>Equal columns</span>
 
           <svg
-            class="w-3.5 h-3.5 text-[var(--md-text-subtle)] group-hover:text-[var(--md-text-muted)] transition-all duration-200"
+            class="w-3.5 h-3.5 text-(--md-text-subtle) group-hover:text-(--md-text-muted) transition-all duration-200"
             :class="{ '-rotate-90': !equalOpen }"
             viewBox="0 0 24 24"
             fill="none"
@@ -45,22 +45,22 @@
                   onDragStart($event, { type: 'row', columns: layout.columns })
                 "
                 @dragend="onDragEnd"
-                class="group w-full relative p-3 border border-[var(--md-border)]/65 rounded-lg hover:border-[var(--md-row-selection)] hover:shadow-sm transition-all cursor-grab active:cursor-grabbing select-none"
+                class="group w-full relative p-3 border border-(--md-border)/65 rounded-lg hover:border-(--md-row-selection) hover:shadow-sm transition-all cursor-grab active:cursor-grabbing select-none"
               >
                 <span
-                  class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] text-[var(--md-text-subtle)] leading-none"
+                  class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] text-(--md-text-subtle) leading-none"
                   >⠿</span
                 >
                 <div class="flex gap-1 h-6">
                   <div
                     v-for="(col, i) in layout.preview"
                     :key="i"
-                    class="bg-[var(--md-surface-muted)] rounded group-hover:bg-[var(--md-row-selection-bg)] transition-colors flex-1"
+                    class="bg-(--md-surface-muted) rounded group-hover:bg-(--md-row-selection-bg) transition-colors flex-1"
                   />
                 </div>
               </button>
               <div
-                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
               >
                 Click · Drag to position
               </div>
@@ -73,11 +73,11 @@
       <div class="space-y-3">
         <button
           @click="asymmetricOpen = !asymmetricOpen"
-          class="w-full flex items-center justify-between text-[10px] font-semibold uppercase tracking-[.06em] text-[var(--md-text-subtle)] group-hover:text-[var(--md-text-muted)] transition-colors"
+          class="w-full flex items-center justify-between text-[10px] font-semibold uppercase tracking-[.06em] text-(--md-text-subtle) group-hover:text-(--md-text-muted) transition-colors"
         >
           <span>Asymmetric</span>
           <svg
-            class="w-3.5 h-3.5 text-[var(--md-text-subtle)] group-hover:text-[var(--md-text-muted)] transition-all duration-200"
+            class="w-3.5 h-3.5 text-(--md-text-subtle) group-hover:text-(--md-text-muted) transition-all duration-200"
             :class="{ '-rotate-90': !asymmetricOpen }"
             viewBox="0 0 24 24"
             fill="none"
@@ -104,17 +104,17 @@
                   onDragStart($event, { type: 'row', columns: layout.widths })
                 "
                 @dragend="onDragEnd"
-                class="group w-full relative p-3 border border-[var(--md-border)]/65 rounded-lg hover:border-[var(--md-row-selection)] hover:shadow-sm transition-all cursor-grab active:cursor-grabbing select-none"
+                class="group w-full relative p-3 border border-(--md-border)/65 rounded-lg hover:border-(--md-row-selection) hover:shadow-sm transition-all cursor-grab active:cursor-grabbing select-none"
               >
                 <span
-                  class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] text-[var(--md-text-subtle)] leading-none"
+                  class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] text-(--md-text-subtle) leading-none"
                   >⠿</span
                 >
                 <div class="flex gap-1 h-6">
                   <div
                     v-for="(width, i) in layout.widths"
                     :key="i"
-                    class="bg-[var(--md-surface-muted)] rounded group-hover:bg-[var(--md-row-selection-bg)] transition-colors flex items-center justify-center text-[8px] text-[var(--md-text-subtle)]"
+                    class="bg-(--md-surface-muted) rounded group-hover:bg-(--md-row-selection-bg) transition-colors flex items-center justify-center text-[8px] text-(--md-text-subtle)"
                     :style="{ flex: width }"
                   >
                     {{ width }}%
@@ -122,7 +122,7 @@
                 </div>
               </button>
               <div
-                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
               >
                 Click · Drag to position
               </div>
@@ -135,11 +135,11 @@
       <div class="space-y-3">
         <button
           @click="customOpen = !customOpen"
-          class="w-full flex items-center justify-between text-[10px] font-semibold uppercase tracking-[.06em] text-[var(--md-text-subtle)] group-hover:text-[var(--md-text-muted)] transition-colors"
+          class="w-full flex items-center justify-between text-[10px] font-semibold uppercase tracking-[.06em] text-(--md-text-subtle) group-hover:text-(--md-text-muted) transition-colors"
         >
           <span>Custom</span>
           <svg
-            class="w-3.5 h-3.5 text-[var(--md-text-subtle)] group-hover:text-[var(--md-text-muted)] transition-all duration-200"
+            class="w-3.5 h-3.5 text-(--md-text-subtle) group-hover:text-(--md-text-muted) transition-all duration-200"
             :class="{ '-rotate-90': !customOpen }"
             viewBox="0 0 24 24"
             fill="none"
@@ -155,7 +155,7 @@
         <transition name="slide">
           <div v-if="customOpen" class="space-y-4">
             <div>
-              <label class="block text-xs text-[var(--md-text-subtle)] mb-1.5"
+              <label class="block text-xs text-(--md-text-subtle) mb-1.5"
                 >Number of columns</label
               >
               <div class="flex gap-2">
@@ -164,7 +164,7 @@
                   type="number"
                   min="1"
                   max="6"
-                  class="flex-1 px-3 py-2 text-xs text-[var(--md-text)] outline-1 outline-[var(--md-border)] rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-[var(--md-selection)]"
+                  class="flex-1 px-3 py-2 text-xs text-(--md-text) outline-1 outline-(--md-border) rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-(--md-selection)"
                 />
                 <div class="relative group/btn">
                   <button
@@ -182,7 +182,7 @@
                     Add
                   </button>
                   <div
-                    class="pointer-events-none absolute bottom-full left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                    class="pointer-events-none absolute bottom-full left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
                   >
                     Click · Drag to position
                   </div>
@@ -191,9 +191,9 @@
             </div>
 
             <div>
-              <label class="block text-xs text-[var(--md-text-subtle)] mb-1.5">
+              <label class="block text-xs text-(--md-text-subtle) mb-1.5">
                 Custom widths
-                <span class="text-[var(--md-text-subtle)] text-[9px]">(sum to 100)</span>
+                <span class="text-(--md-text-subtle) text-[9px]">(sum to 100)</span>
               </label>
               <div class="flex gap-2">
                 <div class="flex-1 relative">
@@ -201,18 +201,18 @@
                     v-model="customWidthsInput"
                     type="text"
                     placeholder="e.g. 30, 70"
-                    class="w-full px-3 py-2 text-xs text-[var(--md-text)] outline-1 outline-[var(--md-border)] rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-[var(--md-selection)]"
+                    class="w-full px-3 py-2 text-xs text-(--md-text) outline-1 outline-(--md-border) rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-(--md-selection)"
                     :class="
                       customWidthsError
-                        ? 'focus:ring-[var(--md-danger)] bg-[var(--md-danger-bg)]'
-                        : 'border-[var(--md-border)] focus:border-[var(--md-border-strong)]'
+                        ? 'focus:ring-(--md-danger) bg-(--md-danger-bg)'
+                        : 'border-(--md-border) focus:border-(--md-border-strong)'
                     "
                     @input="validateCustomWidths"
                     @keyup.enter="addCustomWidths"
                   />
                   <span
                     v-if="customWidthsInput && !customWidthsError"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-[var(--md-selection-fg)]"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-(--md-selection-fg)"
                     >✓</span
                   >
                 </div>
@@ -227,19 +227,19 @@
                     :class="[
                       !customWidthsError && customWidthsInput
                         ? 'md-btn-primary cursor-grab active:cursor-grabbing'
-                        : 'bg-[var(--md-surface-muted)] text-[var(--md-text-subtle)]',
+                        : 'bg-(--md-surface-muted) text-(--md-text-subtle)',
                     ]"
                   >
                     Add
                   </button>
                   <div
-                    class="pointer-events-none absolute bottom-full left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                    class="pointer-events-none absolute bottom-full left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
                   >
                     Click · Drag to position
                   </div>
                 </div>
               </div>
-              <p v-if="customWidthsError" class="text-[9px] text-[var(--md-danger)] mt-1">
+              <p v-if="customWidthsError" class="text-[9px] text-(--md-danger) mt-1">
                 {{ customWidthsError }}
               </p>
 
@@ -247,7 +247,7 @@
                 <div
                   v-for="(w, i) in parsedCustomWidths"
                   :key="i"
-                  class="bg-[var(--md-surface-muted)] rounded flex items-center justify-center text-[8px] text-[var(--md-text-subtle)]"
+                  class="bg-(--md-surface-muted) rounded flex items-center justify-center text-[8px] text-(--md-text-subtle)"
                   :style="{ flex: w }"
                 >
                   {{ w }}%
@@ -266,7 +266,7 @@
             @click="addSpacer()"
             @dragstart="onDragStart($event, { type: 'spacer' })"
             @dragend="onDragEnd"
-            class="w-full flex items-center justify-center gap-2 px-3 py-2 border border-[var(--md-border)] rounded-lg hover:border-[var(--md-row-selection)] hover:bg-[var(--md-row-selection-bg)]/40 transition-all text-xs text-[var(--md-text-muted)] cursor-grab active:cursor-grabbing select-none"
+            class="w-full flex items-center justify-center gap-2 px-3 py-2 border border-(--md-border) rounded-lg hover:border-(--md-row-selection) hover:bg-(--md-row-selection-bg)/40 transition-all text-xs text-(--md-text-muted) cursor-grab active:cursor-grabbing select-none"
           >
             <div class="w-4 h-4">
               <svg
@@ -286,7 +286,7 @@
             <span>Spacer</span>
           </button>
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
           >
             Click · Drag to position
           </div>
@@ -301,8 +301,8 @@
         -->
         <button
           @click="toggleSavedRowsPanel()"
-          class="flex items-center justify-center gap-2 px-3 py-2 border border-[var(--md-border)] rounded-lg hover:border-[var(--md-border-strong)] hover:bg-[var(--md-surface-hover)] transition-all text-xs text-[var(--md-text-muted)]"
-          :class="{ 'border-[var(--md-text)] bg-[var(--md-surface-hover)]': savedRowsPanelOpen }"
+          class="flex items-center justify-center gap-2 px-3 py-2 border border-(--md-border) rounded-lg hover:border-(--md-border-strong) hover:bg-(--md-surface-hover) transition-all text-xs text-(--md-text-muted)"
+          :class="{ 'border-(--md-text) bg-(--md-surface-hover)': savedRowsPanelOpen }"
         >
           <div class="size-4">
             <svg
@@ -319,7 +319,7 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="stroke-[var(--md-text-muted)]"
+                class="stroke-(--md-text-muted)"
               />
             </svg>
           </div>

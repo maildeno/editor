@@ -21,9 +21,9 @@
         :style="{ left: indentPx }"
       >
         <!-- Dot -->
-        <div class="w-1.5 h-1.5 rounded-full bg-[var(--md-row-selection)] shrink-0 -ml-0.75" />
+        <div class="w-1.5 h-1.5 rounded-full bg-(--md-row-selection) shrink-0 -ml-0.75" />
         <!-- Line -->
-        <div class="flex-1 h-0.5 bg-[var(--md-row-selection)] rounded-full" />
+        <div class="flex-1 h-0.5 bg-(--md-row-selection) rounded-full" />
       </div>
     </Transition>
   </div>

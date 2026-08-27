@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col h-full bg-[var(--md-surface)]">
+  <div class="flex flex-col h-full bg-(--md-surface)">
     <!-- Search -->
-    <div class="px-3 py-2 border-b border-[var(--md-border)]">
+    <div class="px-3 py-2 border-b border-(--md-border)">
       <div class="relative">
         <svg
-          class="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--md-text-subtle)] pointer-events-none"
+          class="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-(--md-text-subtle) pointer-events-none"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -22,12 +22,12 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search by name or type…"
-          class="w-full pl-7 pr-7 py-1.25 text-[13px] text-[var(--md-text)] bg-transparent border border-[var(--md-border)] rounded-md focus:outline-none focus:border-[var(--md-border-strong)] transition-colors placeholder-[var(--md-text-subtle)]"
+          class="w-full pl-7 pr-7 py-1.25 text-[13px] text-[var(--md-text)] bg-transparent border border-(--md-border) rounded-md focus:outline-none focus:border-(--md-border-strong) transition-colors placeholder-(--md-text-subtle)"
         />
         <button
           v-if="searchQuery"
           @click="searchQuery = ''"
-          class="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] transition-colors"
+          class="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text-muted) transition-colors"
           aria-label="Clear search"
         >
           <svg
@@ -54,7 +54,7 @@
       @mousedown="handleTreeMousedown"
     >
       <div v-if="filteredRows.length === 0" class="px-3 py-8 text-center">
-        <p class="text-[11px] text-[var(--md-text-subtle)]">
+        <p class="text-[11px] text-(--md-text-subtle)">
           {{ searchQuery ? "No layers match" : "No rows yet" }}
         </p>
       </div>
@@ -99,14 +99,14 @@
             :class="[
               'flex items-center gap-1 pr-3 py-1.5 cursor-pointer transition-colors select-none',
               isRowSelected(row.id)
-                ? 'bg-[var(--md-row-selection-bg)] text-[var(--md-row-selection)]'
-                : 'text-[var(--md-text-subtle)] hover:bg-[var(--md-surface-hover)] hover:text-[var(--md-text-muted)]',
+                ? 'bg-(--md-row-selection-bg) text-(--md-row-selection)'
+                : 'text-(--md-text-subtle) hover:bg-(--md-surface-hover) hover:text-(--md-text-muted)',
               isDragSource(row.id) ? 'opacity-40' : '',
             ]"
           >
             <!-- Drag grip -->
             <span
-              class="size-3.25 mr-0.5 text-[var(--md-text-muted)] hover:text-[var(--md-text)] shrink-0 cursor-grab active:cursor-grabbing opacity-0 group-hover/row:opacity-100 transition-opacity"
+              class="size-3.25 mr-0.5 text-(--md-text-muted) hover:text-(--md-text) shrink-0 cursor-grab active:cursor-grabbing opacity-0 group-hover/row:opacity-100 transition-opacity"
             >
               <svg viewBox="0 0 20 20" fill="currentColor">
                 <path
@@ -119,7 +119,7 @@
             <button
               v-if="row.type === 'row'"
               @click.stop="toggleExpanded(row.id)"
-              class="w-4.75 h-4.75 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text-subtle)] transition-transform shrink-0"
+              class="w-4.75 h-4.75 flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text-subtle) transition-transform shrink-0"
               :class="isExpanded(row.id) ? 'rotate-90' : ''"
             >
               <svg
@@ -137,10 +137,10 @@
             <button
               v-else
               @click.stop
-              class="w-4.5 h-3.75 flex items-center justify-center text-[var(--md-text-subtle)] shrink-0"
+              class="w-4.5 h-3.75 flex items-center justify-center text-(--md-text-subtle) shrink-0"
             >
               <svg
-                class="w-3.25 h-3.25 text-[var(--md-text-muted)] shrink-0"
+                class="w-3.25 h-3.25 text-(--md-text-muted) shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -182,7 +182,7 @@
               stroke-linejoin="round"
               class="w-3.25 h-3.25 shrink-0"
               :class="
-                isRowSelected(row.id) ? 'text-[var(--md-row-selection)]' : 'text-[var(--md-text-muted)]'
+                isRowSelected(row.id) ? 'text-(--md-row-selection)' : 'text-(--md-text-muted)'
               "
             >
               <polyline points="8 18 12 22 16 18" />
@@ -196,7 +196,7 @@
                 :ref="(el) => mountRenameInput(el as HTMLInputElement | null)"
                 :value="pendingRenameValue"
                 type="text"
-                class="flex-1 min-w-0 px-2 py-0.75 text-sm outline-1 outline-[var(--md-border)] rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-[var(--md-row-selection)] translate-y-px text-[var(--md-text-muted)]"
+                class="flex-1 min-w-0 px-2 py-0.75 text-sm outline-1 outline-(--md-border) rounded-md shadow-xs focus:outline-none focus:ring-[1px] focus:ring-(--md-row-selection) translate-y-px text-(--md-text-muted)"
                 @click.stop
                 @mousedown.stop
                 @keydown.enter.prevent="commitRename(row)"
@@ -205,7 +205,7 @@
             </template>
             <template v-else>
               <span
-                class="text-sm text-[var(--md-text-muted)] tracking-wider truncate flex-1 min-w-0"
+                class="text-sm text-(--md-text-muted) tracking-wider truncate flex-1 min-w-0"
                 >{{ getRowLabel(row) }}</span
               >
             </template>
@@ -213,7 +213,7 @@
             <!-- Column count badge -->
             <span
               v-if="row.type === 'row' && row.columns?.length > 1"
-              class="shrink-0 size-5 grid place-content-center rounded-full bg-[var(--md-surface-muted)] text-[var(--md-text-subtle)] text-[10px]"
+              class="shrink-0 size-5 grid place-content-center rounded-full bg-(--md-surface-muted) text-(--md-text-subtle) text-[10px]"
             >
               {{ row.columns.length }}
             </span>
@@ -223,7 +223,7 @@
               class="shrink-0 size-3.5"
             >
               <svg
-                class="size-3.5 text-[var(--md-row-selection)]"
+                class="size-3.5 text-(--md-row-selection)"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
@@ -297,9 +297,9 @@
 
     <!-- Footer -->
     <div
-      class="px-3 py-2 border-t border-[var(--md-border)] flex items-center justify-between"
+      class="px-3 py-2 border-t border-(--md-border) flex items-center justify-between"
     >
-      <span class="text-[11px] text-[var(--md-text-subtle)]">
+      <span class="text-[11px] text-(--md-text-subtle)">
         {{ rows.length }} row{{ rows.length !== 1 ? "s" : "" }}
         <template
           v-if="rows.filter((r: any) => r.type === 'row-spacer').length > 0"
@@ -320,7 +320,7 @@
       <button
         v-if="expandedRows.size > 0"
         @click="collapseAll"
-        class="text-[10px] text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] transition-colors"
+        class="text-[10px] text-(--md-text-subtle) hover:text-(--md-text-muted) transition-colors"
       >
         Collapse all
       </button>

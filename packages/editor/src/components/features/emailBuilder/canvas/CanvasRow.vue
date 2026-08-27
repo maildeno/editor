@@ -17,11 +17,11 @@
       class="pointer-events-none absolute -left-3 -right-3 top-0 bottom-0 border rounded transition-colors"
       :class="[
         selectedRowId === row.id
-          ? 'border-[var(--md-row-selection)]'
+          ? 'border-(--md-row-selection)'
           : canvasHoveredId === row.id
-            ? 'border-[var(--md-row-selection)] border-dashed'
+            ? 'border-(--md-row-selection) border-dashed'
             : isLayerHovered
-              ? 'border-[var(--md-row-selection-fg)] border-dashed opacity-60'
+              ? 'border-(--md-row-selection-fg) border-dashed opacity-60'
               : 'border-transparent',
       ]"
     />
@@ -50,7 +50,7 @@
         :style="{ top: badgePos.top + 'px', left: badgePos.left + 'px' }"
       >
         <div
-          class="flex items-center gap-1 bg-linear-to-r from-[var(--md-row-selection)] to-[var(--md-row-selection-fg)] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
+          class="flex items-center gap-1 bg-linear-to-r from-(--md-row-selection) to-(--md-row-selection-fg) text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
         >
           <svg
             class="w-2.5 h-2.5 shrink-0"
@@ -127,7 +127,7 @@
           :style="{ top: toolbarPos.top + 'px', left: toolbarPos.left + 'px' }"
         >
           <div
-            class="flex items-center bg-[var(--md-toolbar-bg)]/95 backdrop-blur-sm ring-1 ring-[var(--md-row-selection)]/70 rounded-xl p-1 shadow-[0_4px_12px_-2px_rgba(16,24,40,0.08),0_2px_4px_-1px_rgba(16,24,40,0.04)]"
+            class="flex items-center bg-(--md-toolbar-bg)/95 backdrop-blur-sm ring-1 ring-(--md-row-selection)/70 rounded-xl p-1 shadow-[0_4px_12px_-2px_rgba(16,24,40,0.08),0_2px_4px_-1px_rgba(16,24,40,0.04)]"
           >
             <!-- Integrated drag handle -->
             <div class="relative group/btn">
@@ -136,7 +136,7 @@
                 @dragstart.stop="handleDragStart"
                 @dragend.stop="handleDragEnd"
                 @click.stop
-                class="w-7 h-7 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)] active:bg-[var(--md-border)] active:cursor-grabbing rounded-lg cursor-grab transition-colors"
+                class="w-7 h-7 flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover) active:bg-(--md-border) active:cursor-grabbing rounded-lg cursor-grab transition-colors"
               >
                 <svg
                   class="w-3.5 h-3.5"
@@ -153,13 +153,13 @@
                 </svg>
               </div>
               <div
-                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
               >
                 Drag to reorder rows
               </div>
             </div>
 
-            <div class="w-px h-4 bg-[var(--md-border)]/80 mx-0.5" />
+            <div class="w-px h-4 bg-(--md-border)/80 mx-0.5" />
 
             <div class="relative group/btn">
               <button
@@ -168,8 +168,8 @@
                 class="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
                 :class="
                   isFirst
-                    ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
-                    : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]'
+                    ? 'text-(--md-text-subtle) opacity-40 cursor-not-allowed'
+                    : 'text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover)'
                 "
               >
                 <svg
@@ -186,7 +186,7 @@
                 </svg>
               </button>
               <div
-                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
               >
                 Move row up
               </div>
@@ -199,8 +199,8 @@
                 class="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
                 :class="
                   isLast
-                    ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
-                    : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]'
+                    ? 'text-(--md-text-subtle) opacity-40 cursor-not-allowed'
+                    : 'text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover)'
                 "
               >
                 <svg
@@ -217,29 +217,29 @@
                 </svg>
               </button>
               <div
-                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
               >
                 Move row down
               </div>
             </div>
 
-            <div class="w-px h-4 bg-[var(--md-border)]/80 mx-0.5" />
+            <div class="w-px h-4 bg-(--md-border)/80 mx-0.5" />
 
             <!-- Label chip -->
             <span
-              class="px-2 text-[11px] font-semibold text-[var(--md-row-selection-fg)] tracking-wide uppercase select-none"
+              class="px-2 text-[11px] font-semibold text-(--md-row-selection-fg) tracking-wide uppercase select-none"
             >
               Row
             </span>
 
             <!-- Save as product row (saved_row:create) -->
             <template v-if="!showSaveInput">
-              <div class="w-px h-4 bg-[var(--md-border)]/80 mx-0.5" />
+              <div class="w-px h-4 bg-(--md-border)/80 mx-0.5" />
 
               <div class="relative group/btn">
                 <button
                   @click.stop="openSaveInput"
-                  class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-row-selection-fg)] hover:bg-[var(--md-row-selection-bg)] transition-colors"
+                  class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-row-selection-fg) hover:bg-(--md-row-selection-bg) transition-colors"
                 >
                   <!-- Lucide: bookmark -->
                   <svg
@@ -258,7 +258,7 @@
                   </svg>
                 </button>
                 <div
-                  class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                  class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
                 >
                   Save as product row
                 </div>
@@ -272,12 +272,12 @@
                 @keyup.escape.stop="cancelSave"
                 @click.stop
                 :placeholder="row.name ? displayName(row.name) : 'Name'"
-                class="w-30 h-7 px-2 text-[11px] bg-[var(--md-surface-hover)] rounded-md border-0 focus:outline-none focus:ring-1 focus:ring-[var(--md-row-selection)] transition-colors"
+                class="w-30 h-7 px-2 text-[11px] bg-(--md-surface-hover) rounded-md border-0 focus:outline-none focus:ring-1 focus:ring-(--md-row-selection) transition-colors"
                 ref="saveInputRef"
               />
               <button
                 @click.stop="confirmSave"
-                class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-success)] hover:text-[var(--md-success-fg)] hover:bg-[var(--md-success-bg)] transition-colors"
+                class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-success) hover:text-(--md-success-fg) hover:bg-(--md-success-bg) transition-colors"
               >
                 <!-- Lucide: check -->
                 <svg
@@ -295,7 +295,7 @@
               </button>
               <button
                 @click.stop="cancelSave"
-                class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)] transition-colors"
+                class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover) transition-colors"
               >
                 <!-- Lucide: x -->
                 <svg
@@ -314,12 +314,12 @@
               </button>
             </template>
 
-            <div class="w-px h-4 bg-[var(--md-border)]/80 mx-0.5" />
+            <div class="w-px h-4 bg-(--md-border)/80 mx-0.5" />
 
             <div class="relative group/btn">
               <button
                 @click.stop="handleDuplicate"
-                class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-row-selection-fg)] hover:bg-[var(--md-row-selection-bg)] transition-colors"
+                class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-row-selection-fg) hover:bg-(--md-row-selection-bg) transition-colors"
               >
                 <!-- Lucide: copy -->
                 <svg
@@ -339,7 +339,7 @@
                 </svg>
               </button>
               <div
-                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
               >
                 Duplicate row
               </div>
@@ -348,7 +348,7 @@
             <div class="relative group/btn">
               <button
                 @click.stop="handleDelete"
-                class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] transition-colors"
+                class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-danger) hover:bg-(--md-danger-bg) transition-colors"
               >
                 <!-- Lucide: trash-2 -->
                 <svg
@@ -370,7 +370,7 @@
               </button>
 
               <div
-                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
               >
                 Delete row
               </div>

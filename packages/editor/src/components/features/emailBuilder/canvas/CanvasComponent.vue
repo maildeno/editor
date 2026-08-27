@@ -107,7 +107,7 @@
         :style="{ top: toolbarPos.top + 'px', left: toolbarPos.left + 'px' }"
       >
         <div
-          class="flex flex-row items-center bg-[var(--md-toolbar-bg)]/95 backdrop-blur-sm ring-1 ring-[var(--md-selection)]/70 rounded-xl px-1.5 py-1 gap-0.5 shadow-[0_2px_8px_-1px_rgba(16,24,40,0.08)]"
+          class="flex flex-row items-center bg-(--md-toolbar-bg)/95 backdrop-blur-sm ring-1 ring-(--md-selection)/70 rounded-xl px-1.5 py-1 gap-0.5 shadow-[0_2px_8px_-1px_rgba(16,24,40,0.08)]"
         >
           <!-- Drag handle -->
           <div class="relative group/btn">
@@ -116,7 +116,7 @@
               @dragstart.stop="handleDragStart"
               @dragend.stop="handleDragEnd"
               @click.stop
-              class="w-7 h-7 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)] active:bg-[var(--md-border)] active:cursor-grabbing rounded-lg cursor-grab transition-colors"
+              class="w-7 h-7 flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover) active:bg-(--md-border) active:cursor-grabbing rounded-lg cursor-grab transition-colors"
               aria-label="Drag to reorder"
             >
               <svg
@@ -134,13 +134,13 @@
               </svg>
             </div>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
             >
               Drag to reorder
             </div>
           </div>
 
-          <div class="w-px h-4 bg-[var(--md-border)] mx-1" />
+          <div class="w-px h-4 bg-(--md-border) mx-1" />
 
           <!-- Move up -->
           <div class="relative group/btn">
@@ -150,8 +150,8 @@
               :class="[
                 'w-7 h-7 flex items-center justify-center rounded-lg transition-colors',
                 isFirst
-                  ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
-                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]',
+                  ? 'text-(--md-text-subtle) opacity-40 cursor-not-allowed'
+                  : 'text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover)',
               ]"
               aria-label="Move up"
             >
@@ -169,7 +169,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
             >
               Move up
             </div>
@@ -183,8 +183,8 @@
               :class="[
                 'w-7 h-7 flex items-center justify-center rounded-lg transition-colors',
                 isLast
-                  ? 'text-[var(--md-text-subtle)] opacity-40 cursor-not-allowed'
-                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text)] hover:bg-[var(--md-surface-hover)]',
+                  ? 'text-(--md-text-subtle) opacity-40 cursor-not-allowed'
+                  : 'text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover)',
               ]"
               aria-label="Move down"
             >
@@ -202,19 +202,19 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
             >
               Move down
             </div>
           </div>
 
-          <div class="w-px h-4 bg-[var(--md-border)] mx-1" />
+          <div class="w-px h-4 bg-(--md-border) mx-1" />
 
           <!-- Duplicate -->
           <div class="relative group/btn">
             <button
               @click.stop="handleDuplicate"
-              class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-selection-fg)] hover:bg-[var(--md-selection-bg)] transition-colors"
+              class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-selection-fg) hover:bg-(--md-selection-bg) transition-colors"
               aria-label="Duplicate"
             >
               <svg
@@ -234,7 +234,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
             >
               Duplicate
             </div>
@@ -244,7 +244,7 @@
           <div class="relative group/btn">
             <button
               @click.stop="deleteComponent(component.id)"
-              class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] transition-colors"
+              class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-danger) hover:bg-(--md-danger-bg) transition-colors"
               aria-label="Delete"
             >
               <svg
@@ -265,7 +265,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+              class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
             >
               Delete
             </div>
@@ -285,15 +285,15 @@
     -->
     <div
       v-if="isSelected"
-      class="absolute inset-0 pointer-events-none border border-[var(--md-selection)] rounded"
+      class="absolute inset-0 pointer-events-none border border-(--md-selection) rounded"
     />
     <div
       v-else-if="isCanvasHovered"
-      class="absolute inset-0 pointer-events-none border border-dashed border-[var(--md-selection)] rounded"
+      class="absolute inset-0 pointer-events-none border border-dashed border-(--md-selection) rounded"
     />
     <div
       v-else-if="isLayerHovered"
-      class="absolute inset-0 pointer-events-none border border-dashed border-[var(--md-selection-fg)]/60 rounded"
+      class="absolute inset-0 pointer-events-none border border-dashed border-(--md-selection-fg)/60 rounded"
     />
   </div>
 </template>

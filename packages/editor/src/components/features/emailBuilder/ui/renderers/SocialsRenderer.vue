@@ -64,7 +64,7 @@ function handleLinkClick(event: MouseEvent) {
   <div :style="containerStyles" :class="hideClass">
     <div
       v-if="!component.props.platforms.some((p: any) => p.enabled && p.link)"
-      class="text-[var(--md-text-subtle)] text-sm italic py-4"
+      class="text-(--md-text-subtle) text-sm italic py-4"
     >
       Add social link from panel
     </div>

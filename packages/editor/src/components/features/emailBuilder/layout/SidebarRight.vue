@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import ParagraphBlock from "../blocks/ParagraphBlock.vue";
 import HeadingBlock from "../blocks/HeadingBlock.vue";
 import ImageBlock from "../blocks/ImageBlock.vue";
@@ -11,7 +12,6 @@ import SpacerBlock from "../blocks/SpacerBlock.vue";
 import MenuBlock from "../blocks/MenuBlock.vue";
 import SocialsBlock from "../blocks/SocialsBlock.vue";
 import SidebarBlockButton from "../sidebar/SidebarBlockButton.vue";
-import { computed } from "vue";
 import { getAllBlocks } from "@/blocks/registry";
 
 const BUILT_IN = new Set([

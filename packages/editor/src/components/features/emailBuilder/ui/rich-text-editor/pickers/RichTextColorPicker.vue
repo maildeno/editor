@@ -1,7 +1,7 @@
 <template>
   <div ref="anchorRef" class="relative flex items-center justify-center">
     <button
-      class="rounded-full border border-[var(--md-border-strong)] cursor-pointer transition-all hover:scale-105 active:scale-95"
+      class="rounded-full border border-(--md-border-strong) cursor-pointer transition-all hover:scale-105 active:scale-95"
       :style="{
         width: size,
         height: size,

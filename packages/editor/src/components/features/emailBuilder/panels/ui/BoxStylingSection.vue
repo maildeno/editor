@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex items-start justify-between mb-2">
-      <p class="text-[11px] leading-relaxed text-[var(--md-text-subtle)] pr-2">
+      <p class="text-[11px] leading-relaxed text-(--md-text-subtle) pr-2">
         Applies to the highlighted text. Padding & rounded corners render best
         with a background color set.
       </p>
@@ -9,7 +9,7 @@
         v-if="hasBoxStyles"
         type="button"
         @click="resetAll"
-        class="shrink-0 text-xs text-[var(--md-selection-fg)] hover:opacity-80"
+        class="shrink-0 text-xs text-(--md-selection-fg) hover:opacity-80"
       >
         ↩ Reset
       </button>

@@ -12,13 +12,13 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="fixed inset-0 z-110 flex flex-col items-center justify-center bg-[var(--md-surface)] backdrop-blur-sm overflow-hidden"
+    class="fixed inset-0 z-110 flex flex-col items-center justify-center bg-(--md-surface) backdrop-blur-sm overflow-hidden"
   >
     <!-- Animated Logo -->
     <div class="relative mb-6">
       <div class="w-16 h-16 flex items-center justify-center">
         <div
-          class="absolute w-16 h-16 rounded-full border-2 border-[var(--md-border)] animate-ping opacity-75"
+          class="absolute w-16 h-16 rounded-full border-2 border-(--md-border) animate-ping opacity-75"
         />
         <div
           class="absolute w-12 h-12 rounded-full border-2 border-t-[#42389E] border-r-[#42389E] border-b-transparent border-l-transparent animate-spin"
@@ -31,27 +31,27 @@ onUnmounted(() => {
 
     <!-- Loading Text with Dots Animation -->
     <div class="flex items-center gap-1 mb-2">
-      <p class="text-lg font-medium text-[var(--md-text)]">
-        <span class="text-[#42389E]">mail</span>deno
+      <p class="text-lg font-medium text-(--md-text)">
+        <span class="text-(--md-primary)">mail</span>deno
       </p>
       <span class="flex gap-0.5 translate-y-0.5">
         <span
-          class="w-1 h-1 bg-[#42389E] rounded-full animate-bounce"
+          class="w-1 h-1 bg-(--md-primary) rounded-full animate-bounce"
           style="animation-delay: 0ms"
         />
         <span
-          class="w-1 h-1 bg-[#42389E] rounded-full animate-bounce"
+          class="w-1 h-1 bg-(--md-primary) rounded-full animate-bounce"
           style="animation-delay: 150ms"
         />
         <span
-          class="w-1 h-1 bg-[#42389E] rounded-full animate-bounce"
+          class="w-1 h-1 bg-(--md-primary) rounded-full animate-bounce"
           style="animation-delay: 300ms"
         />
       </span>
     </div>
 
     <!-- Subtle hint -->
-    <p class="text-sm text-[var(--md-text-subtle)] mt-1 select-none">
+    <p class="text-sm text-(--md-text-subtle) mt-1 select-none">
       This may take a few seconds
     </p>
   </div>

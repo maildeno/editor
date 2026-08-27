@@ -1,11 +1,11 @@
 <template>
   <div v-if="colors.length" class="mt-3">
-    <p class="text-[10px] font-semibold tracking-widest uppercase text-[var(--md-text-subtle)] mb-1.5">Recent</p>
+    <p class="text-[10px] font-semibold tracking-widest uppercase text-(--md-text-subtle) mb-1.5">Recent</p>
     <div class="flex gap-1 flex-wrap">
       <button
         v-for="c in colors"
         :key="c"
-        class="w-5 h-5 rounded border border-[var(--md-text)]/10 cursor-pointer transition-transform hover:scale-110 hover:shadow-sm shrink-0"
+        class="w-5 h-5 rounded border border-(--md-text)/10 cursor-pointer transition-transform hover:scale-110 hover:shadow-sm shrink-0"
         :class="c === 'transparent' ? 'transparent-swatch' : ''"
         :style="c !== 'transparent' ? { background: c } : {}"
         :title="c"

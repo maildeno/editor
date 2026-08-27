@@ -3,14 +3,14 @@
     <!-- ── Status row ───────────────────────────────────────────────────────── -->
     <div class="flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2">
-        <span class="text-xs text-[var(--md-text-muted)]">Status:</span>
+        <span class="text-xs text-(--md-text-muted)">Status:</span>
         <button
           @click="toggleEnabled"
           class="text-xs px-2 py-1 rounded-full transition-colors whitespace-nowrap"
           :class="
             props.visibility.enabled
-              ? 'bg-[var(--md-selection-bg)] text-[var(--md-selection-fg)]'
-              : 'bg-[var(--md-surface-muted)] text-[var(--md-text-muted)]'
+              ? 'bg-(--md-selection-bg) text-(--md-selection-fg)'
+              : 'bg-(--md-surface-muted) text-(--md-text-muted)'
           "
         >
           {{ props.visibility.enabled ? "Active" : "Inactive" }}
@@ -22,11 +22,11 @@
       <!-- ════════════════════════════════════════════════════════════════════
            TOP-LEVEL BLOCK
            ════════════════════════════════════════════════════════════════════ -->
-      <div class="mt-3 border border-[var(--md-border)] rounded-md overflow-hidden">
+      <div class="mt-3 border border-(--md-border) rounded-md overflow-hidden">
         <!-- Block header — Match selector -->
-        <div class="bg-[var(--md-surface-hover)] px-3 py-2 border-b border-[var(--md-border)]">
+        <div class="bg-(--md-surface-hover) px-3 py-2 border-b border-(--md-border)">
           <div class="flex flex-row items-center justify-between gap-2">
-            <span class="text-xs text-[var(--md-text-subtle)] shrink-0">Match:</span>
+            <span class="text-xs text-(--md-text-subtle) shrink-0">Match:</span>
             <div class="w-44">
               <Select
                 :model-value="props.visibility.match"
@@ -39,7 +39,7 @@
               />
             </div>
           </div>
-          <div class="text-[10px] text-[var(--md-text-subtle)] mt-1">
+          <div class="text-[10px] text-(--md-text-subtle) mt-1">
             {{
               props.visibility.match === "all"
                 ? "— ALL rules must pass (AND)"
@@ -52,7 +52,7 @@
         <div class="rules-scroll">
           <!-- Column headers (desktop) -->
           <div
-            class="hidden sm:grid grid-cols-12 gap-2 px-3 py-1.5 text-[10px] font-medium text-[var(--md-text-subtle)] border-b border-[var(--md-border)] bg-[var(--md-surface)] min-w-[420px]"
+            class="hidden sm:grid grid-cols-12 gap-2 px-3 py-1.5 text-[10px] font-medium text-(--md-text-subtle) border-b border-(--md-border) bg-(--md-surface) min-w-105"
           >
             <div class="col-span-3">Tag</div>
             <div class="col-span-4">Operator</div>
@@ -61,7 +61,7 @@
           </div>
 
           <!-- Flat rules -->
-          <div class="divide-y divide-[var(--md-border)]">
+          <div class="divide-y divide-(--md-border)">
             <Rule
               v-for="(rule, i) in props.visibility.rules"
               :key="i"
@@ -73,10 +73,10 @@
         </div>
 
         <!-- Add flat rule -->
-        <div class="px-3 py-2 bg-[var(--md-surface)] border-t border-[var(--md-border)]">
+        <div class="px-3 py-2 bg-(--md-surface) border-t border-(--md-border)">
           <button
             @click="addRule(props.visibility.rules)"
-            class="flex items-center gap-1 text-xs text-[var(--md-selection-fg)] hover:opacity-80"
+            class="flex items-center gap-1 text-xs text-(--md-selection-fg) hover:opacity-80"
           >
             <Icon name="plus" style="font-size: 10px" />
             Add rule
@@ -88,7 +88,7 @@
           v-if="
             !props.visibility.rules.length && !props.visibility.groups?.length
           "
-          class="px-3 pb-2 text-xs text-[var(--md-text-subtle)] italic"
+          class="px-3 pb-2 text-xs text-(--md-text-subtle) italic"
         >
           No rules yet. Add a rule or a group below.
         </div>
@@ -98,9 +98,9 @@
            GROUPS
            ════════════════════════════════════════════════════════════════════ -->
       <div v-if="props.visibility.groups?.length" class="mt-3 space-y-3">
-        <div class="text-[10px] text-[var(--md-text-subtle)] uppercase tracking-wide">
+        <div class="text-[10px] text-(--md-text-subtle) uppercase tracking-wide">
           Groups — combined with top-level rules using
-          <span class="font-semibold text-[var(--md-text-muted)]">
+          <span class="font-semibold text-(--md-text-muted)">
             {{ props.visibility.match === "all" ? "AND" : "OR" }}
           </span>
         </div>
@@ -108,14 +108,14 @@
         <div
           v-for="(group, gi) in props.visibility.groups"
           :key="gi"
-          class="border border-[var(--md-info-border)] rounded-md overflow-hidden"
+          class="border border-(--md-info-border) rounded-md overflow-hidden"
         >
           <!-- Group header -->
           <div
-            class="flex items-start justify-between gap-2 bg-[var(--md-info-bg)] px-3 py-2 border-b border-[var(--md-info-border)]"
+            class="flex items-start justify-between gap-2 bg-(--md-info-bg) px-3 py-2 border-b border-(--md-info-border)"
           >
             <div class="flex items-center gap-2 rules-scroll pb-1">
-              <span class="text-xs text-[var(--md-info-fg)] font-medium shrink-0">
+              <span class="text-xs text-(--md-info-fg) font-medium shrink-0">
                 Group {{ gi + 1 }} Match:
               </span>
               <div class="w-44">
@@ -129,14 +129,14 @@
                   @update:model-value="onGroupMatchChange(group, $event)"
                 />
               </div>
-              <span class="text-[10px] text-[var(--md-info)] ml-1 shrink-0">
+              <span class="text-[10px] text-(--md-info) ml-1 shrink-0">
                 {{ group.match === "all" ? "— AND" : "— OR" }}
               </span>
             </div>
             <div class="relative group/btn">
               <button
                 @click="removeGroup(gi)"
-                class="mt-1 w-6 h-6 flex items-center justify-center text-[var(--md-info)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] transition-colors shrink-0"
+                class="mt-1 w-6 h-6 flex items-center justify-center text-(--md-info) hover:text-(--md-danger) hover:bg-(--md-danger-bg) transition-colors shrink-0"
               >
                 <svg
                   width="14"
@@ -157,7 +157,7 @@
               </button>
 
               <div
-                class="pointer-events-none absolute top-full right-0 mt-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 -translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:bottom-full after:right-3 after:border-4 after:border-transparent after:border-b-[var(--md-tooltip-bg)]"
+                class="pointer-events-none absolute top-full right-0 mt-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 -translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:bottom-full after:right-3 after:border-4 after:border-transparent after:border-b-(--md-tooltip-bg)"
               >
                 Remove group
               </div>
@@ -168,7 +168,7 @@
           <div class="rules-scroll">
             <!-- Group column headers (desktop) -->
             <div
-              class="hidden sm:grid grid-cols-12 gap-2 px-3 py-1.5 text-[10px] font-medium text-[var(--md-text-subtle)] border-b border-[var(--md-info-border)] bg-[var(--md-surface)] min-w-[420px]"
+              class="hidden sm:grid grid-cols-12 gap-2 px-3 py-1.5 text-[10px] font-medium text-(--md-text-subtle) border-b border-(--md-info-border) bg-(--md-surface) min-w-105"
             >
               <div class="col-span-3">Tag</div>
               <div class="col-span-4">Operator</div>
@@ -177,7 +177,7 @@
             </div>
 
             <!-- Group rules -->
-            <div class="divide-y divide-[var(--md-border)]">
+            <div class="divide-y divide-(--md-border)">
               <Rule
                 v-for="(rule, ri) in group.rules"
                 :key="ri"
@@ -189,10 +189,10 @@
           </div>
 
           <!-- Add rule to group -->
-          <div class="px-3 py-2 bg-[var(--md-surface)] border-t border-[var(--md-info-border)]">
+          <div class="px-3 py-2 bg-(--md-surface) border-t border-(--md-info-border)">
             <button
               @click="addRule(group.rules)"
-              class="flex items-center gap-1 text-xs text-[var(--md-info)] hover:text-[var(--md-info-fg)]"
+              class="flex items-center gap-1 text-xs text-(--md-info) hover:text-(--md-info-fg)"
             >
               <Icon name="plus" style="font-size: 10px" />
               Add rule to group
@@ -201,7 +201,7 @@
 
           <div
             v-if="!group.rules.length"
-            class="px-3 pb-2 text-xs text-[var(--md-text-subtle)] italic"
+            class="px-3 pb-2 text-xs text-(--md-text-subtle) italic"
           >
             Empty group — add at least one rule.
           </div>
@@ -211,7 +211,7 @@
       <!-- Add group -->
       <button
         @click="addGroup"
-        class="flex items-center gap-1 text-xs text-[var(--md-info)] hover:text-[var(--md-info-fg)] mt-3"
+        class="flex items-center gap-1 text-xs text-(--md-info) hover:text-(--md-info-fg) mt-3"
       >
         <Icon name="plus" style="font-size: 10px" />
         Add group
@@ -221,15 +221,15 @@
 </template>
 
 <script setup lang="ts">
-import Select from "@/components/ui/primitives/Select.vue";
-import Icon from "@/components/ui/Icon.vue";
-import PropertySection from "./PropertySection.vue";
-import Rule from "./visibility-rule/Rule.vue";
 import {
   type VisibilityOperator,
   type VisibilityGroup,
 } from "@/composables/emailBuilder/core/useEmailBuilderVisibility";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
+import PropertySection from "./PropertySection.vue";
+import Rule from "./visibility-rule/Rule.vue";
+import Select from "@/components/ui/primitives/Select.vue";
+import Icon from "@/components/ui/Icon.vue";
 
 const { saveToHistory } = useEmailBuilder();
 

@@ -1,7 +1,7 @@
 <template>
   <svg
     class="w-3.5 h-3.5 shrink-0"
-    :class="selected ? 'text-[var(--md-selection)]' : 'text-[var(--md-text-subtle)]'"
+    :class="selected ? 'text-(--md-selection)' : 'text-(--md-text-subtle)'"
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"

@@ -9,7 +9,7 @@
         <div class="flex items-center gap-2 min-w-0">
           <button
             type="button"
-            class="flex items-center justify-center w-[40px] h-[40px] shrink-0 rounded-full hover:bg-gray-100 transition-colors"
+            class="flex items-center justify-center w-10 h-10 shrink-0 rounded-full hover:bg-gray-100 transition-colors"
             aria-label="Back"
             @click="goBack"
           >

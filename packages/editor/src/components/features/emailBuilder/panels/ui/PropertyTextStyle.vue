@@ -2,14 +2,14 @@
 <template>
   <div class="space-y-2">
     <div class="flex items-center justify-between">
-      <label class="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[.02em] text-[var(--md-text-muted)]">
+      <label class="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[.02em] text-(--md-text-muted)">
         Text Style
         <OverrideBadge :show="isTransformOverridden || isDecorationOverridden" />
       </label>
       <button
         v-if="isTransformOverridden || isDecorationOverridden"
         @click="handleResetAll"
-        class="text-[11px] text-[var(--md-selection-fg)] hover:opacity-80 transition-colors"
+        class="text-[11px] text-(--md-selection-fg) hover:opacity-80 transition-colors"
       >
         Reset all
       </button>
@@ -18,7 +18,7 @@
     <div class="flex gap-2">
       <!-- Transform group -->
       <div class="flex-1 flex flex-col gap-1.5">
-        <span class="text-[10px] font-medium uppercase tracking-[.05em] text-[var(--md-text-muted)]">Transform</span>
+        <span class="text-[10px] font-medium uppercase tracking-[.05em] text-(--md-text-muted)">Transform</span>
         <div class="flex gap-1">
           <div
             v-for="opt in transformOptions"
@@ -33,18 +33,18 @@
               <span :class="opt.glyphClass" :style="opt.glyphStyle">{{ opt.glyph }}</span>
             </button>
             <!-- Tooltip -->
-            <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]">
+            <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)">
               {{ opt.label }}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="w-px bg-[var(--md-border)] self-stretch mx-0.5" />
+      <div class="w-px bg-(--md-border) self-stretch mx-0.5" />
 
       <!-- Decoration group -->
       <div class="flex-1 flex flex-col gap-1.5">
-        <span class="text-[10px] font-medium uppercase tracking-[.05em] text-[var(--md-text-muted)]">Decoration</span>
+        <span class="text-[10px] font-medium uppercase tracking-wider text-(--md-text-muted)">Decoration</span>
         <div class="flex gap-1">
           <div
             v-for="opt in decorationOptions"
@@ -59,7 +59,7 @@
               <span :class="opt.glyphClass" :style="opt.glyphStyle">{{ opt.glyph }}</span>
             </button>
             <!-- Tooltip -->
-            <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]">
+            <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)">
               {{ opt.label }}
             </div>
           </div>

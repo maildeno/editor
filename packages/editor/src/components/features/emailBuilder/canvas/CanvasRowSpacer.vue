@@ -14,12 +14,12 @@
       class="pointer-events-none absolute -left-3 -right-3 top-0 bottom-0 border rounded transition-colors"
       :class="[
         selectedRowId === spacer.id
-          ? 'border-[var(--md-row-selection)]'
+          ? 'border-(--md-row-selection)'
           : layerHoveredId === spacer.id
-            ? 'border-[var(--md-row-selection)] border-dashed'
+            ? 'border-(--md-row-selection) border-dashed'
             : isLayerHovered
-              ? 'border-[var(--md-row-selection-fg)] border-dashed opacity-60'
-              : 'border-transparent group-hover:border-[var(--md-border-strong)]',
+              ? 'border-(--md-row-selection-fg) border-dashed opacity-60'
+              : 'border-transparent group-hover:border-(--md-border-strong)',
       ]"
     />
 
@@ -44,7 +44,7 @@
         class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
       >
         <span
-          class="text-xs text-white bg-[var(--md-row-selection-fg)] px-1.5 py-px rounded shadow-sm"
+          class="text-xs text-white bg-(--md-row-selection-fg) px-1.5 py-px rounded shadow-sm"
         >
           {{ spacer.height }}px
         </span>
@@ -60,7 +60,7 @@
     >
       <!-- Pill trigger -->
       <div
-        class="flex items-center gap-1 bg-gradient-to-r from-[var(--md-row-selection)] to-[var(--md-row-selection-fg)] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
+        class="flex items-center gap-1 bg-gradient-to-r from-(--md-row-selection) to-(--md-row-selection-fg) text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
       >
         <svg
           class="w-2.5 h-2.5 shrink-0"

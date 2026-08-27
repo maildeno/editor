@@ -37,8 +37,8 @@ const title = computed(() => {
       badge.cls,
       highlight
         ? level === 'none'
-          ? 'ring-1 ring-[var(--md-danger)] bg-[var(--md-danger-bg)] px-0.5 rounded'
-          : 'ring-1 ring-[var(--md-warning)] bg-[var(--md-warning-bg)] px-0.5 rounded'
+          ? 'ring-1 ring-(--md-danger) bg-(--md-danger-bg) px-0.5 rounded'
+          : 'ring-1 ring-(--md-warning) bg-(--md-warning-bg) px-0.5 rounded'
         : ''
     ]"
     :title="title"

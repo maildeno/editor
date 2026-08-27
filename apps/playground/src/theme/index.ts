@@ -25,7 +25,7 @@ export const theme: ThemeOptions = {
   background: "#f8fafc",
   surface: "#ffffff",
   surfaceMuted: "#f1f5f9",
-  surfaceHover: "#e2e8f0",
+  surfaceHover: "#f9fafb",
 
   text: "#111827",
   textMuted: "#4b5563",

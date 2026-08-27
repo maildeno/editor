@@ -12,7 +12,7 @@
         @update:model-value="onLanguageChange"
       />
 
-      <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.25">
+      <label class="block text-xs font-medium text-(--md-text-muted) mb-1.25">
         Preheader Text
       </label>
       <InputText
@@ -92,7 +92,7 @@
       />
 
       <div v-if="canvasStyles.bodyBackgroundColor === 'transparent'">
-        <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1">
+        <label class="block text-xs font-medium text-(--md-text-muted) mb-1">
           Background Image URL
         </label>
         <InputText
@@ -106,7 +106,7 @@
 
         <!-- Upload area -->
         <div
-          class="relative group w-full h-20 border border-[var(--md-border)] rounded-lg overflow-hidden cursor-pointer hover:border-[var(--md-selection)] transition flex items-center justify-center bg-[var(--md-surface-hover)]/30"
+          class="relative group w-full h-20 border border-(--md-border) rounded-lg overflow-hidden cursor-pointer hover:border-(--md-selection) transition flex items-center justify-center bg-(--md-surface-hover)/30"
           @click="triggerBodyBgUpload"
         >
           <img
@@ -115,13 +115,13 @@
             class="max-h-full object-contain"
           />
           <div v-else class="flex flex-col items-center gap-1">
-            <Icon name="image" class="text-[var(--md-text-subtle)]" style="font-size: 16px" />
-            <span class="text-[9px] text-[var(--md-text-subtle)]">Click to upload</span>
+            <Icon name="image" class="text-(--md-text-subtle)" style="font-size: 16px" />
+            <span class="text-[9px] text-(--md-text-subtle)">Click to upload</span>
           </div>
         </div>
 
         <!-- FIX: show upload error so user gets feedback on failure -->
-        <p v-if="bgUploadError" class="mt-1 text-xs text-[var(--md-danger)]">
+        <p v-if="bgUploadError" class="mt-1 text-xs text-(--md-danger)">
           {{ bgUploadError }}
         </p>
 
@@ -137,7 +137,7 @@
       <template v-if="canvasStyles.bodyBackgroundImage">
         <!-- Background Size -->
         <div>
-          <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
+          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
             >Size</label
           >
           <div class="flex gap-1">
@@ -148,8 +148,8 @@
               class="flex-1 flex flex-col items-center gap-1 px-2 py-1.5 border rounded-md transition-all text-[10px]"
               :class="
                 canvasStyles.bodyBackgroundSize === opt.value
-                  ? 'border-[var(--md-selection)] bg-[var(--md-surface-hover)] text-[var(--md-text-muted)]'
-                  : 'border-[var(--md-border)]/75 text-[var(--md-text-subtle)] hover:border-[var(--md-border)] hover:bg-[var(--md-surface-hover)]'
+                  ? 'border-(--md-selection) bg-(--md-surface-hover) text-(--md-text-muted)'
+                  : 'border-(--md-border)/75 text-(--md-text-subtle) hover:border-(--md-border) hover:bg-(--md-surface-hover)'
               "
             >
               <Icon :name="getSizeIcon(opt.value)" style="font-size: 13px" />
@@ -160,7 +160,7 @@
 
         <!-- Background Repeat -->
         <div class="mt-3">
-          <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
+          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
             >Repeat</label
           >
           <div class="flex gap-1">
@@ -171,8 +171,8 @@
               class="flex-1 flex flex-col items-center gap-1 px-0.5 py-1.5 border rounded-md transition-all text-[10px]"
               :class="
                 canvasStyles.bodyBackgroundRepeat === opt.value
-                  ? 'border-[var(--md-selection)] bg-[var(--md-surface-hover)] text-[var(--md-text-muted)]'
-                  : 'border-[var(--md-border)]/75 text-[var(--md-text-subtle)] hover:border-[var(--md-border)] hover:bg-[var(--md-surface-hover)]'
+                  ? 'border-(--md-selection) bg-(--md-surface-hover) text-(--md-text-muted)'
+                  : 'border-(--md-border)/75 text-(--md-text-subtle) hover:border-(--md-border) hover:bg-(--md-surface-hover)'
               "
             >
               <Icon :name="getRepeatIcon(opt.value)" style="font-size: 13px" />
@@ -183,7 +183,7 @@
 
         <!-- Background Position -->
         <div class="mt-3">
-          <label class="block text-xs font-medium text-[var(--md-text-muted)] mb-1.5"
+          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
             >Position</label
           >
           <div class="grid grid-cols-3 gap-1">
@@ -194,8 +194,8 @@
               class="px-2 py-1.5 text-sm border rounded-md transition-all flex items-center justify-center"
               :class="
                 canvasStyles.bodyBackgroundPosition === pos.value
-                  ? 'border-[var(--md-selection)] bg-[var(--md-surface-hover)] text-[var(--md-text-muted)]'
-                  : 'border-[var(--md-border)]/75 text-[var(--md-text-subtle)] hover:border-[var(--md-border)] hover:bg-[var(--md-surface-hover)]'
+                  ? 'border-(--md-selection) bg-(--md-surface-hover) text-(--md-text-muted)'
+                  : 'border-(--md-border)/75 text-(--md-text-subtle) hover:border-(--md-border) hover:bg-(--md-surface-hover)'
               "
             >
               {{ pos.symbol }}

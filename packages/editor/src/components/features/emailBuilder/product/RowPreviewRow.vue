@@ -18,7 +18,7 @@
         <!-- Empty column placeholder -->
         <div
           v-if="(col.children ?? col.components ?? []).length === 0"
-          class="w-full border border-dashed border-[var(--md-border)] rounded"
+          class="w-full border border-dashed border-(--md-border) rounded"
           style="min-height: 10px"
         />
       </div>

@@ -1,14 +1,14 @@
 <template>
-  <div class="bg-[var(--md-surface)] border border-[var(--md-border)] rounded-xl p-4 space-y-4">
+  <div class="bg-(--md-surface) border border-(--md-border) rounded-xl p-4 space-y-4">
     <div class="flex items-center justify-between">
-      <h4 class="text-xs font-medium text-[var(--md-text-muted)]">{{ label }}</h4>
+      <h4 class="text-xs font-medium text-(--md-text-muted)">{{ label }}</h4>
       <div class="flex items-center gap-3">
         <!-- Lock / Unlock with tooltip -->
         <div class="relative group/btn">
           <button
             type="button"
             @click="linked = !linked"
-            class="w-7 h-7 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-selection)] hover:bg-[var(--md-surface-hover)] rounded-md transition-colors focus:outline-none"
+            class="w-7 h-7 flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-selection) hover:bg-(--md-surface-hover) rounded-md transition-colors focus:outline-none"
             :aria-label="linked ? 'Unlink sides' : 'Link all sides'"
             :aria-pressed="linked"
           >
@@ -16,7 +16,7 @@
           </button>
 
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
           >
             {{ linked ? "Unlink sides" : "Link all sides" }}
           </div>
@@ -25,7 +25,7 @@
           v-if="isMobileEdit && hasOverride"
           type="button"
           @click="$emit('update:modelValue', null)"
-          class="text-xs text-[var(--md-selection-fg)] hover:opacity-80 hover:underline transition-colors focus:outline-none"
+          class="text-xs text-(--md-selection-fg) hover:opacity-80 hover:underline transition-colors focus:outline-none"
         >
           Reset
         </button>
@@ -42,7 +42,7 @@
       <!-- Row 2 -->
       <SpacingSideInput :value="local.left" @update="setSide('left', $event)" />
       <div
-        class="border border-[var(--md-border-strong)] border-dashed rounded-lg py-2.75 text-[var(--md-text-subtle)] text-xs capitalize tracking-wide font-medium"
+        class="border border-(--md-border-strong) border-dashed rounded-lg py-2.75 text-(--md-text-subtle) text-xs capitalize tracking-wide font-medium"
       >
         {{ label?.slice(0, 3).toLowerCase() }}
       </div>
@@ -63,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/ui/Icon.vue";
 import { h, ref, computed } from "vue";
+import Icon from "@/components/ui/Icon.vue";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -94,7 +94,7 @@ const SpacingSideInput = {
         "div",
         {
           class:
-            "flex items-center border border-[var(--md-border)] hover:border-[var(--md-border-strong)] rounded-md overflow-hidden transition-colors bg-[var(--md-surface)]",
+            "flex items-center border border-(--md-border) hover:border-(--md-border-strong) rounded-md overflow-hidden transition-colors bg-(--md-surface)",
         },
         [
           h(
@@ -102,14 +102,14 @@ const SpacingSideInput = {
             {
               type: "button",
               class:
-                "px-1.5 py-0.5 hover:bg-[var(--md-surface-hover)] active:bg-[var(--md-surface-muted)] transition-colors focus:outline-none",
+                "px-1.5 py-0.5 hover:bg-(--md-surface-hover) active:bg-(--md-surface-muted) transition-colors focus:outline-none",
               onClick: () => emit("update", Math.max(0, props.value - 1)),
               "aria-label": "Decrease",
             },
             [
               h(Icon, {
                 name: "minus",
-                class: "text-[var(--md-text-subtle)]",
+                class: "text-(--md-text-subtle)",
                 style: "font-size:10px",
               }),
             ],
@@ -120,7 +120,7 @@ const SpacingSideInput = {
             type: "number",
             min: 0,
             class:
-              "w-7 py-0.5 text-xs text-center border-l border-r border-[var(--md-border)] focus:outline-none bg-transparent text-[var(--md-text)]",
+              "w-7 py-0.5 text-xs text-center border-l border-r border-(--md-border) focus:outline-none bg-transparent text-(--md-text)",
             onInput: (e: Event) =>
               emit("update", Number((e.target as HTMLInputElement).value)),
           }),
@@ -130,14 +130,14 @@ const SpacingSideInput = {
             {
               type: "button",
               class:
-                "px-1.5 py-0.5 hover:bg-[var(--md-selection-bg)] active:bg-[var(--md-selection)]/20 transition-colors focus:outline-none",
+                "px-1.5 py-0.5 hover:bg-(--md-selection-bg) active:bg-(--md-selection)/20 transition-colors focus:outline-none",
               onClick: () => emit("update", props.value + 1),
               "aria-label": "Increase",
             },
             [
               h(Icon, {
                 name: "plus",
-                class: "text-[var(--md-text-subtle)]",
+                class: "text-(--md-text-subtle)",
                 style: "font-size:10px",
               }),
             ],

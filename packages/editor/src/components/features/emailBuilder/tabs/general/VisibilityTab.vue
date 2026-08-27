@@ -1,14 +1,14 @@
 <template>
-  <div class="border border-[var(--md-border)] rounded-lg bg-[var(--md-surface)] overflow-hidden flex flex-col">
+  <div class="border border-(--md-border) rounded-lg bg-(--md-surface) overflow-hidden flex flex-col">
     <!-- Header -->
-    <div class="flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)] border-b border-[var(--md-border)] shrink-0">
+    <div class="flex items-center justify-between px-3 py-2 bg-(--md-surface-hover) border-b border-(--md-border) shrink-0">
       <div class="flex items-center gap-2">
-        <span class="text-xs font-medium text-[var(--md-text-muted)]">Preview Context</span>
-        <span class="text-[10px] text-[var(--md-text-subtle)] bg-[var(--md-surface)] px-1.5 py-0.5 rounded-full border border-[var(--md-border)]">
+        <span class="text-xs font-medium text-(--md-text-muted)">Preview Context</span>
+        <span class="text-[10px] text-(--md-text-subtle) bg-(--md-surface) px-1.5 py-0.5 rounded-full border border-(--md-border)">
           {{ activeCount }} active
         </span>
       </div>
-      <button @click="addContextEntry" class="text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] text-xs flex items-center gap-1">
+      <button @click="addContextEntry" class="text-(--md-text-subtle) hover:text-(--md-text-muted) text-xs flex items-center gap-1">
         <Icon name="plus" style="font-size: 8px" />
         Add tag
       </button>
@@ -17,8 +17,8 @@
     <!-- Context entries -->
     <div class="p-3 space-y-2 shrink-0">
       <div v-if="contextEntries.length > 0" class="grid grid-cols-2 gap-1.5 px-0.5">
-        <span class="text-[11px] text-[var(--md-text-subtle)]">Tag</span>
-        <span class="text-[11px] text-[var(--md-text-subtle)]">Value</span>
+        <span class="text-[11px] text-(--md-text-subtle)">Tag</span>
+        <span class="text-[11px] text-(--md-text-subtle)">Value</span>
       </div>
       <div v-for="(entry, i) in contextEntries" :key="i" class="flex items-center gap-2 group">
         <div class="flex-1 grid grid-cols-2 gap-1.5">
@@ -28,34 +28,34 @@
             class="mg-md-input" />
         </div>
         <button @click="removeEntry(i)"
-          class="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] shrink-0">
+          class="opacity-0 group-hover:opacity-100 transition-opacity text-(--md-text-subtle) hover:text-(--md-danger) shrink-0">
           <Icon name="times" style="font-size: 10px" />
         </button>
       </div>
       <div v-if="activeCount === 0" class="text-center py-3">
-        <span class="text-[11px] text-[var(--md-text-subtle)]">No active context tags — add one to preview visibility rules</span>
+        <span class="text-[11px] text-(--md-text-subtle)">No active context tags — add one to preview visibility rules</span>
       </div>
     </div>
 
     <!-- Conditional Blocks -->
-    <div v-if="conditionalBlocks.length > 0" class="border-t border-[var(--md-border)] flex flex-col min-h-0">
+    <div v-if="conditionalBlocks.length > 0" class="border-t border-(--md-border) flex flex-col min-h-0">
       <button @click="showConditionalSummary = !showConditionalSummary"
-        class="w-full flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)]/50 hover:bg-[var(--md-surface-muted)] transition-colors shrink-0">
+        class="w-full flex items-center justify-between px-3 py-2 bg-(--md-surface-hover)/50 hover:bg-(--md-surface-muted) transition-colors shrink-0">
         <div class="flex items-center gap-2">
-          <span class="text-xs font-medium text-[var(--md-text-muted)]">Conditional Blocks</span>
+          <span class="text-xs font-medium text-(--md-text-muted)">Conditional Blocks</span>
           <span class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded-full font-medium">
             {{ conditionalBlocks.length }}
           </span>
         </div>
-        <svg class="w-3 h-3 text-[var(--md-text-subtle)] transition-transform" :class="showConditionalSummary ? 'rotate-180' : ''"
+        <svg class="w-3 h-3 text-(--md-text-subtle) transition-transform" :class="showConditionalSummary ? 'rotate-180' : ''"
           fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
-      <div v-if="showConditionalSummary" class="overflow-y-auto divide-y divide-[var(--md-border)]" style="max-height: 320px">
-        <div v-for="block in conditionalBlocks" :key="block.id" class="p-3 hover:bg-[var(--md-surface-hover)]/40 transition-colors">
-           <h4 class="text-[10px] text-[var(--md-text-muted)] font-mono flex-1 mb-1">{{ block.label }}</h4>
+      <div v-if="showConditionalSummary" class="overflow-y-auto divide-y divide-(--md-border)" style="max-height: 320px">
+        <div v-for="block in conditionalBlocks" :key="block.id" class="p-3 hover:bg-(--md-surface-hover)/40 transition-colors">
+           <h4 class="text-[10px] text-(--md-text-muted) font-mono flex-1 mb-1">{{ block.label }}</h4>
           <div class="flex items-center gap-2 mb-2">
             <span class="text-[9px] font-semibold px-1.5 py-0.5 rounded border shrink-0" :class="
               block.kind === 'row'
@@ -68,7 +68,7 @@
             </span>
             <!-- Depth badge for nested elements -->
             <span v-if="block.depth > 0"
-              class="text-[9px] text-[var(--md-text-subtle)] bg-[var(--md-surface-muted)] px-1 py-0.5 rounded font-mono shrink-0">
+              class="text-[9px] text-(--md-text-subtle) bg-(--md-surface-muted) px-1 py-0.5 rounded font-mono shrink-0">
               depth {{ block.depth }}
             </span>
            
@@ -116,20 +116,20 @@
           <!-- Groups -->
           <div v-if="block.groups?.length" class="mt-2 space-y-2">
             <div v-if="block.rules.length > 0" class="flex items-center gap-1 pl-1">
-              <div class="h-px flex-1 bg-[var(--md-border)]" />
-              <span class="text-[8px] text-[var(--md-text-subtle)] uppercase font-bold px-1">
+              <div class="h-px flex-1 bg-(--md-border)" />
+              <span class="text-[8px] text-(--md-text-subtle) uppercase font-bold px-1">
                 {{ block.match === 'all' ? 'AND' : 'OR' }}
               </span>
-              <div class="h-px flex-1 bg-[var(--md-border)]" />
+              <div class="h-px flex-1 bg-(--md-border)" />
             </div>
             <div v-for="(group, gi) in block.groups" :key="gi"
-              class="border border-[var(--md-border)] rounded-md p-2 bg-[var(--md-surface-hover)]/30">
-              <div class="text-[8px] font-bold text-[var(--md-text-subtle)] uppercase tracking-widest mb-1.5">
+              class="border border-(--md-border) rounded-md p-2 bg-(--md-surface-hover)/30">
+              <div class="text-[8px] font-bold text-(--md-text-subtle) uppercase tracking-widest mb-1.5">
                 Group · {{ group.match === 'all' ? 'AND' : 'OR' }}
               </div>
               <div class="space-y-1.5">
                 <div v-for="(rule, ri) in group.rules" :key="ri" class="flex flex-col gap-0.5">
-                  <div v-if="ri > 0" class="text-[8px] font-bold text-[var(--md-text-subtle)] uppercase tracking-widest pl-0.5">
+                  <div v-if="ri > 0" class="text-[8px] font-bold text-(--md-text-subtle) uppercase tracking-widest pl-0.5">
                     {{ group.match === 'all' ? 'AND' : 'OR' }}
                   </div>
                   <div class="flex items-center gap-1.5 flex-wrap">
@@ -160,9 +160,9 @@
     </div>
 
     <!-- No conditional blocks -->
-    <div v-else class="px-3 py-4 text-center border-t border-[var(--md-border)]">
-      <Icon name="eye-slash" class="text-[var(--md-text-subtle)] block mb-1" style="font-size: 18px" />
-      <p class="text-[11px] text-[var(--md-text-subtle)]">No visibility rules configured yet</p>
+    <div v-else class="px-3 py-4 text-center border-t border-(--md-border)">
+      <Icon name="eye-slash" class="text-(--md-text-subtle) block mb-1" style="font-size: 18px" />
+      <p class="text-[11px] text-(--md-text-subtle)">No visibility rules configured yet</p>
     </div>
   </div>
 </template>

@@ -3,7 +3,7 @@
     <div
       ref="panelRef"
       data-color-panel
-      class="fixed z-[9999] w-[272px] bg-[var(--md-overlay-bg)] border border-[var(--md-overlay-border)] rounded-xl shadow-[var(--md-overlay-shadow)] p-3 select-none"
+      class="fixed z-9999 w-68 bg-(--md-overlay-bg) border border-(--md-overlay-border) rounded-xl shadow-(--md-overlay-shadow) p-3 select-none"
       :style="positionStyle"
     >
       <SVPanel v-model:s="s" v-model:v="v" :h="h" />
@@ -15,29 +15,29 @@
 
       <div class="flex gap-1.5 mt-2.5">
         <div
-          class="flex-1 h-6 rounded border border-[var(--md-overlay-border)] relative group/btn"
+          class="flex-1 h-6 rounded border border-(--md-overlay-border) relative group/btn"
           :style="{ background: cssColor }"
         >
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
           >
             Current color
           </div>
         </div>
         <div
-          class="flex-1 h-6 rounded border border-[var(--md-overlay-border)] opacity-50 cursor-pointer hover:opacity-100 transition-opacity relative group/btn"
+          class="flex-1 h-6 rounded border border-(--md-overlay-border) opacity-50 cursor-pointer hover:opacity-100 transition-opacity relative group/btn"
           :style="{ background: initialColor }"
           @click="revertToInitial"
         >
           <div
-            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+            class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
           >
             Click to revert
           </div>
         </div>
       </div>
 
-      <div class="flex mt-2.5 border-b border-[var(--md-border)]" role="tablist">
+      <div class="flex mt-2.5 border-b border-(--md-border)" role="tablist">
         <button
           v-for="tab in tabs"
           :key="tab"
@@ -46,15 +46,15 @@
           class="relative pb-1.5 px-2 text-[10px] font-semibold tracking-wider transition-colors"
           :class="
             activeTab === tab
-              ? 'text-[var(--md-text)]'
-              : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)]'
+              ? 'text-(--md-text)'
+              : 'text-(--md-text-subtle) hover:text-(--md-text-muted)'
           "
           @click="activeTab = tab"
         >
           {{ tab }}
           <span
             v-if="activeTab === tab"
-            class="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--md-text)] rounded-full"
+            class="absolute bottom-0 left-0 right-0 h-0.5 bg-(--md-text) rounded-full"
           />
         </button>
       </div>
@@ -62,7 +62,7 @@
       <div class="flex gap-1 mt-2 items-end">
         <!-- HEX -->
         <template v-if="activeTab === 'HEX'">
-          <div class="flex flex-col-reverse flex-[2] min-w-0">
+          <div class="flex flex-col-reverse flex-2 min-w-0">
             <input
               class="mg-md-input font-mono"
               :class="hexError ? 'mg-md-input--invalid' : ''"
@@ -75,7 +75,7 @@
               maxlength="7"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >HEX</label
             >
           </div>
@@ -89,7 +89,7 @@
               @change="a = clamp($event.target.value, 0, 100) / 100"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >A%</label
             >
           </div>
@@ -111,7 +111,7 @@
               @change="onRgbChange(i, $event.target.value)"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >{{ ch }}</label
             >
           </div>
@@ -125,7 +125,7 @@
               @change="a = clamp($event.target.value, 0, 100) / 100"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >A%</label
             >
           </div>
@@ -143,7 +143,7 @@
               @change="setFromHsl($event.target.value, hsl.s, hsl.l)"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >H°</label
             >
           </div>
@@ -157,7 +157,7 @@
               @change="setFromHsl(hsl.h, $event.target.value, hsl.l)"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >S%</label
             >
           </div>
@@ -171,7 +171,7 @@
               @change="setFromHsl(hsl.h, hsl.s, $event.target.value)"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >L%</label
             >
           </div>
@@ -185,7 +185,7 @@
               @change="a = clamp($event.target.value, 0, 100) / 100"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >A%</label
             >
           </div>
@@ -203,7 +203,7 @@
               @change="setFromHsb($event.target.value, hsb.s, hsb.b)"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >H°</label
             >
           </div>
@@ -217,7 +217,7 @@
               @change="setFromHsb(hsb.h, $event.target.value, hsb.b)"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >S%</label
             >
           </div>
@@ -231,7 +231,7 @@
               @change="setFromHsb(hsb.h, hsb.s, $event.target.value)"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >B%</label
             >
           </div>
@@ -245,7 +245,7 @@
               @change="a = clamp($event.target.value, 0, 100) / 100"
             />
             <label
-              class="text-[9px] text-[var(--md-text-subtle)] font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
+              class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
               >A%</label
             >
           </div>

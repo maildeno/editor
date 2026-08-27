@@ -85,12 +85,12 @@
     <PropertySection title="Appearance">
       <div>
         <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-medium text-[var(--md-text-muted)]">Background</label>
+          <label class="text-xs font-medium text-(--md-text-muted)">Background</label>
           <button
             v-if="isBackgroundOverridden()"
             type="button"
             @click="resetBackground"
-            class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
+            class="text-xs text-(--md-selection-fg) hover:opacity-80"
           >
             ↩ Reset
           </button>

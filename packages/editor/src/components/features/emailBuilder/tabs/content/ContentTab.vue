@@ -28,14 +28,14 @@
           Layers
           <span
             v-if="rows.length > 0"
-            class="inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-medium rounded-full bg-[var(--md-surface-muted)] text-[var(--md-text-subtle)]"
+            class="inline-flex items-center justify-center min-w-4 h-4 px-1 text-[10px] font-medium rounded-full bg-(--md-surface-muted) text-(--md-text-subtle)"
           >
             {{ rows.length }}
           </span>
         </span>
         <span
           v-if="sidebarTab === 'layers'"
-          class="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--md-text)] rounded-full"
+          class="absolute bottom-0 left-0 right-0 h-0.5 bg-(--md-text) rounded-full"
         />
       </button>
 
@@ -65,12 +65,12 @@
           Properties
           <span
             v-if="hasSelection && sidebarTab !== 'properties'"
-            class="w-1.5 h-1.5 rounded-full bg-[var(--md-text-subtle)]"
+            class="w-1.5 h-1.5 rounded-full bg-(--md-text-subtle)"
           />
         </span>
         <span
           v-if="sidebarTab === 'properties'"
-          class="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--md-text)] rounded-full"
+          class="absolute bottom-0 left-0 right-0 h-0.5 bg-(--md-text) rounded-full"
         />
       </button>
     </div>
@@ -91,10 +91,10 @@
         class="flex flex-col items-center justify-start h-full text-center py-8"
       >
         <div
-          class="w-10 h-10 rounded-xl bg-[var(--md-surface-muted)] flex items-center justify-center mb-3"
+          class="w-10 h-10 rounded-xl bg-(--md-surface-muted) flex items-center justify-center mb-3"
         >
           <svg
-            class="w-5 h-5 text-[var(--md-text-subtle)] -translate-x-0.5 -translate-y-0.5"
+            class="w-5 h-5 text-(--md-text-subtle) -translate-x-0.5 -translate-y-0.5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -107,8 +107,8 @@
             />
           </svg>
         </div>
-        <p class="text-sm font-medium text-[var(--md-text-subtle)] mb-1">Nothing selected</p>
-        <p class="text-xs text-[var(--md-text-subtle)]">
+        <p class="text-sm font-medium text-(--md-text-subtle) mb-1">Nothing selected</p>
+        <p class="text-xs text-(--md-text-subtle)">
           Click a row or component on the canvas, or browse via the Layers tab
         </p>
       </div>
@@ -119,7 +119,7 @@
         class="space-y-2.5"
       >
         <div class="flex items-center justify-between">
-          <p class="text-sm font-bold text-[var(--md-text-muted)]">
+          <p class="text-sm font-bold text-(--md-text-muted)">
             {{
               selectedRow.type === "row-spacer"
                 ? "Row Spacer Properties"
@@ -130,15 +130,15 @@
 
         <div class="flex items-center justify-between gap-2 mb-4">
           <div
-            class="flex items-center gap-1 p-0.5 bg-[var(--md-surface-muted)] rounded-lg flex-1"
+            class="flex items-center gap-1 p-0.5 bg-(--md-surface-muted) rounded-lg flex-1"
           >
             <button
               @click="activeTab = 'row'"
               class="flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all relative"
               :class="
                 activeTab === 'row'
-                  ? 'bg-[var(--md-surface)] text-[var(--md-text)] shadow-sm'
-                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)]'
+                  ? 'bg-(--md-surface) text-(--md-text) shadow-sm'
+                  : 'text-(--md-text-subtle) hover:text-(--md-text-muted)'
               "
             >
               {{ selectedRow.type === "row-spacer" ? "Spacer" : "Row" }}
@@ -149,14 +149,14 @@
               class="flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center justify-center gap-1.5 relative"
               :class="
                 activeTab === 'column'
-                  ? 'bg-[var(--md-surface)] text-[var(--md-text)] shadow-sm'
-                  : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)]'
+                  ? 'bg-(--md-surface) text-(--md-text) shadow-sm'
+                  : 'text-(--md-text-subtle) hover:text-(--md-text-muted)'
               "
             >
               <span>Column</span>
               <span
                 v-if="selectedColumn"
-                class="inline-flex items-center justify-center min-w-4.5 h-4 px-1 text-[9px] font-medium bg-[var(--md-border)] text-[var(--md-text-muted)] rounded-full"
+                class="inline-flex items-center justify-center min-w-4.5 h-4 px-1 text-[9px] font-medium bg-(--md-border) text-(--md-text-muted) rounded-full"
               >
                 {{ selectedColumnIndex + 1 }}/{{ selectedRow.columns.length }}
               </span>
@@ -165,7 +165,7 @@
           <div class="relative group/btn">
             <button
               @click="handleDeleteRow"
-              class="p-1.5 text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] rounded-md hover:bg-[var(--md-danger-bg)] transition-colors"
+              class="p-1.5 text-(--md-text-subtle) hover:text-(--md-danger) rounded-md hover:bg-(--md-danger-bg) transition-colors"
             >
               <svg
                 width="18"
@@ -185,7 +185,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute bottom-full left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)]"
+              class="pointer-events-none absolute bottom-full left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
             >
               Delete row
             </div>
@@ -206,14 +206,14 @@
         <div v-else-if="activeTab === 'column'">
           <p
             v-if="selectedRow.type === 'row-spacer'"
-            class="text-sm text-[var(--md-text-subtle)]"
+            class="text-sm text-(--md-text-subtle)"
           >
             Row spacers do not have columns.
           </p>
           <template v-else>
             <div
               v-if="selectedRow.columns.length > 1"
-              class="flex flex-wrap gap-3 mb-4 border-b border-[var(--md-border)]"
+              class="flex flex-wrap gap-3 mb-4 border-b border-(--md-border)"
             >
               <button
                 v-for="(col, i) in selectedRow.columns"
@@ -222,8 +222,8 @@
                 class="text-xs font-medium transition-colors pb-1.5"
                 :class="
                   selectedColumn?.columnId === col.id
-                    ? 'text-[var(--md-text)] border-b-2 border-[var(--md-text)]'
-                    : 'text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] border-b-2 border-transparent'
+                    ? 'text-(--md-text) border-b-2 border-(--md-text)'
+                    : 'text-(--md-text-subtle) hover:text-(--md-text-muted) border-b-2 border-transparent'
                 "
               >
                 Column {{ Number(i) + 1 }}
@@ -233,7 +233,7 @@
               v-if="activeColumnObject"
               :column="activeColumnObject"
             />
-            <p v-else class="text-sm text-[var(--md-text-subtle)]">
+            <p v-else class="text-sm text-(--md-text-subtle)">
               Select a column to edit its properties
             </p>
           </template>
@@ -243,19 +243,19 @@
       <!-- Component Properties -->
       <div v-else-if="selectedComponent" class="space-y-4">
         <div
-          class="flex items-center justify-between mb-4 pb-4 border-b border-[var(--md-border)]"
+          class="flex items-center justify-between mb-4 pb-4 border-b border-(--md-border)"
         >
           <div>
             <!-- Use componentType (new shape) falling back to type (legacy) -->
-            <p class="text-sm font-medium text-[var(--md-text-muted)] capitalize">
+            <p class="text-sm font-medium text-(--md-text-muted) capitalize">
               {{ selectedComponent.componentType ?? selectedComponent.type }}
             </p>
-            <p class="text-xs text-[var(--md-text-subtle)]">Component Properties</p>
+            <p class="text-xs text-(--md-text-subtle)">Component Properties</p>
           </div>
           <div class="relative group/btn">
             <button
               @click="handleDelete"
-              class="p-1.5 text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] rounded-md hover:bg-[var(--md-danger-bg)] transition-colors"
+              class="p-1.5 text-(--md-text-subtle) hover:text-(--md-danger) rounded-md hover:bg-(--md-danger-bg) transition-colors"
             >
               <svg
                 width="18"
@@ -275,7 +275,7 @@
               </svg>
             </button>
             <div
-              class="pointer-events-none absolute -bottom-[125%] left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:bottom-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-[var(--md-tooltip-bg)] after:rotate-180"
+              class="pointer-events-none absolute bottom-[-125%] left-2/2 -translate-x-2/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:bottom-full after:right-2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg) after:rotate-180"
             >
               Delete block
             </div>

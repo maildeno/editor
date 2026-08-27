@@ -35,8 +35,8 @@
 :root,
 :host {
   /* Core */
-  --md-primary: #111111;
-  --md-primary-hover: #000000;
+  --md-primary: #4a7c59;
+  --md-primary-hover: #3a5a40;
   --md-on-primary: #ffffff;
 
   --md-background: #f8fafc;

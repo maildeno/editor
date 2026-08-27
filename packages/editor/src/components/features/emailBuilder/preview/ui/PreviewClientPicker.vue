@@ -3,7 +3,7 @@
     <!-- Single wrapper for both overlay and drawer. Mount/unmount together. -->
     <div
       v-if="open"
-      class="preview-picker fixed inset-0 z-[9000]"
+      class="preview-picker fixed inset-0 z-9000"
       role="dialog"
       aria-modal="true"
       aria-label="Add email client"

@@ -14,9 +14,9 @@
  * empty list would make a missing capability look like an empty account.
  */
 import { ref, watch } from "vue";
-import Icon from "@/components/ui/Icon.vue";
 import { useStorageAdapter } from "@/adapters";
 import type { TemplateSummary } from "@/adapters/types";
+import Icon from "@/components/ui/Icon.vue";
 
 const props = defineProps<{ open: boolean; currentTemplateId?: string | null }>();
 const emit = defineEmits<{
@@ -98,16 +98,16 @@ function relativeDate(iso?: string): string {
       v-if="props.open"
       class="w-65 sticky top-16 h-[calc(100vh-5.25rem)] z-80"
     >
-      <div class="bg-[var(--md-surface)] flex flex-col h-full border-r border-[var(--md-border)]/80">
+      <div class="bg-(--md-surface) flex flex-col h-full border-r border-(--md-border)/80">
         <div class="flex items-center justify-between px-3.5 py-3 shrink-0">
           <div class="flex items-center gap-2">
-            <svg class="w-3.5 h-3.5 text-[var(--md-text-subtle)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-3.5 h-3.5 text-(--md-text-subtle)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect width="7" height="7" x="3" y="3" rx="1" />
               <rect width="7" height="7" x="14" y="3" rx="1" />
               <rect width="7" height="7" x="14" y="14" rx="1" />
               <rect width="7" height="7" x="3" y="14" rx="1" />
             </svg>
-            <span class="text-[11px] font-semibold text-[var(--md-text-subtle)] uppercase tracking-[.08em]">
+            <span class="text-[11px] font-semibold text-(--md-text-subtle) uppercase tracking-[.08em]">
               Saved Templates
             </span>
           </div>
@@ -115,7 +115,7 @@ function relativeDate(iso?: string): string {
           <div class="relative group/close">
             <button
               @click="emit('close')"
-              class="w-6 h-6 flex items-center justify-center rounded-md text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] hover:bg-[var(--md-surface-muted)] transition-colors focus:outline-none"
+              class="w-6 h-6 flex items-center justify-center rounded-md text-(--md-text-subtle) hover:text-(--md-text-muted) hover:bg-(--md-surface-muted) transition-colors focus:outline-none"
               aria-label="Close saved templates"
             >
               <Icon name="times" style="font-size: 12px" />
@@ -124,20 +124,20 @@ function relativeDate(iso?: string): string {
         </div>
 
         <div class="flex-1 overflow-y-auto px-2 pb-2">
-          <p v-if="!supported" class="px-2 py-6 text-[11px] text-[var(--md-text-subtle)] text-center leading-relaxed">
+          <p v-if="!supported" class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center leading-relaxed">
             This editor's storage adapter doesn't support listing templates.
           </p>
 
-          <p v-else-if="loading" class="px-2 py-6 text-[11px] text-[var(--md-text-subtle)] text-center">
+          <p v-else-if="loading" class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center">
             Loading…
           </p>
 
-          <p v-else-if="errored" class="px-2 py-6 text-[11px] text-[var(--md-danger)] text-center leading-relaxed">
+          <p v-else-if="errored" class="px-2 py-6 text-[11px] text-(--md-danger) text-center leading-relaxed">
             Couldn't load saved templates.<br />
             <button class="underline hover:no-underline mt-1" @click="load">Retry</button>
           </p>
 
-          <p v-else-if="!templates.length" class="px-2 py-6 text-[11px] text-[var(--md-text-subtle)] text-center leading-relaxed">
+          <p v-else-if="!templates.length" class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center leading-relaxed">
             No saved templates yet.<br />Save one and it'll appear here.
           </p>
 
@@ -145,26 +145,26 @@ function relativeDate(iso?: string): string {
             <div
               v-for="t in templates"
               :key="t.templateId"
-              class="group flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-[var(--md-surface-hover)] transition-colors cursor-pointer"
-              :class="t.templateId === props.currentTemplateId ? 'bg-[var(--md-row-selection-bg)]/70' : ''"
+              class="group flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-(--md-surface-hover) transition-colors cursor-pointer"
+              :class="t.templateId === props.currentTemplateId ? 'bg-(--md-row-selection-bg)/70' : ''"
               @click="emit('select', t.templateId)"
             >
               <div class="min-w-0 flex-1">
-                <div class="text-[12px] font-medium text-[var(--md-text)] truncate">
+                <div class="text-[12px] font-medium text-(--md-text) truncate">
                   {{ t.name || "Untitled template" }}
                 </div>
-                <div class="text-[10px] text-[var(--md-text-subtle)] truncate">
+                <div class="text-[10px] text-(--md-text-subtle) truncate">
                   {{ t.templateId }}
                 </div>
               </div>
 
-              <span class="text-[10px] text-[var(--md-text-subtle)] shrink-0 tabular-nums">
+              <span class="text-[10px] text-(--md-text-subtle) shrink-0 tabular-nums">
                 {{ relativeDate(t.updatedAt) }}
               </span>
 
               <button
                 v-if="typeof adapter.deleteTemplate === 'function'"
-                class="hidden group-hover:flex items-center justify-center w-5 h-5 shrink-0 rounded-md text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] hover:bg-[var(--md-danger-bg)] transition-colors focus:outline-none"
+                class="hidden group-hover:flex items-center justify-center w-5 h-5 shrink-0 rounded-md text-(--md-text-subtle) hover:text-(--md-danger) hover:bg-(--md-danger-bg) transition-colors focus:outline-none"
                 aria-label="Delete template"
                 @click="remove(t.templateId, $event)"
               >

@@ -5,13 +5,13 @@
     <!-- Menu Items (desktop only — content editing) -->
     <PropertySection v-if="editMode === 'desktop'" title="Menu Items">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs text-[var(--md-text-subtle)]">
+        <span class="text-xs text-(--md-text-subtle)">
           {{ component.props.items.length }}
           {{ component.props.items.length === 1 ? "item" : "items" }}
         </span>
         <button
           @click="addItem"
-          class="text-xs text-[var(--md-selection)] hover:text-[var(--md-selection-fg)] flex items-center gap-1 transition-colors"
+          class="text-xs text-(--md-selection) hover:text-(--md-selection-fg) flex items-center gap-1 transition-colors"
         >
           <Icon name="plus" style="font-size: 9px" /> Add
         </button>
@@ -21,20 +21,20 @@
         <div
           v-for="(item, index) in component.props.items"
           :key="item._id ?? index"
-          class="border border-[var(--md-border)] rounded-lg shadow-xs overflow-hidden"
+          class="border border-(--md-border) rounded-lg shadow-xs overflow-hidden"
         >
           <!-- Header row with toggle and controls -->
           <div
-            class="flex items-center justify-between p-2 bg-[var(--md-surface)] hover:bg-[var(--md-selection-bg)] transition-colors"
+            class="flex items-center justify-between p-2 bg-(--md-surface) hover:bg-(--md-selection-bg) transition-colors"
           >
             <div class="flex items-center gap-2 flex-1 min-w-0">
               <button
                 @click="onItemEnabledToggle(item)"
                 class="relative w-7 h-4 rounded-full transition-colors shrink-0"
-                :class="item.enabled ? 'bg-[var(--md-selection)]/75' : 'bg-[var(--md-border)]'"
+                :class="item.enabled ? 'bg-(--md-selection)/75' : 'bg-(--md-border)'"
               >
                 <span
-                  class="absolute top-0.5 h-3 w-3 rounded-full bg-[var(--md-surface)] shadow-sm transition-all"
+                  class="absolute top-0.5 h-3 w-3 rounded-full bg-(--md-surface) shadow-sm transition-all"
                   :class="item.enabled ? 'left-3.5' : 'left-0.5'"
                 />
               </button>
@@ -44,13 +44,13 @@
                 class="flex items-center gap-1.5 flex-1 min-w-0 text-left"
               >
                 <Icon
-                  class="text-[var(--md-text-subtle)] transition-transform"
+                  class="text-(--md-text-subtle) transition-transform"
                   :name="isItemCollapsed(Number(index))
                       ? 'chevron-right'
                       : 'chevron-down'"
                   style="font-size: 12px"
                 />
-                <span class="text-xs font-medium truncate text-[var(--md-text-muted)]">
+                <span class="text-xs font-medium truncate text-(--md-text-muted)">
                   {{ item.label || "Untitled" }}
                 </span>
               </button>
@@ -61,7 +61,7 @@
               <button
                 @click="moveItem(Number(index), -1)"
                 :disabled="index === 0"
-                class="w-6 h-6 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                class="w-6 h-6 flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text-muted) disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Move up"
               >
                 <Icon name="chevron-up" style="font-size: 10px" />
@@ -69,14 +69,14 @@
               <button
                 @click="moveItem(Number(index), 1)"
                 :disabled="index === component.props.items.length - 1"
-                class="w-6 h-6 flex items-center justify-center text-[var(--md-text-subtle)] hover:text-[var(--md-text-muted)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                class="w-6 h-6 flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text-muted) disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Move down"
               >
                 <Icon name="chevron-down" style="font-size: 10px" />
               </button>
               <button
                 @click="removeItem(Number(index))"
-                class="p-1.25 text-[var(--md-text-subtle)] hover:text-[var(--md-danger)] rounded-md hover:bg-[var(--md-danger-bg)] transition-colors"
+                class="p-1.25 text-(--md-text-subtle) hover:text-(--md-danger) rounded-md hover:bg-(--md-danger-bg) transition-colors"
                 title="Delete item"
               >
                 <svg
@@ -102,10 +102,10 @@
           <!-- Collapsible content -->
           <div
             v-show="!isItemCollapsed(Number(index))"
-            class="p-3 pt-0 space-y-2 border-t border-[var(--md-border)]"
+            class="p-3 pt-0 space-y-2 border-t border-(--md-border)"
           >
             <div class="mt-2">
-              <label class="text-[10px] text-[var(--md-text-subtle)] mb-1 block">Label</label>
+              <label class="text-[10px] text-(--md-text-subtle) mb-1 block">Label</label>
               <InputText
                 :model-value="item.label"
                 @update:model-value="(value) => onLabelInput(value, Number(index))"
@@ -114,7 +114,7 @@
               />
             </div>
             <div>
-              <label class="text-[10px] text-[var(--md-text-subtle)] mb-1 block">URL</label>
+              <label class="text-[10px] text-(--md-text-subtle) mb-1 block">URL</label>
               <InputText
                 :model-value="item.link"
                 @update:model-value="(value) => onUrlInput(value, Number(index))"
@@ -128,7 +128,7 @@
 
         <div
           v-if="component.props.items.length === 0"
-          class="text-center py-6 text-[10px] text-[var(--md-text-subtle)]"
+          class="text-center py-6 text-[10px] text-(--md-text-subtle)"
         >
           No items. Click "Add" to get started.
         </div>
@@ -229,12 +229,12 @@
     <PropertySection title="Appearance">
       <div>
         <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-medium text-[var(--md-text-muted)]">Background</label>
+          <label class="text-xs font-medium text-(--md-text-muted)">Background</label>
           <button
             v-if="isBackgroundOverridden()"
             type="button"
             @click="resetBackground"
-            class="text-xs text-[var(--md-selection-fg)] hover:opacity-80"
+            class="text-xs text-(--md-selection-fg) hover:opacity-80"
           >
             ↩ Reset
           </button>
@@ -299,7 +299,7 @@
         label="Stack Menu on Mobile"
         description="Menu will stack vertically on screens ≤600px"
         :model-value="component.props.mobileStack"
-        active-color="bg-[var(--md-selection)]"
+        active-color="bg-(--md-selection)"
         @update:model-value="onMobileStackChange"
       />
     </PropertySection>

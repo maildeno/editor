@@ -1,17 +1,17 @@
 <template>
   <div
     ref="rootEl"
-    class="border border-[var(--md-border)] rounded-lg bg-[var(--md-surface)] overflow-hidden"
+    class="border border-(--md-border) rounded-lg bg-(--md-surface) overflow-hidden"
   >
     <!-- ── Header ─────────────────────────────────────────────────────────── -->
     <div
-      class="flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)] border-b border-[var(--md-border)]"
+      class="flex items-center justify-between px-3 py-2 bg-(--md-surface-hover) border-b border-(--md-border)"
     >
       <div class="flex items-center gap-2">
-        <span class="text-xs font-medium text-[var(--md-text-muted)]">Tag Preview</span>
+        <span class="text-xs font-medium text-(--md-text-muted)">Tag Preview</span>
         <span
           v-if="allDetectedTags.length"
-          class="text-[10px] text-[var(--md-text-subtle)] bg-[var(--md-surface)] px-1.5 py-0.5 rounded-full border border-[var(--md-border)]"
+          class="text-[10px] text-(--md-text-subtle) bg-(--md-surface) px-1.5 py-0.5 rounded-full border border-(--md-border)"
         >
           {{ allDetectedTags.length }} tags
         </span>
@@ -24,10 +24,10 @@
         class="text-xs px-2 py-1 rounded-md transition-all flex items-center gap-1.5"
         :class="[
           isPreviewActive
-            ? 'bg-[var(--md-text)] text-[var(--md-surface)]'
+            ? 'bg-(--md-text) text-(--md-surface)'
             : tagEntries.length === 0
-              ? 'bg-[var(--md-surface-muted)] text-[var(--md-text-subtle)] cursor-not-allowed'
-              : 'bg-[var(--md-surface-muted)] text-[var(--md-text-muted)] hover:bg-[var(--md-border)]',
+              ? 'bg-(--md-surface-muted) text-(--md-text-subtle) cursor-not-allowed'
+              : 'bg-(--md-surface-muted) text-(--md-text-muted) hover:bg-(--md-border)',
         ]"
       >
         <Icon
@@ -44,7 +44,7 @@
         <div class="flex items-center gap-2">
           <div class="relative flex-1">
             <span
-              class="absolute left-2 top-[53%] -translate-y-1/2 text-[var(--md-text-subtle)] text-xs pointer-events-none"
+              class="absolute left-2 top-[53%] -translate-y-1/2 text-(--md-text-subtle) text-xs pointer-events-none"
               >&#123;&#123;</span
             >
             <input
@@ -55,7 +55,7 @@
             />
           </div>
 
-          <span class="text-[var(--md-text-subtle)] text-xs shrink-0">→</span>
+          <span class="text-(--md-text-subtle) text-xs shrink-0">→</span>
 
           <div class="relative flex-1">
             <input
@@ -69,14 +69,14 @@
             />
             <span
               v-if="entry.value"
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-[8px] text-[var(--md-selection-fg)]"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-[8px] text-(--md-selection-fg)"
               >✓</span
             >
           </div>
 
           <button
             @click="removeEntry(i)"
-            class="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--md-text-subtle)] hover:text-[var(--md-danger)]"
+            class="opacity-0 group-hover:opacity-100 transition-opacity text-(--md-text-subtle) hover:text-(--md-danger)"
           >
             <Icon name="times" style="font-size: 10px" />
           </button>
@@ -89,34 +89,34 @@
       v-if="tagEntries.length === 0 && allDetectedTags.length === 0"
       class="p-6 text-center"
     >
-      <span class="text-[11px] text-[var(--md-text-subtle)] block mb-1"
+      <span class="text-[11px] text-(--md-text-subtle) block mb-1"
         >No merge tags found</span
       >
-      <span class="text-[11px] text-[var(--md-text-subtle)]"
+      <span class="text-[11px] text-(--md-text-subtle)"
         >Add &#123;&#123; tag &#125;&#125; to any text block</span
       >
     </div>
     <div
       v-if="tagEntries.length === 0 && allDetectedTags.length > 0"
-      class="px-3 py-2 text-center border-t border-[var(--md-border)]"
+      class="px-3 py-2 text-center border-t border-(--md-border)"
     >
-      <span class="text-[11px] text-[var(--md-text-subtle)]"
+      <span class="text-[11px] text-(--md-text-subtle)"
         >Add preview values for detected tags</span
       >
     </div>
 
     <!-- ── Auto-detected tags ────────────────────────────────────────────── -->
-    <div v-if="allDetectedTags.length > 0" class="border-t border-[var(--md-border)]">
+    <div v-if="allDetectedTags.length > 0" class="border-t border-(--md-border)">
       <button
         @click="showDetectedSummary = !showDetectedSummary"
-        class="w-full flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)]/50 hover:bg-[var(--md-surface-muted)] transition-colors"
+        class="w-full flex items-center justify-between px-3 py-2 bg-(--md-surface-hover)/50 hover:bg-(--md-surface-muted) transition-colors"
       >
         <span
-          class="text-[10px] font-medium text-[var(--md-text-subtle)]/75 uppercase tracking-wider"
+          class="text-[10px] font-medium text-(--md-text-subtle)/75 uppercase tracking-wider"
           >Detected in canvas</span
         >
         <svg
-          class="w-3 h-3 text-[var(--md-text-subtle)] transition-transform"
+          class="w-3 h-3 text-(--md-text-subtle) transition-transform"
           :class="showDetectedSummary ? 'rotate-180' : ''"
           fill="none"
           stroke="currentColor"
@@ -139,8 +139,8 @@
             class="group relative px-2 py-1 text-xs rounded-md border transition-all"
             :class="
               isTagDefined(tag)
-                ? 'bg-[var(--md-text)] text-[var(--md-surface)] border-[var(--md-text)]'
-                : 'bg-[var(--md-surface)] text-[var(--md-text-muted)] border-[var(--md-border)] hover:border-[var(--md-border-strong)] hover:bg-[var(--md-surface-hover)]'
+                ? 'bg-(--md-text) text-(--md-surface) border-(--md-text)'
+                : 'bg-(--md-surface) text-(--md-text-muted) border-(--md-border) hover:border-(--md-border-strong) hover:bg-(--md-surface-hover)'
             "
           >
             &#123;&#123; {{ tag
@@ -150,13 +150,13 @@
             &#125;&#125;
             <span
               v-if="isTagDefined(tag)"
-              class="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[8px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
+              class="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[8px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
             >
               Preview: "{{ mergeTagPreviewContext[tag] }}"
             </span>
           </button>
         </div>
-        <p class="text-[11px] text-[var(--md-text-subtle)] mt-2 flex items-center gap-1">
+        <p class="text-[11px] text-(--md-text-subtle) mt-2 flex items-center gap-1">
           <Icon name="info-circle" style="font-size: 8px" />
           Click a tag to add a preview value
         </p>
@@ -166,15 +166,15 @@
     <!-- ── Export Tokens preview ─────────────────────────────────────────── -->
     <div
       v-if="tagEntries.some((e) => e.tag.trim())"
-      class="border-t border-[var(--md-border)]"
+      class="border-t border-(--md-border)"
     >
       <button
         @click="showESPPreview = !showESPPreview"
-        class="w-full flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)]/50 hover:bg-[var(--md-surface-muted)] transition-colors"
+        class="w-full flex items-center justify-between px-3 py-2 bg-(--md-surface-hover)/50 hover:bg-(--md-surface-muted) transition-colors"
       >
         <div class="flex items-center gap-2">
           <span
-            class="text-[10px] font-medium text-[var(--md-text-subtle)]/75 uppercase tracking-wider"
+            class="text-[10px] font-medium text-(--md-text-subtle)/75 uppercase tracking-wider"
             >Export Tokens</span
           >
           <span
@@ -185,7 +185,7 @@
           </span>
         </div>
         <svg
-          class="w-3 h-3 text-[var(--md-text-subtle)] transition-transform"
+          class="w-3 h-3 text-(--md-text-subtle) transition-transform"
           :class="showESPPreview ? 'rotate-180' : ''"
           fill="none"
           stroke="currentColor"
@@ -207,10 +207,10 @@
             class="space-y-1"
           >
             <div class="flex items-center gap-2 text-[10px]">
-              <span class="text-[var(--md-text-subtle)] shrink-0 w-14 text-right"
+              <span class="text-(--md-text-subtle) shrink-0 w-14 text-right"
                 >snapshot</span
               >
-              <span class="font-mono text-[var(--md-text-subtle)] shrink-0"
+              <span class="font-mono text-(--md-text-subtle) shrink-0"
                 >&#123;&#123; {{ entry.tag
                 }}{{
                   entry.fallback || detectedDefaults.get(entry.tag)
@@ -219,7 +219,7 @@
                 }}
                 &#125;&#125;</span
               >
-              <span class="text-[var(--md-text-subtle)] shrink-0">→</span>
+              <span class="text-(--md-text-subtle) shrink-0">→</span>
               <span
                 class="font-mono bg-sky-50 text-sky-700 px-1.5 py-0.5 rounded border border-sky-100 truncate"
               >
@@ -227,8 +227,8 @@
               </span>
             </div>
             <div class="flex items-center gap-2 text-[10px]">
-              <span class="text-[var(--md-text-subtle)] shrink-0 w-14 text-right">master</span>
-              <span class="font-mono text-[var(--md-text-subtle)] shrink-0"
+              <span class="text-(--md-text-subtle) shrink-0 w-14 text-right">master</span>
+              <span class="font-mono text-(--md-text-subtle) shrink-0"
                 >&#123;&#123; {{ entry.tag
                 }}{{
                   entry.fallback || detectedDefaults.get(entry.tag)
@@ -237,7 +237,7 @@
                 }}
                 &#125;&#125;</span
               >
-              <span class="text-[var(--md-text-subtle)] shrink-0">→</span>
+              <span class="text-(--md-text-subtle) shrink-0">→</span>
               <span
                 class="font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100 truncate"
               >
@@ -245,7 +245,7 @@
               </span>
             </div>
           </div>
-          <p class="text-[9px] text-[var(--md-text-subtle)] leading-relaxed pt-1">
+          <p class="text-[9px] text-(--md-text-subtle) leading-relaxed pt-1">
             <strong>snapshot</strong> = literal preview value (or inline
             default). <strong>master</strong> = ESP token sent to your mail
             server.
@@ -255,24 +255,24 @@
     </div>
 
     <!-- ── System tags picker ────────────────────────────────────────────── -->
-    <div class="border-t border-[var(--md-border)]">
+    <div class="border-t border-(--md-border)">
       <button
         @click="showSystemTags = !showSystemTags"
-        class="w-full flex items-center justify-between px-3 py-2 bg-[var(--md-surface-hover)]/50 hover:bg-[var(--md-surface-muted)] transition-colors"
+        class="w-full flex items-center justify-between px-3 py-2 bg-(--md-surface-hover)/50 hover:bg-(--md-surface-muted) transition-colors"
       >
         <div class="flex items-center gap-2">
           <span
-            class="text-[10px] font-medium text-[var(--md-text-subtle)]/75 uppercase tracking-wider"
+            class="text-[10px] font-medium text-(--md-text-subtle)/75 uppercase tracking-wider"
             >System Tags</span
           >
           <span
-            class="text-[9px] text-[var(--md-text-subtle)] bg-[var(--md-surface)] px-1.5 py-0.5 rounded-full border border-[var(--md-border)]"
+            class="text-[9px] text-(--md-text-subtle) bg-(--md-surface) px-1.5 py-0.5 rounded-full border border-(--md-border)"
           >
             {{ systemTagIds.length }}
           </span>
         </div>
         <svg
-          class="w-3 h-3 text-[var(--md-text-subtle)] transition-transform"
+          class="w-3 h-3 text-(--md-text-subtle) transition-transform"
           :class="showSystemTags ? 'rotate-180' : ''"
           fill="none"
           stroke="currentColor"
@@ -287,7 +287,7 @@
         </svg>
       </button>
       <div v-if="showSystemTags" class="p-3 space-y-2">
-        <p class="text-[9px] text-[var(--md-text-subtle)] leading-relaxed">
+        <p class="text-[9px] text-(--md-text-subtle) leading-relaxed">
           System tags are automatically translated to your target ESP's native
           token on export. Click to copy.
         </p>
@@ -296,13 +296,13 @@
             v-for="id in systemTagIds"
             :key="id"
             @click="copySystemTag(id)"
-            class="group relative flex items-center gap-1 px-2 py-1 text-xs rounded-md border border-dashed border-[var(--md-border-strong)] bg-[var(--md-surface)] text-[var(--md-text-muted)] hover:border-[var(--md-text-subtle)] hover:bg-[var(--md-surface-hover)] transition-all"
+            class="group relative flex items-center gap-1 px-2 py-1 text-xs rounded-md border border-dashed border-(--md-border-strong) bg-(--md-surface) text-(--md-text-muted) hover:border-(--md-text-subtle) hover:bg-(--md-surface-hover) transition-all"
             :title="systemTagPreview(id)"
           >
-            <Icon name="tag" class="text-[var(--md-text-subtle)]" style="font-size: 8px" />
+            <Icon name="tag" class="text-(--md-text-subtle)" style="font-size: 8px" />
             {{ id }}
             <span
-              class="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-[8px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 font-mono"
+              class="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[8px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 font-mono"
             >
               {{ systemTagPreview(id) }}
             </span>
@@ -310,7 +310,7 @@
         </div>
         <p
           v-if="copiedTag"
-          class="text-[9px] text-[var(--md-selection-fg)] flex items-center gap-1"
+          class="text-[9px] text-(--md-selection-fg) flex items-center gap-1"
         >
           <Icon name="check" style="font-size: 8px" />
           Copied {{ copiedTag }} to clipboard
@@ -321,8 +321,6 @@
 </template>
 
 <script setup lang="ts">
-import { queryAllFromRoot } from "@/utils/shadowDom";
-import Icon from "@/components/ui/Icon.vue";
 import { computed, watch, nextTick, ref } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import {
@@ -335,8 +333,9 @@ import {
   getSystemToken,
 } from "@/composables/emailBuilder/export/merge-tags/mergeTagMapper";
 import { ESP_SYNTAX_META } from "@/composables/emailBuilder/export/logic/espLogicWrapper";
-import type { ESPSyntax } from "@/composables/emailBuilder/export/logic/espLogicWrapper";
 import { getESPMetaSafe } from "@/esp/registry";
+import { queryAllFromRoot } from "@/utils/shadowDom";
+import Icon from "@/components/ui/Icon.vue";
 
 // Anchors the input lookups below to this component's own root node, so
 // they resolve inside the shadow root as well as the light DOM.

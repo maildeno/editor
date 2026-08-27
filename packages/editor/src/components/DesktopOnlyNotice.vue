@@ -143,11 +143,11 @@ const { isDesktop } = useDeviceDetection();
 <style scoped>
 /* ===== DESIGN SYSTEM TOKENS ===== */
 .desktop-gate {
-  --brand-primary: #2463eb;
-  --brand-primary-dark: #1b4ec4;
-  --brand-primary-light: #4b82f0;
-  --brand-gradient-start: #2463eb;
-  --brand-gradient-end: #8b5cf6;
+  --brand-primary: #4a7c59;
+  --brand-primary-dark: #3a5a40;
+  --brand-primary-light: #3a5a40;
+  --brand-gradient-start: #4a7c59;
+  --brand-gradient-end: #3a5a40;
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;

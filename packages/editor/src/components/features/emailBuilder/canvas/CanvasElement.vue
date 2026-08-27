@@ -46,7 +46,7 @@
     <!-- ── Unknown type fallback ─────────────────────────────────────────── -->
     <div
       v-else
-      class="text-xs text-[var(--md-text-subtle)] italic px-2 py-1 bg-[var(--md-surface-hover)] rounded border border-dashed border-[var(--md-border)]"
+      class="text-xs text-(--md-text-subtle) italic px-2 py-1 bg-(--md-surface-hover) rounded border border-dashed border-(--md-border)"
     >
       Unknown element type: {{ element.type }}
     </div>
@@ -55,7 +55,7 @@
   <!-- Depth exceeded warning -->
   <div
     v-else
-    class="text-xs text-[var(--md-warning)] italic px-2 py-1 bg-[var(--md-warning-bg)] rounded border border-dashed border-[var(--md-warning-border)]"
+    class="text-xs text-(--md-warning) italic px-2 py-1 bg-(--md-warning-bg) rounded border border-dashed border-(--md-warning-border)"
   >
     Max nesting depth reached (5)
   </div>

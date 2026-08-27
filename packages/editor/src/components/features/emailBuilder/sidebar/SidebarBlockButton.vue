@@ -5,12 +5,12 @@
       class="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-3 opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 ease-out"
     >
       <div
-        class="relative bg-[var(--md-tooltip-bg)] text-[var(--md-tooltip-text)] text-xs font-medium px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-lg"
+        class="relative bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-lg"
       >
         {{ label }}
         <!-- Arrow -->
         <span
-          class="absolute -right-1 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-[var(--md-tooltip-bg)] rotate-45"
+          class="absolute -right-1 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-(--md-tooltip-bg) rotate-45"
         />
       </div>
     </div>
@@ -23,7 +23,7 @@
       :disabled="!canAdd && !isDragging"
       :class="[
         'size-11 rounded-xl border-2 transition-all duration-150 grid place-content-center group/inner',
-        'border-[var(--md-border)]/80 hover:border-[var(--md-selection)] hover:bg-[var(--md-selection-bg)]',
+        'border-(--md-border)/80 hover:border-(--md-selection) hover:bg-(--md-selection-bg)',
         'disabled:opacity-40 disabled:cursor-not-allowed',
         'active:scale-95',
       ]"
@@ -31,7 +31,7 @@
     >
       <!-- Icon wrapper — subtle color shift on hover -->
       <div
-        class="size-[18px] text-[var(--md-text-subtle)] group-hover/inner:text-[var(--md-selection-fg)] transition-colors duration-150"
+        class="size-[18px] text-(--md-text-subtle) group-hover/inner:text-(--md-selection-fg) transition-colors duration-150"
       >
         <slot />
       </div>

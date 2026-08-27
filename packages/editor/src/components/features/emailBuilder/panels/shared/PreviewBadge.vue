@@ -7,7 +7,7 @@
   -->
   <div
     v-if="active && resolved !== raw && resolved !== ''"
-    class="mt-1.5 text-[11px] text-[var(--md-selection-fg)] bg-[var(--md-selection-bg)] px-1.5 py-0.5 rounded pointer-events-none truncate inline-block max-w-full"
+    class="mt-1.5 text-[11px] text-(--md-selection-fg) bg-(--md-selection-bg) px-1.5 py-0.5 rounded pointer-events-none truncate inline-block max-w-full"
     :title="resolved"
   >
     {{ resolved }}

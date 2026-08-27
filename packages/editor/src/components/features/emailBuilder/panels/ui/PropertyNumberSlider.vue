@@ -2,14 +2,14 @@
 <template>
   <div class="space-y-1.5">
     <div class="flex items-center justify-between">
-      <label class="flex items-center gap-1.5 text-xs font-medium text-[var(--md-text-muted)]">
+      <label class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)">
         {{ label }}
         <OverrideBadge :show="isOverridden" />
       </label>
       <button
         v-if="isOverridden"
         @click="$emit('reset')"
-        class="text-[11px] text-[var(--md-selection-fg)] hover:opacity-80 transition-colors"
+        class="text-[11px] text-(--md-selection-fg) hover:opacity-80 transition-colors"
       >
         ↩ Reset
       </button>
@@ -24,24 +24,24 @@
         :min="min"
         :max="max"
         :step="step"
-        class="flex-1 h-[3px] bg-[var(--md-border)] rounded-full appearance-none cursor-pointer accent-[var(--md-selection)] focus:outline-none"
+        class="flex-1 h-0.75 bg-(--md-border) rounded-full appearance-none cursor-pointer accent-(--md-selection) focus:outline-none"
       />
 
       <!-- Number input + chevrons -->
-      <div class="flex items-center border border-[var(--md-border)] rounded-md bg-[var(--md-surface)] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+      <div class="flex items-center border border-(--md-border) rounded-md bg-(--md-surface) overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
         <input
           :value="modelValue"
           @input="handleInput"
           @blur="clampValue"
           type="text"
           :inputmode="step === 1 ? 'numeric' : 'decimal'"
-          class="w-10 py-1 text-[12px] text-center border-0 focus:outline-none text-[var(--md-text-muted)] bg-transparent"
+          class="w-10 py-1 text-[12px] text-center border-0 focus:outline-none text-(--md-text-muted) bg-transparent"
         />
-        <div class="flex flex-col border-l border-[var(--md-border)]">
+        <div class="flex flex-col border-l border-(--md-border)">
           <button
             @click="increment"
             type="button"
-            class="w-4 h-[13px] flex items-center justify-center hover:bg-[var(--md-surface-hover)] transition-colors focus:outline-none"
+            class="w-4 h-3.25 flex items-center justify-center hover:bg-(--md-surface-hover) transition-colors focus:outline-none"
             :class="{ 'opacity-25 cursor-not-allowed': modelValue >= max }"
             :disabled="modelValue >= max"
           >
@@ -49,11 +49,11 @@
               <path d="m18 15-6-6-6 6"/>
             </svg>
           </button>
-          <div class="h-px bg-[var(--md-border)]" />
+          <div class="h-px bg-(--md-border)" />
           <button
             @click="decrement"
             type="button"
-            class="w-4 h-[13px] flex items-center justify-center hover:bg-[var(--md-surface-hover)] transition-colors focus:outline-none"
+            class="w-4 h-3.25 flex items-center justify-center hover:bg-(--md-surface-hover) transition-colors focus:outline-none"
             :class="{ 'opacity-25 cursor-not-allowed': modelValue <= min }"
             :disabled="modelValue <= min"
           >
@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      <span v-if="unit" class="text-[11px] text-[var(--md-text-muted)] w-4 shrink-0">{{ unit }}</span>
+      <span v-if="unit" class="text-[11px] text-(--md-text-muted) w-4 shrink-0">{{ unit }}</span>
     </div>
   </div>
 </template>

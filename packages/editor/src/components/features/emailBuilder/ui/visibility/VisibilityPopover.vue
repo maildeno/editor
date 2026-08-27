@@ -39,7 +39,7 @@
             </span>
             <span
               v-if="!isValueless(rule.operator)"
-              class="bg-gray-800 text-gray-100 ring-1 ring-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono max-w-[90px] truncate"
+              class="bg-gray-800 text-gray-100 ring-1 ring-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono max-w-22.5 truncate"
               :title="rule.value"
             >
               {{ rule.value || '?' }}
@@ -97,7 +97,7 @@
                 </span>
                 <span
                   v-if="!isValueless(rule.operator)"
-                  class="bg-gray-800 text-gray-100 ring-1 ring-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono max-w-[80px] truncate"
+                  class="bg-gray-800 text-gray-100 ring-1 ring-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono max-w-20 truncate"
                   :title="rule.value"
                 >
                   {{ rule.value || '?' }}
@@ -110,7 +110,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="px-3 py-1.5 bg-white/[0.03] border-t border-white/10">
+    <div class="px-3 py-1.5 bg-white/3 border-t border-white/10">
       <p class="text-[10px] text-gray-500">
         Shown when
         <span class="font-semibold text-gray-400">{{ visibility.match === 'all' ? 'all' : 'any' }}</span>
