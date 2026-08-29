@@ -94,15 +94,14 @@
   --md-toolbar-border: var(--md-border);
 
   /* Canvas interaction accents. Two independent families so a component
-     selection and a row selection stay visually distinct, exactly as they
-     do today (green vs purple) — see the comments on ThemeTokens. */
+     selection and a row selection stay visually distinct — see the comments on ThemeTokens. */
   --md-selection: #4ade80;
   --md-selection-bg: #f0fdf4;
   --md-selection-fg: #16a34a;
 
-  --md-row-selection: #a855f7;
-  --md-row-selection-bg: #faf5ff;
-  --md-row-selection-fg: #9333ea;
+  --md-row-selection: #4ade80;
+  --md-row-selection-bg: #f0fdf4;
+  --md-row-selection-fg: #16a34a;
 
   /* Small dark icon-button tooltips. Deliberately not derived from
      `overlay` — see the ThemeTokens comment on `tooltipBg`. */

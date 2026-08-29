@@ -89,7 +89,7 @@
           <!-- Flat rules -->
           <div v-if="block.rules.length > 0" class="space-y-1.5 pl-1">
             <div v-for="(rule, ri) in block.rules" :key="ri" class="flex flex-col gap-0.5">
-              <div v-if="ri > 0" class="text-[8px] font-bold text-[var(--md-text-subtle)] uppercase tracking-widest pl-0.5">
+              <div v-if="ri > 0" class="text-[8px] font-bold text-(--md-text-subtle) uppercase tracking-widest pl-0.5">
                 {{ block.match === 'all' ? 'AND' : 'OR' }}
               </div>
               <div class="flex items-center gap-1.5 flex-wrap">

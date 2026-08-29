@@ -92,10 +92,10 @@ export const theme: ThemeOptions = {
   selectionBg: "#eff6ff",
   selectionFg: "#1d4ed8",
 
-  // Row selection: violet.
-  rowSelection: "#8b5cf6",
-  rowSelectionBg: "#f5f3ff",
-  rowSelectionFg: "#6d28d9",
+  // Row selection: blue.
+  rowSelection: "#3b82f6",
+  rowSelectionBg: "#eff6ff",
+  rowSelectionFg: "#1d4ed8",
 
   // ── Tooltips ─────────────────────────────────────────────────────────
 

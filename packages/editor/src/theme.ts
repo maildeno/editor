@@ -99,7 +99,7 @@ export interface ThemeTokens {
   /** Same role as `selection`, one level up: row outlines, the row's
    *  floating toolbar, and "this is a row" indicators in the Layout tab
    *  and Layers panel. Separate token so components and rows can be told
-   *  apart at a glance, as they are by default (green vs purple). */
+   *  apart at a glance */
   rowSelection?: string;
   rowSelectionBg?: string;
   rowSelectionFg?: string;
