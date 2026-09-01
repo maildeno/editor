@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-3">
-     <!-- Row Name -->
+    <!-- Row Name -->
     <PropertySection title="Name">
       <div>
         <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5">
@@ -144,7 +144,7 @@ const DEFAULT_GRADIENT = {
  * Falls back gracefully if the spacer was created before gradient support.
  */
 
- const getSolid = () => {
+const getSolid = () => {
   const bg = props.spacer.backgroundGradient;
 
   if (bg?.solid && bg.solid !== "transparent") return bg.solid;

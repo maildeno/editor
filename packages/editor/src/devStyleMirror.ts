@@ -39,7 +39,11 @@ export function mirrorHeadStylesInto(shadowRoot: ShadowRoot): () => void {
     const obs = new MutationObserver(() => {
       clone.textContent = source.textContent;
     });
-    obs.observe(source, { characterData: true, childList: true, subtree: true });
+    obs.observe(source, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
     contentObservers.set(source, obs);
   };
 

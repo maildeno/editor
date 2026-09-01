@@ -172,6 +172,9 @@ Everything below is identical across frameworks. Only the mounting differs.
 | `theme` | `{ primaryColor?, surfaceColor? }` | Brand colour, expanded into a full 50–950 shade scale. |
 | `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json"> }` | Restrict which export formats appear. Omit for all four. |
 | `onSendTestEmail` | `(payload) => Promise<void>` | Enables the "Send test" button. Hidden entirely when omitted. |
+| `brandName` | `string` | Name in the desktop-only notice's "Powered by" line. Omit for the default; pass `""` to hide the line. |
+| `versions` | `boolean` | Replaces the saved-templates panel with version history. Needs the version adapter methods; the built-in localStorage adapter has them. |
+| `assistant` | `{ mount, unmount? }` | Fills the assistant drawer from a non-Vue host. Vue hosts can use the `#assistant` slot instead. |
 
 ### Getting content out
 
@@ -234,6 +237,15 @@ const adapter: EditorStorageAdapter = {
   },
 
   // ── Saved rows (reusable snippets) ─────────────────────────
+  // Optional second, read-only row library — an org's shared blocks.
+  // Shown in a "Shared" tab beside the user's own rows, and only when
+  // this returns something, so omitting it changes nothing. There is no
+  // save/rename/delete counterpart: curating a shared library is an admin
+  // concern the editor has no user model to express.
+  async listSystemSavedRows() {
+    return api.get("/org/saved-rows");
+  },
+
   async listSavedRows() {
     return fetch("/api/saved-rows").then((r) => r.json());
   },
@@ -446,4 +458,24 @@ Pass it back as `templateId` next time to reopen.
 - **The container needs a real height.** The editor fills its parent; `height: 100vh` or a sized flex child both work. A container with no height renders nothing visible.
 - **`transform`, `filter`, `perspective` or `will-change` on any ancestor** breaks `position: fixed` inside it — floating toolbars and pickers will land in the wrong place. Avoid them above the mount point.
 - **Desktop only.** The editor shows a notice on small screens rather than attempting a mobile drag-and-drop UI.
-- **Autosave** keeps a local draft, so a refresh mid-edit recovers. "New template" clears it deliberately.
+- **Autosave** keeps a local draft, so a refresh mid-edit recovers. "New template" clears it deliberately.
+
+> **Saving is opt-in.** Pass `onSave` to `init()` and the Save button appears.
+> Omit it and the button, the save-status indicator and the autosave timer are
+> all absent — which is what you want for a guest or read-only editor.
+>
+> `handle.on("save", …)` only ever fires when `onSave` was passed, because
+> without it the editor never saves and there is no event to hear. If you just
+> want to observe saves, pass a no-op `onSave` to enable saving and do the work
+> in the listener.
+
+```js
+const handle = await init({
+  container: "#editor",
+  onSave: ({ templateId }) => {
+    console.log("saved", templateId);
+    console.log(handle.getHtml());
+  },
+});
+```
+

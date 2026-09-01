@@ -8,7 +8,9 @@
       class="flex items-center justify-between px-3 py-2 bg-(--md-surface-hover) border-b border-(--md-border)"
     >
       <div class="flex items-center gap-2">
-        <span class="text-xs font-medium text-(--md-text-muted)">Tag Preview</span>
+        <span class="text-xs font-medium text-(--md-text-muted)"
+          >Tag Preview</span
+        >
         <span
           v-if="allDetectedTags.length"
           class="text-[10px] text-(--md-text-subtle) bg-(--md-surface) px-1.5 py-0.5 rounded-full border border-(--md-border)"
@@ -106,7 +108,10 @@
     </div>
 
     <!-- ── Auto-detected tags ────────────────────────────────────────────── -->
-    <div v-if="allDetectedTags.length > 0" class="border-t border-(--md-border)">
+    <div
+      v-if="allDetectedTags.length > 0"
+      class="border-t border-(--md-border)"
+    >
       <button
         @click="showDetectedSummary = !showDetectedSummary"
         class="w-full flex items-center justify-between px-3 py-2 bg-(--md-surface-hover)/50 hover:bg-(--md-surface-muted) transition-colors"
@@ -156,7 +161,9 @@
             </span>
           </button>
         </div>
-        <p class="text-[11px] text-(--md-text-subtle) mt-2 flex items-center gap-1">
+        <p
+          class="text-[11px] text-(--md-text-subtle) mt-2 flex items-center gap-1"
+        >
           <Icon name="info-circle" style="font-size: 8px" />
           Click a tag to add a preview value
         </p>
@@ -227,7 +234,9 @@
               </span>
             </div>
             <div class="flex items-center gap-2 text-[10px]">
-              <span class="text-(--md-text-subtle) shrink-0 w-14 text-right">master</span>
+              <span class="text-(--md-text-subtle) shrink-0 w-14 text-right"
+                >master</span
+              >
               <span class="font-mono text-(--md-text-subtle) shrink-0"
                 >&#123;&#123; {{ entry.tag
                 }}{{
@@ -299,7 +308,11 @@
             class="group relative flex items-center gap-1 px-2 py-1 text-xs rounded-md border border-dashed border-(--md-border-strong) bg-(--md-surface) text-(--md-text-muted) hover:border-(--md-text-subtle) hover:bg-(--md-surface-hover) transition-all"
             :title="systemTagPreview(id)"
           >
-            <Icon name="tag" class="text-(--md-text-subtle)" style="font-size: 8px" />
+            <Icon
+              name="tag"
+              class="text-(--md-text-subtle)"
+              style="font-size: 8px"
+            />
             {{ id }}
             <span
               class="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[8px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 font-mono"

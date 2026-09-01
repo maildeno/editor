@@ -10,7 +10,10 @@ import Dialog from "./primitives/Dialog.vue";
 import Button from "./primitives/Button.vue";
 import Icon from "./Icon.vue";
 import {
-  activeConfirm, confirmVisible, acceptActive, rejectActive,
+  activeConfirm,
+  confirmVisible,
+  acceptActive,
+  rejectActive,
 } from "@/composables/ui/useConfirm";
 </script>
 
@@ -18,7 +21,11 @@ import {
   <Dialog
     :visible="confirmVisible"
     :header="activeConfirm?.header"
-    @update:visible="(v: boolean) => { if (!v) rejectActive(); }"
+    @update:visible="
+      (v: boolean) => {
+        if (!v) rejectActive();
+      }
+    "
   >
     <div class="md-confirm__body">
       <Icon name="exclamation-triangle" class="md-confirm__icon" />
@@ -42,7 +49,21 @@ import {
 </template>
 
 <style scoped>
-.md-confirm__body { display: flex; align-items: flex-start; gap: 0.75rem; }
-.md-confirm__icon { font-size: 22px; color: var(--md-warning); flex-shrink: 0; margin-top: 0.125rem; }
-.md-confirm__message { margin: 0; font-size: 14px; line-height: 1.5; color: var(--md-text); }
+.md-confirm__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.md-confirm__icon {
+  font-size: 22px;
+  color: var(--md-warning);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+.md-confirm__message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--md-text);
+}
 </style>

@@ -15,8 +15,17 @@ import SidebarBlockButton from "../sidebar/SidebarBlockButton.vue";
 import { getAllBlocks } from "@/blocks/registry";
 
 const BUILT_IN = new Set([
-  "paragraph", "heading", "image", "video", "list",
-  "button", "anchor", "divider", "spacer", "menu", "socials",
+  "paragraph",
+  "heading",
+  "image",
+  "video",
+  "list",
+  "button",
+  "anchor",
+  "divider",
+  "spacer",
+  "menu",
+  "socials",
 ]);
 
 /**
@@ -30,12 +39,13 @@ const customBlocks = computed(() =>
     (b) => Boolean(b.icon) && !BUILT_IN.has(b.name),
   ),
 );
-
 </script>
 
 <template>
   <div class="p-2 space-y-3 sticky top-13 h-fit z-40">
-    <div class="w-15 py-2 flex flex-col items-center justify-center md-surface-sidebar rounded-xl space-y-2">
+    <div
+      class="w-15 py-2 flex flex-col items-center justify-center md-surface-sidebar rounded-xl space-y-2"
+    >
       <ParagraphBlock />
       <HeadingBlock />
       <ImageBlock />
@@ -44,8 +54,8 @@ const customBlocks = computed(() =>
       <ButtonBlock />
       <AnchorBlock />
       <DividerBlock />
-      <SpacerBlock/>
-      <MenuBlock/>
+      <SpacerBlock />
+      <MenuBlock />
       <SocialsBlock />
 
       <!-- Blocks added via registerBlock(). Only those with an icon appear:

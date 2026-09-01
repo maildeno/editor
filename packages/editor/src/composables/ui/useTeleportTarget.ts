@@ -53,7 +53,7 @@ export function useTeleportTarget(): TeleportTarget | "body" {
   if (target === undefined) {
     console.warn(
       "[maildeno-editor] useTeleportTarget() couldn't find a provided " +
-        "target — falling back to \"body\". If this is running inside " +
+        'target — falling back to "body". If this is running inside ' +
         "the custom-element (Shadow DOM) path, teleported content will " +
         "render unstyled.",
     );
@@ -70,7 +70,9 @@ import { computed, type ComputedRef } from "vue";
  * `null`. Normalises the not-yet-mounted case to undefined so the portal
  * falls back to its own default instead of erroring on a null target.
  */
-export function usePortalTarget(): ComputedRef<string | HTMLElement | undefined> {
+export function usePortalTarget(): ComputedRef<
+  string | HTMLElement | undefined
+> {
   const target = useTeleportTarget();
   return computed(() =>
     typeof target === "string" ? target : (target.value ?? undefined),

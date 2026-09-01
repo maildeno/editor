@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import StylesTab from "./general/StylesTab.vue";
 import MergeTagsTab from "./general/MergeTagsTab.vue";

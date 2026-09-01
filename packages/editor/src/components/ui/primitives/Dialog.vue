@@ -203,7 +203,9 @@ onBeforeUnmount(unlockScroll);
         </p>
 
         <div class="md-dialog__body"><slot /></div>
-        <div v-if="$slots.footer" class="md-dialog__footer"><slot name="footer" /></div>
+        <div v-if="$slots.footer" class="md-dialog__footer">
+          <slot name="footer" />
+        </div>
       </div>
     </div>
   </Teleport>
@@ -238,8 +240,15 @@ onBeforeUnmount(unlockScroll);
   gap: 1rem;
   padding: 1.125rem 1.25rem 0.5rem;
 }
-.md-dialog__header--noTitle { justify-content: flex-end; }
-.md-dialog__title { font-size: 17px; font-weight: 600; color: var(--md-text); margin: 0; }
+.md-dialog__header--noTitle {
+  justify-content: flex-end;
+}
+.md-dialog__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--md-text);
+  margin: 0;
+}
 .md-dialog__close {
   display: inline-flex;
   padding: 0.25rem;
@@ -249,7 +258,10 @@ onBeforeUnmount(unlockScroll);
   border-radius: 0.25rem;
   cursor: pointer;
 }
-.md-dialog__close:hover { color: var(--md-text); background: var(--md-surface-muted); }
+.md-dialog__close:hover {
+  color: var(--md-text);
+  background: var(--md-surface-muted);
+}
 .md-dialog__body {
   padding: 0.5rem 1.25rem 1.25rem;
   overflow-y: auto;
@@ -264,8 +276,10 @@ onBeforeUnmount(unlockScroll);
 }
 .md-dialog__srOnly {
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;

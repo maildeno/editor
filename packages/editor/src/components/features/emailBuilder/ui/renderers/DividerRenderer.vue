@@ -31,7 +31,11 @@ const hrStyles = computed(() => {
   const p = resolveMobileProps(props.component.props, previewMode);
   return {
     margin:
-      p.align === "center" ? "0 auto" : p.align === "right" ? "0 0 0 auto" : "0",
+      p.align === "center"
+        ? "0 auto"
+        : p.align === "right"
+          ? "0 0 0 auto"
+          : "0",
     width: p.width + "%",
     height: p.height + "px",
     background: resolveBackground(p),

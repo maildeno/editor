@@ -124,6 +124,9 @@ export const myAdapter: EditorStorageAdapter = {
 | `theme` | `{ primaryColor?, surfaceColor? }` |
 | `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json"> }` |
 | `onSendTestEmail` | `(payload) => Promise<void>` |
+| `brandName` | `string` |
+| `versions` | `boolean` |
+| `assistant` | `AssistantMount` |
 
 | Event | Payload |
 | --- | --- |
@@ -131,6 +134,119 @@ export const myAdapter: EditorStorageAdapter = {
 
 Content getters go through a template ref: `editor.value.getHtml()`,
 `getMjml()`, `getReactEmail()`, `getJson()`.
+
+The write side goes through the same ref: `setJson(data, opts?)`,
+`getSelection()`, `setSelection(id)`, `onChange(cb)`. `setJson` accepts what
+`getJson()` returns, so `setJson(getJson())` round-trips, and defaults to a
+single undoable step — the user can Ctrl+Z back to what they had.
+
+## Reading the canvas
+
+Content getters live on the component instance, so you need a template ref —
+they are not events or slot props.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { EmailEditor } from "@maildeno/editor";
+
+const editor = ref<InstanceType<typeof EmailEditor> | null>(null);
+
+function exportAll() {
+  editor.value?.getHtml();        // production-ready HTML email
+  editor.value?.getHtml("wrap");  // "prune" (default) | "wrap"
+  editor.value?.getMjml();
+  editor.value?.getReactEmail();  // .tsx source
+  editor.value?.getJson();        // portable template object
+}
+</script>
+
+<template>
+  <EmailEditor ref="editor" @save="onSave" />
+</template>
+```
+
+All five return `null` when the canvas is empty. `getJson()` returns the
+portable format — `template_id`, `template_name`, `canvas`, `rows`,
+`schema_version` — and `setJson()` accepts exactly that, so
+`setJson(getJson())` round-trips.
+
+The write side is on the same ref: `setJson`, `getSelection`, `setSelection`,
+`onChange`.
+
+> **Saving is opt-in.** `@save` is what reveals the Save button — writing the
+> listener is the opt-in, since Vue compiles `@save="fn"` to an `onSave` prop.
+> Omit it and the button, the save-status indicator and the autosave timer are
+> all absent, which is what you want for a guest editor.
+
+```vue
+<EmailEditor
+  ref="editor"
+  @save="({ templateId }) => console.log('saved', templateId, editor.value?.getHtml())"
+/>
+```
+
+## Version history
+
+```vue
+<EmailEditor :versions="true" :storage-adapter="adapter" />
+```
+
+Replaces the saved-templates panel and its header button with version
+history: restore, delete, delete-all, and "keep" to pin a version so
+delete-all spares it.
+
+Your adapter supplies the data through five optional methods —
+`listTemplateVersions`, `getTemplateVersion`, `deleteTemplateVersion`,
+`deleteAllTemplateVersions`, `setTemplateVersionKept`. Each control appears
+only when its method exists, so an adapter that can list and restore but not
+delete gets exactly that. The built-in localStorage adapter implements all
+five, so this works with no backend at all.
+
+Nothing in the adapter *creates* versions. When a save produces one is your
+policy, and you already own `saveTemplate` — decide there.
+
+## Header actions
+
+Put your own controls beside Save — a plan-gated toggle, an ownership label,
+a fork button:
+
+```vue
+<EmailEditor>
+  <template #header-actions="{ templateId, isSaving, saveStatus }">
+    <MyHeaderControls :template-id="templateId" :is-saving="isSaving" />
+  </template>
+</EmailEditor>
+```
+
+Renders nothing when unused — no wrapper, no gap. `saveStatus` is the
+editor's own autosave state: `"idle" | "saving" | "saved" | "error"`.
+
+The slot is for chrome that belongs *to the save*. To drive the canvas from a
+host control, use the write API on the component ref.
+
+## Assistant panel
+
+The editor supplies a drawer, its trigger button, open/close state, escape
+handling and focus return. You supply what goes inside. There's no AI in this
+package: prompts, endpoints and diff strategy belong to your product, not to
+an MIT dependency.
+
+```vue
+<EmailEditor>
+  <template #assistant="{ editor }">
+    <MyAssistant :editor="editor" />
+  </template>
+</EmailEditor>
+```
+
+The `editor` slot prop is a small canvas API — `getJson`, `setJson`,
+`getSelection`, `setSelection`, `onChange` — so your panel can read the
+canvas, apply a generated design, and react to changes without reaching into
+editor internals. Applying through `setJson` keeps the result undoable.
+
+The trigger only appears when you supply a slot (or the `assistant` prop, for
+non-Vue hosts), so there is no dead button when you don't.
 
 ## Feature reference
 
@@ -156,6 +272,9 @@ Everything below is identical across frameworks. Only the mounting differs.
 | `theme` | `{ primaryColor?, surfaceColor? }` | Brand colour, expanded into a full 50–950 shade scale. |
 | `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json"> }` | Restrict which export formats appear. Omit for all four. |
 | `onSendTestEmail` | `(payload) => Promise<void>` | Enables the "Send test" button. Hidden entirely when omitted. |
+| `brandName` | `string` | Name in the desktop-only notice's "Powered by" line. Omit for the default; pass `""` to hide the line. |
+| `versions` | `boolean` | Replaces the saved-templates panel with version history. Needs the version adapter methods; the built-in localStorage adapter has them. |
+| `assistant` | `{ mount, unmount? }` | Fills the assistant drawer from a non-Vue host. Vue hosts can use the `#assistant` slot instead. |
 
 ### Getting content out
 
@@ -218,6 +337,15 @@ const adapter: EditorStorageAdapter = {
   },
 
   // ── Saved rows (reusable snippets) ─────────────────────────
+  // Optional second, read-only row library — an org's shared blocks.
+  // Shown in a "Shared" tab beside the user's own rows, and only when
+  // this returns something, so omitting it changes nothing. There is no
+  // save/rename/delete counterpart: curating a shared library is an admin
+  // concern the editor has no user model to express.
+  async listSystemSavedRows() {
+    return api.get("/org/saved-rows");
+  },
+
   async listSavedRows() {
     return fetch("/api/saved-rows").then((r) => r.json());
   },
@@ -423,7 +551,7 @@ Pass it back as `templateId` next time to reopen.
 
 ### Practical notes
 
-- **The container needs a real height.** The editor fills its parent; `height: 100vh` or a sized flex child both work. A container with no height renders nothing visible.
+- **The container needs a minimum height, not a maximum.** The editor scrolls the *document*: its shell is `min-height: 100vh` with a `sticky` header, so the canvas grows past the viewport and the page scrolls under a pinned toolbar. `min-height: 100vh` on the container is right. A fixed `height` with `overflow: hidden` clips everything below the fold and leaves no scroll container to reach it.
 - **`transform`, `filter`, `perspective` or `will-change` on any ancestor** breaks `position: fixed` inside it — floating toolbars and pickers will land in the wrong place. Avoid them above the mount point.
 - **Desktop only.** The editor shows a notice on small screens rather than attempting a mobile drag-and-drop UI.
 - **Autosave** keeps a local draft, so a refresh mid-edit recovers. "New template" clears it deliberately.

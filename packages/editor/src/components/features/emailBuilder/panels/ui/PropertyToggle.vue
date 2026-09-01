@@ -1,8 +1,14 @@
 <template>
-  <div class="flex items-center justify-between p-3 bg-(--md-surface-hover) rounded-lg">
+  <div
+    class="flex items-center justify-between p-3 bg-(--md-surface-hover) rounded-lg"
+  >
     <div class="flex-1">
-      <label class="block text-xs font-medium text-(--md-text-muted)">{{ label }}</label>
-      <p v-if="description" class="text-xs text-(--md-text-subtle) mt-1">{{ description }}</p>
+      <label class="block text-xs font-medium text-(--md-text-muted)">{{
+        label
+      }}</label>
+      <p v-if="description" class="text-xs text-(--md-text-subtle) mt-1">
+        {{ description }}
+      </p>
     </div>
     <button
       @click="$emit('update:modelValue', !modelValue)"
@@ -21,13 +27,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   label: { type: String, required: true },
   description: { type: String, default: null },
   modelValue: { type: Boolean, default: false },
-  activeColor: { type: String, default: 'bg-[var(--md-selection)]' },
-})
+  activeColor: { type: String, default: "bg-[var(--md-selection)]" },
+});
 
-defineEmits(['update:modelValue'])
+defineEmits(["update:modelValue"]);
 </script>

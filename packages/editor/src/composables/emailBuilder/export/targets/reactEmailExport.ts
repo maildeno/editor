@@ -330,7 +330,6 @@ ${rowWrappedContent}
       mobileOverrides,
     );
 
-
     // 2. Generate
     const rowsJsx = rows.value
       .map((row: any) => buildRowJSX(row, ctx, mode, 0))

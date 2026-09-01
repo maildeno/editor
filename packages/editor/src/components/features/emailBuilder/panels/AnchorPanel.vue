@@ -28,7 +28,9 @@
 
       <!-- URL -->
       <div>
-        <label class="block text-xs font-medium text-(--md-text-muted) mb-1">URL</label>
+        <label class="block text-xs font-medium text-(--md-text-muted) mb-1"
+          >URL</label
+        >
         <div class="relative">
           <InputText
             ref="linkInputRef"
@@ -115,7 +117,9 @@
 
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-(--md-text-muted)">Text Decoration</span>
+          <span class="text-xs font-medium text-(--md-text-muted)"
+            >Text Decoration</span
+          >
           <button
             v-if="isOverridden('textDecoration')"
             @click="resetProp('textDecoration')"
@@ -255,7 +259,6 @@ const editMode = computed<EditMode>({
   },
 });
 
-
 const {
   displayValue,
   isOverridden,
@@ -390,6 +393,10 @@ const textDecorationOptions = [
   color: var(--md-selection-fg);
 }
 .toggle-btn--active:hover {
-  background: color-mix(in srgb, var(--md-selection) 20%, var(--md-selection-bg));
+  background: color-mix(
+    in srgb,
+    var(--md-selection) 20%,
+    var(--md-selection-bg)
+  );
 }
 </style>

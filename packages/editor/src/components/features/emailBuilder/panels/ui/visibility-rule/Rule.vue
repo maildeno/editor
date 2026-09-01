@@ -3,7 +3,9 @@
     class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center px-3 py-3.25 text-xs min-w-75 sm:min-w-105 mb-2"
   >
     <!-- Tag -->
-    <div class="flex sm:hidden text-[10px] text-(--md-text-subtle) -mb-1">Tag</div>
+    <div class="flex sm:hidden text-[10px] text-(--md-text-subtle) -mb-1">
+      Tag
+    </div>
     <div class="sm:col-span-3">
       <input
         :value="rule.tag"
@@ -16,7 +18,9 @@
     </div>
 
     <!-- Operator -->
-    <div class="flex sm:hidden text-[10px] text-(--md-text-subtle) -mb-1">Operator</div>
+    <div class="flex sm:hidden text-[10px] text-(--md-text-subtle) -mb-1">
+      Operator
+    </div>
     <div class="sm:col-span-4 relative">
       <Select
         :model-value="rule.operator"
@@ -91,7 +95,7 @@
 
     <!-- Delete -->
     <div class="sm:col-span-1 flex justify-end sm:justify-center mt-1 sm:mt-0">
-     <div class="relative group/btn">
+      <div class="relative group/btn">
         <button
           type="button"
           @click="$emit('remove')"

@@ -17,7 +17,9 @@
         :value="modelValue"
         :placeholder="placeholder"
         spellcheck="false"
-        @change="$emit('update:modelValue', $event.target.value)"
+        @change="
+          $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+        "
       />
     </div>
   </template>
@@ -25,7 +27,9 @@
   <!-- Full mode: label + reset + swatch + hex input -->
   <div v-else class="space-y-1.5">
     <div class="flex items-center justify-between">
-      <label class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)">
+      <label
+        class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
+      >
         {{ label }}
         <OverrideBadge :show="isOverridden" />
       </label>
@@ -68,7 +72,9 @@
         :value="modelValue"
         :placeholder="placeholder"
         spellcheck="false"
-        @change="$emit('update:modelValue', $event.target.value)"
+        @change="
+          $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+        "
       />
     </div>
   </div>
@@ -83,27 +89,27 @@
   />
 </template>
 
-<script setup>
-import { ref, computed, onBeforeUnmount } from 'vue'
-import OverrideBadge from '../shared/OverrideBadge.vue'
-import ColorPickerPanel from './color-picker/ColorPickerPanel.vue'
+<script setup lang="ts">
+import { ref, computed, onBeforeUnmount } from "vue";
+import OverrideBadge from "../shared/OverrideBadge.vue";
+import ColorPickerPanel from "./color-picker/ColorPickerPanel.vue";
 
 const props = defineProps({
-  label: { type: String, default: '' },
-  modelValue: { type: String, default: '#000000' },
-  placeholder: { type: String, default: '#000000' },
+  label: { type: String, default: "" },
+  modelValue: { type: String, default: "#000000" },
+  placeholder: { type: String, default: "#000000" },
   allowTransparent: { type: Boolean, default: false },
   isOverridden: { type: Boolean, default: false },
   bare: { type: Boolean, default: false },
   showInput: { type: Boolean, default: false },
-})
+});
 
-const emit = defineEmits(['update:modelValue', 'reset'])
+const emit = defineEmits(["update:modelValue", "reset"]);
 
-const triggerRef = ref(null)
-const pickerOpen = ref(false)
+const triggerRef = ref(null);
+const pickerOpen = ref(false);
 
-const isTransparent = computed(() => props.modelValue === 'transparent')
+const isTransparent = computed(() => props.modelValue === "transparent");
 
 // e.target (not composedPath()) is the bug here — see Header.vue's
 // handleClickOutside for the full explanation; same fix, same reason.
@@ -113,35 +119,44 @@ const isTransparent = computed(() => props.modelValue === 'transparent')
 // custom-element usage path. Checking composedPath() directly for the
 // data-color-panel attribute sidesteps needing to locate the element via
 // a global query in the first place.
-const onDocPointerDown = (e) => {
-  const path = e.composedPath()
-  if (triggerRef.value && path.includes(triggerRef.value)) return
-  if (path.some((el) => el instanceof Element && el.hasAttribute('data-color-panel'))) return
-  closePicker()
-}
+const onDocPointerDown = (e: Event) => {
+  const path = e.composedPath();
+  if (triggerRef.value && path.includes(triggerRef.value)) return;
+  if (
+    path.some(
+      (el: EventTarget) =>
+        el instanceof Element && el.hasAttribute("data-color-panel"),
+    )
+  )
+    return;
+  closePicker();
+};
 
 const closePicker = () => {
-  pickerOpen.value = false
-  document.removeEventListener('pointerdown', onDocPointerDown, true)
-}
+  pickerOpen.value = false;
+  document.removeEventListener("pointerdown", onDocPointerDown, true);
+};
 
 const togglePicker = () => {
   if (pickerOpen.value) {
-    closePicker()
+    closePicker();
   } else {
-    pickerOpen.value = true
-    setTimeout(() => document.addEventListener('pointerdown', onDocPointerDown, true), 0)
+    pickerOpen.value = true;
+    setTimeout(
+      () => document.addEventListener("pointerdown", onDocPointerDown, true),
+      0,
+    );
   }
-}
+};
 
-const onTransparentToggle = (val) => {
-  closePicker()
-  emit('update:modelValue', val ? 'transparent' : '#ffffff')
-}
+const onTransparentToggle = (val: boolean) => {
+  closePicker();
+  emit("update:modelValue", val ? "transparent" : "#ffffff");
+};
 
 onBeforeUnmount(() => {
-  document.removeEventListener('pointerdown', onDocPointerDown, true)
-})
+  document.removeEventListener("pointerdown", onDocPointerDown, true);
+});
 </script>
 
 <style scoped>
@@ -152,7 +167,11 @@ onBeforeUnmount(() => {
     linear-gradient(45deg, transparent 75%, #ccc 75%),
     linear-gradient(-45deg, transparent 75%, #ccc 75%);
   background-size: 6px 6px;
-  background-position: 0 0, 0 3px, 3px -3px, -3px 0;
+  background-position:
+    0 0,
+    0 3px,
+    3px -3px,
+    -3px 0;
   background-color: white;
 }
 </style>

@@ -3,9 +3,9 @@ import type { VisibilityOperator } from "@/composables/emailBuilder/core/useEmai
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
 export interface VisibilityRule {
-  tag: string;                 // ✅ was `type: string`
+  tag: string; // ✅ was `type: string`
   operator: VisibilityOperator; // ✅ was plain `string`
-  value: string;               // ✅ was `any`
+  value: string; // ✅ was `any`
 }
 
 export interface VisibilityGroup {
@@ -17,7 +17,7 @@ export interface VisibilityConfig {
   enabled: boolean;
   match: "all" | "any";
   rules: VisibilityRule[];
-  groups?: VisibilityGroup[];  // ✅ nested group support
+  groups?: VisibilityGroup[]; // ✅ nested group support
 }
 
 export interface HideConfig {
@@ -73,7 +73,9 @@ export const DEFAULT_HIDE: Readonly<HideConfig> = Object.freeze({
   mobileHide: false,
 });
 
-export const DEFAULT_BASE_CONFIG: Readonly<BaseComponentConfig> = Object.freeze({
-  visibility: DEFAULT_VISIBILITY,
-  ...DEFAULT_HIDE,
-});
+export const DEFAULT_BASE_CONFIG: Readonly<BaseComponentConfig> = Object.freeze(
+  {
+    visibility: DEFAULT_VISIBILITY,
+    ...DEFAULT_HIDE,
+  },
+);

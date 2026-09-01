@@ -131,20 +131,26 @@ const LABELS: Record<keyof ClientCapabilities, string> = {
 };
 
 const TITLES: Record<keyof ClientCapabilities, string> = {
-  webFonts: "Google Fonts / @font-face — falls back to system fonts when missing.",
-  gradients: "CSS linear/radial gradients on <td>. Falls back to backgroundColor when missing.",
-  tdBorderRadius: "border-radius on <td>. Outlook desktop ignores; buttons (on <a>) are fine.",
-  buttonBorderRadius: "border-radius on <a> button. Works in Outlook desktop too (since 2016).",
+  webFonts:
+    "Google Fonts / @font-face — falls back to system fonts when missing.",
+  gradients:
+    "CSS linear/radial gradients on <td>. Falls back to backgroundColor when missing.",
+  tdBorderRadius:
+    "border-radius on <td>. Outlook desktop ignores; buttons (on <a>) are fine.",
+  buttonBorderRadius:
+    "border-radius on <a> button. Works in Outlook desktop too (since 2016).",
   boxShadow: "box-shadow rendering. Only modern WebKit clients.",
   bgImageOnTd: "background-image on <td>. Outlook desktop needs VML.",
   vml: "Microsoft VML (used as fallback for gradients/bg images in Outlook desktop).",
-  msoConditionals: "Honors <!--[if mso]> conditional comments for Outlook-only markup.",
+  msoConditionals:
+    "Honors <!--[if mso]> conditional comments for Outlook-only markup.",
   animatedGifs: "Animated GIFs. Outlook desktop shows only the first frame.",
   videoTag: "Native <video> tag. Only Apple Mail supports this.",
   svgImg: "SVG via <img src=*.svg>. Gmail strips, Outlook desktop refuses.",
   retinaImages: "Retina @2x images via srcset / width attribute.",
   mediaQueries: "@media (max-width: 600px) responsive queries.",
-  embeddedStyles: "<style> tag in <head> respected. Outlook desktop ignores entirely.",
+  embeddedStyles:
+    "<style> tag in <head> respected. Outlook desktop ignores entirely.",
   tableAlign: 'Honors align="center" on <table> / <td>.',
   tdPadding: "CSS padding on <td>.",
   darkModeStrategy: "How the client behaves when the OS is in dark mode.",
@@ -157,7 +163,8 @@ function darkModeRow(strategy: DarkModeStrategy): CapabilityRow {
   switch (strategy) {
     case "respects-meta":
       label = "Dark (native)";
-      title = "Respects <meta name=color-scheme>. Your authored colors are preserved.";
+      title =
+        "Respects <meta name=color-scheme>. Your authored colors are preserved.";
       break;
     case "near-black-swap":
       label = "Dark (swap)";
@@ -165,11 +172,13 @@ function darkModeRow(strategy: DarkModeStrategy): CapabilityRow {
       break;
     case "partial-transparent":
       label = "Dark (partial)";
-      title = "Only transparent backgrounds darken. Opaque cells stay as authored.";
+      title =
+        "Only transparent backgrounds darken. Opaque cells stay as authored.";
       break;
     case "none":
       label = "No dark mode";
-      title = "Client doesn't adapt to OS dark mode — recipients see the light design.";
+      title =
+        "Client doesn't adapt to OS dark mode — recipients see the light design.";
       break;
   }
   return { key: "darkModeStrategy", label, supported, title };

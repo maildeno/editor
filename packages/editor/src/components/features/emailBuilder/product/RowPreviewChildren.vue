@@ -2,7 +2,6 @@
   <template v-for="(child, _) in children" :key="child.id">
     <!-- ── Depth guard ──────────────────────────────────────────────────── -->
     <template v-if="(depth ?? 0) < 5">
-
       <!-- ── Nested row ─────────────────────────────────────────────────── -->
       <RowPreviewRow
         v-if="child.type === 'row'"
@@ -30,16 +29,11 @@
       />
 
       <!-- ── Legacy-shape leaf (type IS the componentType e.g. 'paragraph') -->
-      <RowPreviewLegacyComponent
-        v-else
-        :comp="child"
-        :scale="scale"
-      />
-
+      <RowPreviewLegacyComponent v-else :comp="child" :scale="scale" />
     </template>
 
     <!-- Depth exceeded — silent gap to preserve layout -->
-    <div v-else style="height: 4px; width: 100%;" />
+    <div v-else style="height: 4px; width: 100%" />
   </template>
 </template>
 
@@ -77,7 +71,9 @@ function resolveBackground(item: any): string {
 
   if (hasGradient) {
     const { type, direction, colors } = bg.gradient;
-    const stops = colors.map((c: any) => `${c.color} ${c.position}%`).join(", ");
+    const stops = colors
+      .map((c: any) => `${c.color} ${c.position}%`)
+      .join(", ");
     return type === "radial"
       ? `radial-gradient(circle at center, ${stops})`
       : `linear-gradient(${direction}, ${stops})`;

@@ -28,7 +28,9 @@
 
       <!-- URL -->
       <div>
-        <label class="block text-xs font-medium text-(--md-text-muted) mb-1">URL</label>
+        <label class="block text-xs font-medium text-(--md-text-muted) mb-1"
+          >URL</label
+        >
         <div class="relative">
           <InputText
             ref="linkInputRef"
@@ -119,7 +121,9 @@
         <template v-if="component.props.icon">
           <!-- Alt text (accessibility) -->
           <div class="mb-3">
-            <label class="text-xs font-medium text-(--md-text-muted) mb-1 block">
+            <label
+              class="text-xs font-medium text-(--md-text-muted) mb-1 block"
+            >
               Alt Text
               <span class="text-(--md-text-subtle) font-normal"
                 >(leave empty if decorative)</span
@@ -135,7 +139,8 @@
 
           <!-- Position: Before / After -->
           <div class="mb-3">
-            <label class="text-xs font-medium text-(--md-text-muted) mb-1.5 block"
+            <label
+              class="text-xs font-medium text-(--md-text-muted) mb-1.5 block"
               >Icon Position</label
             >
             <div class="grid grid-cols-2 gap-1.5">
@@ -246,7 +251,9 @@
     <PropertySection title="Appearance">
       <div>
         <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-medium text-(--md-text-muted)">Background</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Background</label
+          >
           <button
             v-if="isBackgroundOverridden()"
             type="button"
@@ -365,7 +372,8 @@
             placeholder="Select style"
             class="w-full text-sm capitalize"
             :class="{
-              'ring-1 ring-(--md-selection) rounded': isBorderPropOverridden('style'),
+              'ring-1 ring-(--md-selection) rounded':
+                isBorderPropOverridden('style'),
             }"
           />
         </div>
@@ -449,7 +457,6 @@ import PropertyToggle from "./ui/PropertyToggle.vue";
 import PropertyVisibility from "./ui/PropertyVisibility.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
 import PropertyGradientColor from "./ui/PropertyGradientColor.vue";
-
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 

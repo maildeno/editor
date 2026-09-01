@@ -37,7 +37,6 @@ const props = defineProps<{
 const { WEB_SAFE_FONTS, FONTS_WITH_ITALICS, DEFAULT_WEIGHTS } =
   useGoogleFonts();
 
-
 // ── Background helper ─────────────────────────────────────────────────────────
 
 const resolveBackground = (item: any): string => {
@@ -176,11 +175,10 @@ function colStyle(col: any, parentRow?: any) {
   const widthPct = col.width ?? 100;
   const siblingCount = parentRow?.columns?.length || 1;
   const gapPx = parentRow?.gap ?? 0;
-  const gapShare = siblingCount > 1 ? (gapPx * (siblingCount - 1)) / siblingCount : 0;
+  const gapShare =
+    siblingCount > 1 ? (gapPx * (siblingCount - 1)) / siblingCount : 0;
   const widthValue =
-    gapShare > 0
-      ? `calc(${widthPct}% - ${gapShare}px)`
-      : `${widthPct}%`;
+    gapShare > 0 ? `calc(${widthPct}% - ${gapShare}px)` : `${widthPct}%`;
 
   const style: Record<string, string> = {
     flex: `0 0 ${widthValue}`,

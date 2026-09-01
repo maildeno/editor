@@ -24,7 +24,9 @@
            ════════════════════════════════════════════════════════════════════ -->
       <div class="mt-3 border border-(--md-border) rounded-md overflow-hidden">
         <!-- Block header — Match selector -->
-        <div class="bg-(--md-surface-hover) px-3 py-2 border-b border-(--md-border)">
+        <div
+          class="bg-(--md-surface-hover) px-3 py-2 border-b border-(--md-border)"
+        >
           <div class="flex flex-row items-center justify-between gap-2">
             <span class="text-xs text-(--md-text-subtle) shrink-0">Match:</span>
             <div class="w-44">
@@ -98,7 +100,9 @@
            GROUPS
            ════════════════════════════════════════════════════════════════════ -->
       <div v-if="props.visibility.groups?.length" class="mt-3 space-y-3">
-        <div class="text-[10px] text-(--md-text-subtle) uppercase tracking-wide">
+        <div
+          class="text-[10px] text-(--md-text-subtle) uppercase tracking-wide"
+        >
           Groups — combined with top-level rules using
           <span class="font-semibold text-(--md-text-muted)">
             {{ props.visibility.match === "all" ? "AND" : "OR" }}
@@ -189,7 +193,9 @@
           </div>
 
           <!-- Add rule to group -->
-          <div class="px-3 py-2 bg-(--md-surface) border-t border-(--md-info-border)">
+          <div
+            class="px-3 py-2 bg-(--md-surface) border-t border-(--md-info-border)"
+          >
             <button
               @click="addRule(group.rules)"
               class="flex items-center gap-1 text-xs text-(--md-info) hover:text-(--md-info-fg)"

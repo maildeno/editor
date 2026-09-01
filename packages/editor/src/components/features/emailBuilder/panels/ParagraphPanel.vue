@@ -85,7 +85,9 @@
     <PropertySection title="Appearance">
       <div>
         <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-medium text-(--md-text-muted)">Background</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Background</label
+          >
           <button
             v-if="isBackgroundOverridden()"
             type="button"
@@ -217,7 +219,6 @@ const editMode = computed<EditMode>({
     previewMode.value = v;
   },
 });
-
 
 const {
   displayValue,

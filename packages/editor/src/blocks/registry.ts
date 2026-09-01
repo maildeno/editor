@@ -27,9 +27,7 @@ export function registerBlock(
   maybeDefinition?: BlockDefinition,
 ): void {
   const definition =
-    typeof idOrDefinition === "string"
-      ? maybeDefinition
-      : idOrDefinition;
+    typeof idOrDefinition === "string" ? maybeDefinition : idOrDefinition;
 
   if (!definition) {
     console.error(

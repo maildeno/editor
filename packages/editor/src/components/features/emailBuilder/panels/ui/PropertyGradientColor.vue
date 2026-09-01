@@ -6,7 +6,11 @@
         type="button"
         @click="setMode('solid')"
         class="flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all"
-        :class="!localValue.useGradient ? 'bg-(--md-surface) shadow-sm' : 'text-(--md-text-subtle)'"
+        :class="
+          !localValue.useGradient
+            ? 'bg-(--md-surface) shadow-sm'
+            : 'text-(--md-text-subtle)'
+        "
       >
         Solid
       </button>
@@ -14,7 +18,11 @@
         type="button"
         @click="setMode('gradient')"
         class="flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all"
-        :class="localValue.useGradient ? 'bg-(--md-surface) shadow-sm' : 'text-(--md-text-subtle)'"
+        :class="
+          localValue.useGradient
+            ? 'bg-(--md-surface) shadow-sm'
+            : 'text-(--md-text-subtle)'
+        "
       >
         Gradient
       </button>
@@ -47,14 +55,22 @@
           <button
             @click="updateGradientField('type', 'linear')"
             class="px-3 py-0.75 text-xs rounded-md transition-all"
-            :class="localValue.gradient.type === 'linear' ? 'bg-(--md-surface) shadow-sm' : 'text-(--md-text-subtle)'"
+            :class="
+              localValue.gradient.type === 'linear'
+                ? 'bg-(--md-surface) shadow-sm'
+                : 'text-(--md-text-subtle)'
+            "
           >
             Linear
           </button>
           <button
             @click="updateGradientField('type', 'radial')"
             class="px-3 py-0.75 text-xs rounded-md transition-all"
-            :class="localValue.gradient.type === 'radial' ? 'bg-(--md-surface) shadow-sm' : 'text-(--md-text-subtle)'"
+            :class="
+              localValue.gradient.type === 'radial'
+                ? 'bg-(--md-surface) shadow-sm'
+                : 'text-(--md-text-subtle)'
+            "
           >
             Radial
           </button>
@@ -76,7 +92,9 @@
       <!-- Color stops -->
       <div>
         <div class="flex items-center justify-between mb-2">
-          <label class="text-xs font-medium text-(--md-text-subtle)">Color stops</label>
+          <label class="text-xs font-medium text-(--md-text-subtle)"
+            >Color stops</label
+          >
           <button
             @click="addStop"
             class="text-xs text-(--md-text-subtle) hover:text-(--md-text-muted) flex items-center gap-1"
@@ -103,7 +121,12 @@
               <input
                 type="number"
                 :value="stop.position"
-                @input="updateStopPosition(index, ($event.target as HTMLInputElement).value)"
+                @input="
+                  updateStopPosition(
+                    index,
+                    ($event.target as HTMLInputElement).value,
+                  )
+                "
                 @blur="validatePosition(index)"
                 min="0"
                 max="100"
@@ -182,7 +205,9 @@ const emit = defineEmits<{
 
 // ─── Local state ─────────────────────────────────────────────────────────────
 
-const localValue = ref<BackgroundValue>(deepClone(props.modelValue ?? DEFAULT_BG));
+const localValue = ref<BackgroundValue>(
+  deepClone(props.modelValue ?? DEFAULT_BG),
+);
 const isInternalUpdate = ref(false);
 
 const previewStyle = computed(() => {
@@ -251,8 +276,10 @@ function updateStopColor(index: number, color: string) {
 }
 
 function updateStopPosition(index: number, raw: string) {
-  localValue.value.gradient.colors[index].position =
-    Math.min(100, Math.max(0, parseInt(raw, 10) || 0));
+  localValue.value.gradient.colors[index].position = Math.min(
+    100,
+    Math.max(0, parseInt(raw, 10) || 0),
+  );
 }
 
 function validatePosition(index: number) {
@@ -277,7 +304,7 @@ const directionOptions = [
   { label: "Right → Left", value: "to left" },
   { label: "Top → Bottom", value: "to bottom" },
   { label: "Bottom → Top", value: "to top" },
-  { label: "Diagonal ↘",   value: "135deg" },
-  { label: "Diagonal ↗",   value: "45deg" },
+  { label: "Diagonal ↘", value: "135deg" },
+  { label: "Diagonal ↗", value: "45deg" },
 ];
 </script>

@@ -5,7 +5,10 @@ import type { BlockDefinition, BlockRenderContext } from "../types";
 function renderHtml(props: any, ctx: BlockRenderContext): string {
   const { uid, marginStyle, paddingStyle, safeUrl, getResponsiveClasses } = ctx;
 
-  const socialClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const socialClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const halfSpacing = Math.ceil((props.spacing ?? 0) / 2);
   const iconSize = props.iconSize ?? 32;
   const socialAlign = props.align ?? "center";
@@ -17,7 +20,9 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
         ? "margin-left:auto; margin-right:0;"
         : "margin-left:0; margin-right:auto;";
 
-  const socialPlatforms = (props.platforms ?? []).filter((p: any) => p.enabled && p.link);
+  const socialPlatforms = (props.platforms ?? []).filter(
+    (p: any) => p.enabled && p.link,
+  );
   const lastIdx = socialPlatforms.length - 1;
 
   const socialCells = socialPlatforms
@@ -67,7 +72,10 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
 function renderMjml(props: any, ctx: BlockRenderContext): string {
   const { uid, marginStyle, paddingStyle, safeUrl, getResponsiveClasses } = ctx;
 
-  const socialClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const socialClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const halfSpacing = Math.ceil((props.spacing ?? 0) / 2);
   const iconSize = props.iconSize ?? 32;
   const socialAlign = props.align ?? "center";
@@ -79,7 +87,9 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
         ? "margin-left:auto; margin-right:0;"
         : "margin-left:0; margin-right:auto;";
 
-  const socialPlatforms = (props.platforms ?? []).filter((p: any) => p.enabled && p.link);
+  const socialPlatforms = (props.platforms ?? []).filter(
+    (p: any) => p.enabled && p.link,
+  );
   const lastIdx = socialPlatforms.length - 1;
 
   const socialCells = socialPlatforms
@@ -121,7 +131,10 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { uid, safeUrl, getResponsiveClasses, react } = ctx;
   const { parseMarginPaddingDiscrete, styleObj } = react;
 
-  const socialClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const socialClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const halfSpacing = Math.ceil((props.spacing ?? 0) / 2);
   const iconSize = props.iconSize ?? 32;
   const socialAlign = props.align ?? "center";
@@ -133,7 +146,9 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
         ? { marginLeft: "auto", marginRight: "0" }
         : { marginLeft: "0", marginRight: "auto" };
 
-  const socialPlatforms = (props.platforms ?? []).filter((p: any) => p.enabled && p.link);
+  const socialPlatforms = (props.platforms ?? []).filter(
+    (p: any) => p.enabled && p.link,
+  );
   const lastIdx = socialPlatforms.length - 1;
 
   const socialCells = socialPlatforms

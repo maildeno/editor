@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import MergeTagTab from "./merge-tags/MergeTagTab.vue";
 import LinkTagTab from "./merge-tags/LinkTagTab.vue";

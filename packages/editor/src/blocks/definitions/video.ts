@@ -12,7 +12,10 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const videoClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const videoClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const videoSrc = props.src || "";
   const linkHref = props.fallbackLink || props.src || "#";
   const coverSrc = props.coverImage || "";
@@ -51,7 +54,10 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const videoClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const videoClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const videoSrc = props.src || "";
   const linkHref = props.fallbackLink || props.src || "#";
   const coverSrc = props.coverImage || "";
@@ -88,9 +94,16 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { parseMarginPaddingDiscrete, styleObj } = react;
 
   const videoAlign =
-    props.align === "center" ? "center" : props.align === "right" ? "right" : "left";
+    props.align === "center"
+      ? "center"
+      : props.align === "right"
+        ? "right"
+        : "left";
 
-  const videoClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const videoClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const linkHref = props.fallbackLink || props.src || "#";
   const coverSrc = props.coverImage || "";
   const altText = props.alt || "Watch Video";

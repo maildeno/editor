@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useInfoDialog } from "@/composables/ui/useInfoDialog";
@@ -72,14 +72,15 @@ const handleClick = () => {
   );
 };
 
-const handleDragStart = (e) => {
+const handleDragStart = (e: DragEvent) => {
   isDragging.value = true;
+  if (!e.dataTransfer) return;
   e.dataTransfer.effectAllowed = "copy";
   e.dataTransfer.setData("text/plain", "new-component");
   e.dataTransfer.setData("componentType", props.componentType);
   e.dataTransfer.setData("isNewComponent", "true");
 
-  const ghost = e.target.cloneNode(true);
+  const ghost = (e.target as HTMLElement).cloneNode(true) as HTMLElement;
   ghost.style.opacity = "0.5";
   document.body.appendChild(ghost);
   e.dataTransfer.setDragImage(ghost, 0, 0);

@@ -27,7 +27,9 @@
         stroke-linejoin="round"
         class="w-3.25 h-3.25 shrink-0"
         :class="
-          isColumnSelected(column.id) ? 'text-(--md-row-selection)' : 'text-(--md-text-muted)'
+          isColumnSelected(column.id)
+            ? 'text-(--md-row-selection)'
+            : 'text-(--md-text-muted)'
         "
       >
         <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -242,7 +244,9 @@
             stroke-linejoin="round"
             class="size-3.25 shrink-0"
             :class="
-              isRowSelected(child.id) ? 'text-(--md-row-selection)' : 'text-(--md-text-subtle)'
+              isRowSelected(child.id)
+                ? 'text-(--md-row-selection)'
+                : 'text-(--md-text-subtle)'
             "
           >
             <rect x="3" y="3" width="18" height="18" rx="2" />

@@ -29,7 +29,8 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { PropType } from "vue";
 import Select from "@/components/ui/primitives/Select.vue";
 import OverrideBadge from "../shared/OverrideBadge.vue";
 
@@ -37,8 +38,13 @@ defineProps({
   label: { type: String, required: true },
   modelValue: { type: [String, Number], default: null },
   options: { type: Array, required: true },
-  optionLabel: { type: String, default: "label" },
-  optionValue: { type: String, default: "value" },
+  // `string | null`, matching the Select primitive this wraps. null is a
+  // meaningful value there — it means "options are plain strings, don't look
+  // up a key on them" — and six panels pass it deliberately for the font
+  // list. Vue only substitutes a default for undefined, so an explicit null
+  // still reaches Select, which is exactly what those callers want.
+  optionLabel: { type: String as PropType<string | null>, default: "label" },
+  optionValue: { type: String as PropType<string | null>, default: "value" },
   placeholder: { type: String, default: undefined },
   isOverridden: { type: Boolean, default: false },
 });

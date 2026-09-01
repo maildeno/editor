@@ -117,8 +117,14 @@
         </div>
       </div>
 
-      <!-- Footer with brand link -->
-      <div class="gate-footer">
+      <!-- Footer with brand link.
+        Hidden entirely when brandName is an empty string. That is the same
+        presence/absence gating used elsewhere in the package (onSendTestEmail's
+        mere presence is what reveals the Send-test button), so a white-label
+        host can drop the attribution line without a second prop existing just
+        to control it. Omitting brandName keeps the default instead — an
+        absent prop and a deliberately blank one are different intents. -->
+      <div v-if="brandName" class="gate-footer">
         <span class="footer-text">Powered by</span>
         <span class="brand-text">{{ brandName }}</span>
       </div>
@@ -130,6 +136,15 @@
 import { useDeviceDetection } from "@/composables/system/useDeviceDetection";
 
 interface Props {
+  /**
+   * Name shown in the "Powered by" line at the bottom of the notice.
+   *
+   * This default is the single source of truth for it. EmailEditor.vue
+   * forwards the prop through without redeclaring a default of its own, so
+   * an undefined value arriving from any of the three mount paths (Vue
+   * component, custom element, light DOM) lands here and resolves the same
+   * way. Pass an empty string to hide the line entirely.
+   */
   brandName?: string;
 }
 

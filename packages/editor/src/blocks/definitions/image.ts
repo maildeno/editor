@@ -12,7 +12,10 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const imageClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const imageClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   const imgTag = `<img src="${props.src}" alt="${props.alt}" style="width:${props.width}%; height:${props.height}; border-radius:${props.borderRadius}px; border:${props.border.width}px ${props.border.style} ${props.border.color}; display:inline-block;"/>`;
 
@@ -37,7 +40,10 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const imageClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const imageClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   const imgTag = `<img src="${props.src}" alt="${props.alt}" style="width:${props.width}%; height:${props.height}; border-radius:${props.borderRadius}px; border:${props.border.width}px ${props.border.style} ${props.border.color}; display:inline-block;"/>`;
 
@@ -59,9 +65,16 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { parseMarginPaddingDiscrete, styleObj } = react;
 
   const imgAlign =
-    props.align === "center" ? "center" : props.align === "right" ? "right" : "left";
+    props.align === "center"
+      ? "center"
+      : props.align === "right"
+        ? "right"
+        : "left";
 
-  const imageClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const imageClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   const imgJsx = `<Img
     src="${props.src}"

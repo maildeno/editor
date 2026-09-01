@@ -24,7 +24,9 @@ const containerStyles = computed(() => {
 
 // Extracted verbatim from CanvasComponent.vue's enabledSocials.
 const enabledSocials = computed(() =>
-  (props.component.props.platforms ?? []).filter((p: any) => p.enabled && p.link),
+  (props.component.props.platforms ?? []).filter(
+    (p: any) => p.enabled && p.link,
+  ),
 );
 
 // Extracted verbatim from CanvasComponent.vue's socialsAnchorStyles.

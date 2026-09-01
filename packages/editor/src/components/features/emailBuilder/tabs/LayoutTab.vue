@@ -193,7 +193,9 @@
             <div>
               <label class="block text-xs text-(--md-text-subtle) mb-1.5">
                 Custom widths
-                <span class="text-(--md-text-subtle) text-[9px]">(sum to 100)</span>
+                <span class="text-(--md-text-subtle) text-[9px]"
+                  >(sum to 100)</span
+                >
               </label>
               <div class="flex gap-2">
                 <div class="flex-1 relative">
@@ -239,7 +241,10 @@
                   </div>
                 </div>
               </div>
-              <p v-if="customWidthsError" class="text-[9px] text-(--md-danger) mt-1">
+              <p
+                v-if="customWidthsError"
+                class="text-[9px] text-(--md-danger) mt-1"
+              >
                 {{ customWidthsError }}
               </p>
 
@@ -302,7 +307,9 @@
         <button
           @click="toggleSavedRowsPanel()"
           class="flex items-center justify-center gap-2 px-3 py-2 border border-(--md-border) rounded-lg hover:border-(--md-border-strong) hover:bg-(--md-surface-hover) transition-all text-xs text-(--md-text-muted)"
-          :class="{ 'border-(--md-text) bg-(--md-surface-hover)': savedRowsPanelOpen }"
+          :class="{
+            'border-(--md-text) bg-(--md-surface-hover)': savedRowsPanelOpen,
+          }"
         >
           <div class="size-4">
             <svg

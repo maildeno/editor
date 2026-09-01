@@ -10,10 +10,10 @@ const props = defineProps<{
 }>();
 
 const map: Record<SupportLevel, { text: string; cls: string }> = {
-  native:   { text: "✓", cls: "text-emerald-500" },
-  helper:   { text: "~", cls: "text-amber-500" },
+  native: { text: "✓", cls: "text-emerald-500" },
+  helper: { text: "~", cls: "text-amber-500" },
   fallback: { text: "⚠", cls: "text-orange-400" },
-  none:     { text: "–", cls: "text-gray-300" },
+  none: { text: "–", cls: "text-gray-300" },
 };
 
 const badge = computed(() => map[props.level]);
@@ -39,7 +39,7 @@ const title = computed(() => {
         ? level === 'none'
           ? 'ring-1 ring-(--md-danger) bg-(--md-danger-bg) px-0.5 rounded'
           : 'ring-1 ring-(--md-warning) bg-(--md-warning-bg) px-0.5 rounded'
-        : ''
+        : '',
     ]"
     :title="title"
   >

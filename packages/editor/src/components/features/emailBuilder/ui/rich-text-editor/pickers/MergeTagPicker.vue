@@ -48,7 +48,9 @@
           @click="commitTag(tag)"
         >
           <span>&#123;&#123; {{ tag }} &#125;&#125;</span>
-          <span v-if="i === activeIndex" class="text-[9px] text-(--md-text-subtle)"
+          <span
+            v-if="i === activeIndex"
+            class="text-[9px] text-(--md-text-subtle)"
             >↵ insert</span
           >
         </li>
@@ -68,7 +70,9 @@
           @click="commitCustom"
         >
           <span>&#123;&#123; {{ normalizedQuery }} &#125;&#125;</span>
-          <span class="text-[9px] text-(--md-text-subtle) ml-1 shrink-0">custom</span>
+          <span class="text-[9px] text-(--md-text-subtle) ml-1 shrink-0"
+            >custom</span
+          >
         </li>
 
         <!-- Empty state -->

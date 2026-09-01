@@ -3,21 +3,35 @@ import MenuPanel from "@/components/features/emailBuilder/panels/MenuPanel.vue";
 import type { BlockDefinition, BlockRenderContext } from "../types";
 
 function renderHtml(props: any, ctx: BlockRenderContext): string {
-  const { uid, marginStyle, paddingStyle, safeUrl, resolveBgCss, getResponsiveClasses } = ctx;
+  const {
+    uid,
+    marginStyle,
+    paddingStyle,
+    safeUrl,
+    resolveBgCss,
+    getResponsiveClasses,
+  } = ctx;
 
   const menuClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
   const halfSpacing = Math.ceil((props.spacing ?? 0) / 2);
   const menuAlign = props.align ?? "center";
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
   const isSolid = !backgroundCss.includes("gradient(");
   const bgColorAttr =
     isSolid && props.backgroundColor && props.backgroundColor !== "transparent"
       ? `bgcolor="${props.backgroundColor}"`
       : "";
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
-  const enabledItems = (props.items ?? []).filter((item: any) => item.enabled && item.label);
+  const enabledItems = (props.items ?? []).filter(
+    (item: any) => item.enabled && item.label,
+  );
   const responsiveClass = props.mobileStack ? "mobile-stack" : "";
   const lastIdx = enabledItems.length - 1;
 
@@ -43,21 +57,35 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
 }
 
 function renderMjml(props: any, ctx: BlockRenderContext): string {
-  const { uid, marginStyle, paddingStyle, safeUrl, resolveBgCss, getResponsiveClasses } = ctx;
+  const {
+    uid,
+    marginStyle,
+    paddingStyle,
+    safeUrl,
+    resolveBgCss,
+    getResponsiveClasses,
+  } = ctx;
 
   const menuClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
   const halfSpacing = Math.ceil((props.spacing ?? 0) / 2);
   const menuAlign = props.align ?? "center";
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
   const isSolid = !backgroundCss.includes("gradient(");
   const bgColorAttr =
     isSolid && props.backgroundColor && props.backgroundColor !== "transparent"
       ? `bgcolor="${props.backgroundColor}"`
       : "";
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
-  const enabledItems = (props.items ?? []).filter((item: any) => item.enabled && item.label);
+  const enabledItems = (props.items ?? []).filter(
+    (item: any) => item.enabled && item.label,
+  );
   const responsiveClass = props.mobileStack ? "mobile-stack" : "";
   const lastIdx = enabledItems.length - 1;
 
@@ -87,14 +115,24 @@ font-family="none">
 
 function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { uid, safeUrl, resolveBgCss, getResponsiveClasses, react } = ctx;
-  const { parseMarginPaddingDiscrete, parseCssString, normalizeFontFamily, styleObj } = react;
+  const {
+    parseMarginPaddingDiscrete,
+    parseCssString,
+    normalizeFontFamily,
+    styleObj,
+  } = react;
 
   const menuClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
   const halfSpacing = Math.ceil((props.spacing ?? 0) / 2);
   const menuAlign = props.align ?? "center";
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
 
-  const enabledItems = (props.items ?? []).filter((item: any) => item.enabled && item.label);
+  const enabledItems = (props.items ?? []).filter(
+    (item: any) => item.enabled && item.label,
+  );
   const responsiveClass = props.mobileStack ? "mobile-stack" : "";
   const lastIdx = enabledItems.length - 1;
 
@@ -112,7 +150,9 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
           letterSpacing: `${props.letterSpacing}px`,
         }),
         fontWeight: String(props.fontWeight),
-        fontFamily: normalizeFontFamily(`'${props.fontFamily}', Arial, sans-serif`),
+        fontFamily: normalizeFontFamily(
+          `'${props.fontFamily}', Arial, sans-serif`,
+        ),
         fontStyle: props.fontStyle,
         textTransform: props.textTransform,
         marginLeft: `${isFirst ? 0 : halfSpacing}px`,

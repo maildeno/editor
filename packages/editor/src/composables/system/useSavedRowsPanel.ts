@@ -18,63 +18,63 @@ export type SavedRowsTab = "user" | "system";
 
 type SavedRowsPanelInstance = ReturnType<typeof createSavedRowsPanelInstance>;
 const SavedRowsPanelKey: InjectionKey<SavedRowsPanelInstance> = Symbol(
- "maildeno-editor:saved-rows-panel",
+  "maildeno-editor:saved-rows-panel",
 );
 
 /** Called once, at the EmailEditor root. */
 export function provideSavedRowsPanel() {
- const instance = createSavedRowsPanelInstance();
- provide(SavedRowsPanelKey, instance);
- return instance;
+  const instance = createSavedRowsPanelInstance();
+  provide(SavedRowsPanelKey, instance);
+  return instance;
 }
 
 /** Every other file calls this exactly as before. */
 export const useSavedRowsPanel = (): SavedRowsPanelInstance => {
- const instance = inject(SavedRowsPanelKey);
- if (!instance) {
- throw new Error(
- "[maildeno-editor] useSavedRowsPanel() was called outside an EmailEditor instance.",
- );
- }
- return instance;
+  const instance = inject(SavedRowsPanelKey);
+  if (!instance) {
+    throw new Error(
+      "[maildeno-editor] useSavedRowsPanel() was called outside an EmailEditor instance.",
+    );
+  }
+  return instance;
 };
 
 function createSavedRowsPanelInstance() {
- const isOpen = ref<boolean>(false);
- const activeTab = ref<SavedRowsTab>("user");
+  const isOpen = ref<boolean>(false);
+  const activeTab = ref<SavedRowsTab>("user");
 
- function open(tab?: SavedRowsTab) {
- if (tab) activeTab.value = tab;
- isOpen.value = true;
- }
+  function open(tab?: SavedRowsTab) {
+    if (tab) activeTab.value = tab;
+    isOpen.value = true;
+  }
 
- function close() {
- isOpen.value = false;
- }
+  function close() {
+    isOpen.value = false;
+  }
 
- function toggle(tab?: SavedRowsTab) {
- // If a tab is requested and the panel is already open on a different tab,
- // don't close — just switch tabs. This matches the typical pattern in
- // products like Figma / Notion where clicking a sidebar item that's
- // already showing a different sub-view switches view rather than closing.
- if (tab && isOpen.value && activeTab.value !== tab) {
- activeTab.value = tab;
- return;
- }
- isOpen.value = !isOpen.value;
- if (isOpen.value && tab) activeTab.value = tab;
- }
+  function toggle(tab?: SavedRowsTab) {
+    // If a tab is requested and the panel is already open on a different tab,
+    // don't close — just switch tabs. This matches the typical pattern in
+    // products like Figma / Notion where clicking a sidebar item that's
+    // already showing a different sub-view switches view rather than closing.
+    if (tab && isOpen.value && activeTab.value !== tab) {
+      activeTab.value = tab;
+      return;
+    }
+    isOpen.value = !isOpen.value;
+    if (isOpen.value && tab) activeTab.value = tab;
+  }
 
- function setTab(tab: SavedRowsTab) {
- activeTab.value = tab;
- }
+  function setTab(tab: SavedRowsTab) {
+    activeTab.value = tab;
+  }
 
- return {
- isOpen,
- activeTab,
- open,
- close,
- toggle,
- setTab,
- };
+  return {
+    isOpen,
+    activeTab,
+    open,
+    close,
+    toggle,
+    setTab,
+  };
 }

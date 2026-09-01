@@ -2,7 +2,9 @@
 <template>
   <div class="space-y-1.5">
     <div class="flex items-center justify-between">
-      <label class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)">
+      <label
+        class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
+      >
         {{ label }}
         <OverrideBadge :show="isOverridden" />
       </label>
@@ -28,7 +30,9 @@
       />
 
       <!-- Number input + chevrons -->
-      <div class="flex items-center border border-(--md-border) rounded-md bg-(--md-surface) overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+      <div
+        class="flex items-center border border-(--md-border) rounded-md bg-(--md-surface) overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+      >
         <input
           :value="modelValue"
           @input="handleInput"
@@ -45,8 +49,16 @@
             :class="{ 'opacity-25 cursor-not-allowed': modelValue >= max }"
             :disabled="modelValue >= max"
           >
-            <svg class="w-2 h-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m18 15-6-6-6 6"/>
+            <svg
+              class="w-2 h-2"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m18 15-6-6-6 6" />
             </svg>
           </button>
           <div class="h-px bg-(--md-border)" />
@@ -57,19 +69,31 @@
             :class="{ 'opacity-25 cursor-not-allowed': modelValue <= min }"
             :disabled="modelValue <= min"
           >
-            <svg class="w-2 h-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m6 9 6 6 6-6"/>
+            <svg
+              class="w-2 h-2"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
             </svg>
           </button>
         </div>
       </div>
 
-      <span v-if="unit" class="text-[11px] text-(--md-text-muted) w-4 shrink-0">{{ unit }}</span>
+      <span
+        v-if="unit"
+        class="text-[11px] text-(--md-text-muted) w-4 shrink-0"
+        >{{ unit }}</span
+      >
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import OverrideBadge from "../shared/OverrideBadge.vue";
 
 const props = defineProps({
@@ -84,8 +108,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "reset"]);
 
-const handleInput = (e) => {
-  const val = parseFloat(e.target.value);
+const handleInput = (e: Event) => {
+  const val = parseFloat((e.target as HTMLInputElement).value);
   if (!isNaN(val)) emit("update:modelValue", val);
 };
 
@@ -93,12 +117,13 @@ const clampValue = () => {
   let val = props.modelValue;
   if (val < props.min) val = props.min;
   if (val > props.max) val = props.max;
-  if (props.step < 1) val = parseFloat((Math.round(val / props.step) * props.step).toFixed(1));
+  if (props.step < 1)
+    val = parseFloat((Math.round(val / props.step) * props.step).toFixed(1));
   emit("update:modelValue", val);
 };
 
-const handleSlider = (e) => {
-  let val = parseFloat(e.target.value);
+const handleSlider = (e: Event) => {
+  let val = parseFloat((e.target as HTMLInputElement).value);
   if (props.step < 1) val = parseFloat(val.toFixed(1));
   emit("update:modelValue", val);
 };

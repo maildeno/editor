@@ -13,12 +13,19 @@
     v-else-if="compType === 'paragraph'"
     :style="paragraphStyle(comp.props)"
     class="overflow-hidden"
-    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
+    style="
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    "
     v-html="resolvePreviewHtml(comp.props?.content) || 'Text'"
   />
 
   <!-- ── Image ────────────────────────────────────────────────────────────── -->
-  <div v-else-if="compType === 'image'" :style="imageContainerStyle(comp.props)">
+  <div
+    v-else-if="compType === 'image'"
+    :style="imageContainerStyle(comp.props)"
+  >
     <img
       :src="comp.props?.src"
       :alt="comp.props?.alt || ''"
@@ -27,7 +34,10 @@
   </div>
 
   <!-- ── Video ────────────────────────────────────────────────────────────── -->
-  <div v-else-if="compType === 'video'" :style="videoContainerStyle(comp.props)">
+  <div
+    v-else-if="compType === 'video'"
+    :style="videoContainerStyle(comp.props)"
+  >
     <div :style="videoThumbnailStyle(comp.props)">
       <img
         v-if="comp.props?.coverImage"
@@ -36,7 +46,11 @@
         :style="videoImageStyle()"
       />
       <div v-else :style="videoPlaceholderStyle()">
-        <svg style="width: 30%; height: 30%; color: #9ca3af" fill="currentColor" viewBox="0 0 20 20">
+        <svg
+          style="width: 30%; height: 30%; color: #9ca3af"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
           <path
             fill-rule="evenodd"
             d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
@@ -48,30 +62,36 @@
   </div>
 
   <!-- ── Button ───────────────────────────────────────────────────────────── -->
-<div v-else-if="compType === 'button'" :style="buttonContainerStyle(comp.props)">
-  <span :style="buttonStyle(comp.props)" class="inline-block truncate">
-    <!-- Icon before text -->
-    <img
-      v-if="comp.props?.icon && comp.props?.iconPosition !== 'after'"
-      :src="comp.props.icon"
-      :alt="comp.props?.iconAlt || ''"
-      :style="buttonIconStyle(comp.props)"
-      @error="onIconError"
-    />
-    {{ comp.props?.text || "Button" }}
-    <!-- Icon after text -->
-    <img
-      v-if="comp.props?.icon && comp.props?.iconPosition === 'after'"
-      :src="comp.props.icon"
-      :alt="comp.props?.iconAlt || ''"
-      :style="buttonIconStyle(comp.props)"
-      @error="onIconError"
-    />
-  </span>
-</div>
+  <div
+    v-else-if="compType === 'button'"
+    :style="buttonContainerStyle(comp.props)"
+  >
+    <span :style="buttonStyle(comp.props)" class="inline-block truncate">
+      <!-- Icon before text -->
+      <img
+        v-if="comp.props?.icon && comp.props?.iconPosition !== 'after'"
+        :src="comp.props.icon"
+        :alt="comp.props?.iconAlt || ''"
+        :style="buttonIconStyle(comp.props)"
+        @error="onIconError"
+      />
+      {{ comp.props?.text || "Button" }}
+      <!-- Icon after text -->
+      <img
+        v-if="comp.props?.icon && comp.props?.iconPosition === 'after'"
+        :src="comp.props.icon"
+        :alt="comp.props?.iconAlt || ''"
+        :style="buttonIconStyle(comp.props)"
+        @error="onIconError"
+      />
+    </span>
+  </div>
 
   <!-- ── Anchor ───────────────────────────────────────────────────────────── -->
-  <div v-else-if="compType === 'anchor'" :style="anchorContainerStyle(comp.props)">
+  <div
+    v-else-if="compType === 'anchor'"
+    :style="anchorContainerStyle(comp.props)"
+  >
     <span :style="anchorStyle(comp.props)" class="truncate block">
       {{ comp.props?.text || "Link" }}
     </span>
@@ -85,7 +105,10 @@
   />
 
   <!-- ── Divider ───────────────────────────────────────────────────────────── -->
-  <div v-else-if="compType === 'divider'" :style="dividerContainerStyle(comp.props)">
+  <div
+    v-else-if="compType === 'divider'"
+    :style="dividerContainerStyle(comp.props)"
+  >
     <hr :style="dividerStyle(comp.props)" />
   </div>
 
@@ -96,17 +119,22 @@
 
   <!-- ── Menu ─────────────────────────────────────────────────────────────── -->
   <div v-else-if="compType === 'menu'" :style="menuContainerStyle(comp.props)">
-    <div
-      v-if="!comp.props?.items?.some((i: any) => i.enabled && i.label)"
-      
-    >
+    <div v-if="!comp.props?.items?.some((i: any) => i.enabled && i.label)">
       Menu
     </div>
     <template v-else>
       <span
-        v-for="(item, idx) in comp.props.items.filter((i: any) => i.enabled && i.label)"
+        v-for="(item, idx) in comp.props.items.filter(
+          (i: any) => i.enabled && i.label,
+        )"
         :key="item._id || idx"
-        :style="menuItemStyle(comp.props, Number(idx), comp.props.items.filter((i: any) => i.enabled && i.label).length)"
+        :style="
+          menuItemStyle(
+            comp.props,
+            Number(idx),
+            comp.props.items.filter((i: any) => i.enabled && i.label).length,
+          )
+        "
       >
         {{ item.label }}
       </span>
@@ -114,12 +142,23 @@
   </div>
 
   <!-- ── Socials ───────────────────────────────────────────────────────────── -->
-  <div v-else-if="compType === 'socials'" :style="socialsContainerStyle(comp.props)">
-    <template v-if="comp.props?.platforms?.some((p: any) => p.enabled && p.link)">
+  <div
+    v-else-if="compType === 'socials'"
+    :style="socialsContainerStyle(comp.props)"
+  >
+    <template
+      v-if="comp.props?.platforms?.some((p: any) => p.enabled && p.link)"
+    >
       <span
-        v-for="platform in comp.props.platforms.filter((p: any) => p.enabled && p.link)"
+        v-for="platform in comp.props.platforms.filter(
+          (p: any) => p.enabled && p.link,
+        )"
         :key="platform.name"
-        :style="{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }"
+        :style="{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }"
       >
         <img
           :src="platform.icon"
@@ -132,14 +171,21 @@
         />
       </span>
     </template>
-    <span v-else style="font-size: 7px; color: #9ca3af; font-style: italic">Socials</span>
+    <span v-else style="font-size: 7px; color: #9ca3af; font-style: italic"
+      >Socials</span
+    >
   </div>
 
   <!-- ── Unknown fallback ─────────────────────────────────────────────────── -->
   <div
     v-else
     class="rounded truncate"
-    style="font-size: 7px; color: #9ca3af; background: #f3f4f6; padding: 1px 3px;"
+    style="
+      font-size: 7px;
+      color: #9ca3af;
+      background: #f3f4f6;
+      padding: 1px 3px;
+    "
   >
     {{ compType }}
   </div>
@@ -166,9 +212,7 @@ const props = defineProps<{
 // New shape: { type: 'component', componentType: 'paragraph' }
 // Legacy shape: { type: 'paragraph' }
 
-const compType = computed(
-  () => props.comp.componentType ?? props.comp.type,
-);
+const compType = computed(() => props.comp.componentType ?? props.comp.type);
 
 // ── HTML preview helper ───────────────────────────────────────────────────────
 
@@ -195,7 +239,9 @@ function resolveBackground(item: any): string {
 
   if (hasGradient) {
     const { type, direction, colors } = bg.gradient;
-    const stops = colors.map((c: any) => `${c.color} ${c.position}%`).join(", ");
+    const stops = colors
+      .map((c: any) => `${c.color} ${c.position}%`)
+      .join(", ");
     return type === "radial"
       ? `radial-gradient(circle at center, ${stops})`
       : `linear-gradient(${direction}, ${stops})`;
@@ -209,8 +255,14 @@ function resolveBackground(item: any): string {
 function loadGoogleFont(fontFamily?: string) {
   if (!fontFamily) return;
   const knownGoogleFonts = [
-    "Roboto", "Open Sans", "Lato", "Montserrat", "Poppins",
-    "Nunito", "Raleway", "Plus Jakarta Sans",
+    "Roboto",
+    "Open Sans",
+    "Lato",
+    "Montserrat",
+    "Poppins",
+    "Nunito",
+    "Raleway",
+    "Plus Jakarta Sans",
   ];
   const isGoogle =
     fontFamily.includes(" ") ||
@@ -282,7 +334,8 @@ function imageStyle(p: any) {
     borderRadius: (p?.borderRadius || 0) + "px",
     border: `${p?.border?.width || 0}px ${p?.border?.style || "solid"} ${p?.border?.color || "#000000"}`,
     display: "block",
-    margin: align === "center" ? "0 auto" : align === "right" ? "0 0 0 auto" : "0",
+    margin:
+      align === "center" ? "0 auto" : align === "right" ? "0 0 0 auto" : "0",
   };
 }
 
@@ -314,11 +367,29 @@ function videoThumbnailStyle(p: any): CSSProperties {
 }
 
 function videoImageStyle(): CSSProperties {
-  return { position: "absolute", top: "0", left: "0", width: "100%", height: "100%", objectFit: "cover", display: "block" };
+  return {
+    position: "absolute",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  };
 }
 
 function videoPlaceholderStyle(): CSSProperties {
-  return { position: "absolute", top: "0", left: "0", width: "100%", height: "100%", background: "#e5e7eb", display: "flex", alignItems: "center", justifyContent: "center" };
+  return {
+    position: "absolute",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    background: "#e5e7eb",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 }
 
 function buttonContainerStyle(p: any) {
@@ -344,7 +415,11 @@ function buttonStyle(p: any) {
     // Icon branch uses inline-flex so icon + text align cleanly on one row.
     // Plain branch stays inline-block (unchanged behaviour).
     ...(hasIcon
-      ? { display: "inline-flex", alignItems: "center", verticalAlign: "middle" }
+      ? {
+          display: "inline-flex",
+          alignItems: "center",
+          verticalAlign: "middle",
+        }
       : { display: "inline-block" }),
     lineHeight: "1.2",
     textDecoration: "none",
@@ -354,7 +429,7 @@ function buttonStyle(p: any) {
 // Icon sizing — scaled down slightly so 20px (canvas default) still fits
 // comfortably in the truncated preview row. Gap is margin on the image.
 function buttonIconStyle(p: any) {
-  const size = Math.max(4, (p?.iconSize ?? 20));
+  const size = Math.max(4, p?.iconSize ?? 20);
   const gap = p?.iconGap ?? 8;
   const isBefore = p?.iconPosition !== "after";
   return {
@@ -423,12 +498,17 @@ function dividerStyle(p: any) {
     height: (p?.height || 1) + "px",
     background: resolveBackground(p),
     border: "none",
-    margin: align === "center" ? "0 auto" : align === "right" ? "0 0 0 auto" : "0",
+    margin:
+      align === "center" ? "0 auto" : align === "right" ? "0 0 0 auto" : "0",
   };
 }
 
 function spacerStyle(p: any) {
-  return { width: "100%", height: (p?.height || 16) + "px", background: resolveBackground(p) };
+  return {
+    width: "100%",
+    height: (p?.height || 16) + "px",
+    background: resolveBackground(p),
+  };
 }
 
 function menuContainerStyle(p: any) {
@@ -448,10 +528,10 @@ function menuItemStyle(p: any, index: number, total: number) {
   const spacing = p?.spacing ?? 8;
 
   const isFirst = index === 0;
-  const isLast = index === total - 1
+  const isLast = index === total - 1;
 
   return {
-     // display is always block, used for showcase
+    // display is always block, used for showcase
     display: "inline-block",
     marginLeft: isFirst ? "0px" : `${spacing / 2}px`,
     marginRight: isLast ? "0px" : `${spacing / 2}px`,
@@ -481,7 +561,11 @@ function socialsContainerStyle(p: any): CSSProperties {
     flexWrap: "wrap",
     gap: (p?.spacing ?? 8) + "px",
     justifyContent:
-      p?.align === "center" ? "center" : p?.align === "right" ? "flex-end" : "flex-start",
+      p?.align === "center"
+        ? "center"
+        : p?.align === "right"
+          ? "flex-end"
+          : "flex-start",
   };
 }
 </script>

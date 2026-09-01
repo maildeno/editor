@@ -57,8 +57,14 @@
               class="max-h-full object-contain"
             />
             <div v-else class="flex flex-col items-center gap-1">
-              <Icon name="image" class="text-(--md-text-subtle)" style="font-size: 16px" />
-              <span class="text-[9px] text-(--md-text-subtle)">Click to upload</span>
+              <Icon
+                name="image"
+                class="text-(--md-text-subtle)"
+                style="font-size: 16px"
+              />
+              <span class="text-[9px] text-(--md-text-subtle)"
+                >Click to upload</span
+              >
             </div>
           </div>
           <input
@@ -171,7 +177,6 @@
           @update:model-value="onGapChange"
         />
       </div>
-
     </PropertySection>
 
     <!-- Border -->
@@ -196,7 +201,9 @@
       />
       <div class="grid grid-cols-4 gap-2">
         <div class="col-span-2">
-          <label class="text-xs font-medium text-(--md-text-muted)">Color</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Color</label
+          >
           <PropertyColor
             label="Color"
             bare
@@ -206,7 +213,9 @@
           />
         </div>
         <div class="col-span-2">
-          <label class="text-xs font-medium text-(--md-text-muted)">Style</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Style</label
+          >
           <Select
             :model-value="row.border.style"
             :options="borderStyleOptions"
@@ -268,8 +277,6 @@ import PropertyGradientColor from "./ui/PropertyGradientColor.vue";
 import PropertyVisibility from "./ui/PropertyVisibility.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
 import PropertyToggle from "./ui/PropertyToggle.vue";
-
-
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

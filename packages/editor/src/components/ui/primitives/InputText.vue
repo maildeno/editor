@@ -37,7 +37,9 @@ defineExpose({
     :aria-invalid="props.invalid || undefined"
     class="md-input"
     :class="{ 'md-input--invalid': props.invalid }"
-    @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+    @input="
+      emit('update:modelValue', ($event.target as HTMLInputElement).value)
+    "
   />
 </template>
 
@@ -52,13 +54,26 @@ defineExpose({
   border: 1px solid var(--md-border);
   border-radius: 0.375rem;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
-.md-input::placeholder { color: var(--md-text-subtle); }
+.md-input::placeholder {
+  color: var(--md-text-subtle);
+}
 .md-input:focus {
   border-color: var(--md-primary);
 }
-.md-input:disabled { background: var(--md-surface-hover); color: var(--md-text-subtle); cursor: not-allowed; }
-.md-input--invalid { border-color: var(--md-danger); }
-.md-input--invalid:focus { border-color: var(--md-danger); box-shadow: 0 0 0 1px var(--md-danger); }
+.md-input:disabled {
+  background: var(--md-surface-hover);
+  color: var(--md-text-subtle);
+  cursor: not-allowed;
+}
+.md-input--invalid {
+  border-color: var(--md-danger);
+}
+.md-input--invalid:focus {
+  border-color: var(--md-danger);
+  box-shadow: 0 0 0 1px var(--md-danger);
+}
 </style>

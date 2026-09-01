@@ -138,7 +138,11 @@ const previewWidth = computed(() => {
  */
 const handleLayoutDrop = async (insertIndex: number) => {
   // ── Nested row promoted to top-level canvas ──────────────────────────────────
-  if (isRowDragActive.value && !isTopLevelRowDragActive.value && nestedRowDragId.value) {
+  if (
+    isRowDragActive.value &&
+    !isTopLevelRowDragActive.value &&
+    nestedRowDragId.value
+  ) {
     moveNestedRow(nestedRowDragId.value, null, null, insertIndex);
     isRowDragActive.value = false;
     nestedRowDragId.value = null;

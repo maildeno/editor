@@ -6,14 +6,20 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
   const { uid, marginStyle, resolveBgCss, getResponsiveClasses } = ctx;
   const align = props.align ?? "center";
 
-  const tdBgStyle = resolveBgCss(props.backgroundGradient, props.backgroundColor);
+  const tdBgStyle = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
   const isSolid = !tdBgStyle.includes("gradient(");
   const bgColorAttr =
     isSolid && props.backgroundColor && props.backgroundColor !== "transparent"
       ? `bgcolor="${props.backgroundColor}"`
       : "";
 
-  const dividerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const dividerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   const tableStyle =
     align === "center"
@@ -65,14 +71,20 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
   const { uid, marginStyle, resolveBgCss, getResponsiveClasses } = ctx;
   const align = props.align ?? "center";
 
-  const tdBgStyle = resolveBgCss(props.backgroundGradient, props.backgroundColor);
+  const tdBgStyle = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
   const isSolid = !tdBgStyle.includes("gradient(");
   const bgColorAttr =
     isSolid && props.backgroundColor && props.backgroundColor !== "transparent"
       ? `bgcolor="${props.backgroundColor}"`
       : "";
 
-  const dividerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const dividerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   const tableStyle =
     align === "center"
@@ -116,11 +128,21 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { parseMarginPaddingDiscrete, parseCssString, styleObj } = react;
   const align = props.align ?? "center";
 
-  const tdBgStyle = ctx.resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const dividerClasses = ctx.getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const tdBgStyle = ctx.resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const dividerClasses = ctx.getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   const tableMargin =
-    align === "center" ? "0 auto" : align === "right" ? "0 0 0 auto" : "0 auto 0 0";
+    align === "center"
+      ? "0 auto"
+      : align === "right"
+        ? "0 0 0 auto"
+        : "0 auto 0 0";
 
   return `<div className="${dividerClasses}" style={{ ${styleObj(parseMarginPaddingDiscrete(props.margin, undefined))} }}>
   <Hr

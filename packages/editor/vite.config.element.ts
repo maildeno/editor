@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { scopeInjectedCssPlugin } from "./scopeInjectedCss";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath, URL } from "node:url";
@@ -92,7 +93,10 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  plugins: [vue(), tailwindcss(), captureExtractedCssForShadowRoot()],
+  plugins: [
+    // Scopes the injected stylesheet to the editor subtree so it can't
+    // restyle the host page. Must run before the ?inline import is frozen.
+    scopeInjectedCssPlugin(),vue(), tailwindcss(), captureExtractedCssForShadowRoot()],
   build: {
     // Kept in sync with vite.config.ts — see that file's comment.
     minify: false,

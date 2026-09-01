@@ -26,7 +26,7 @@
   </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import InputText from "@/components/ui/primitives/InputText.vue";
 import Button from "@/components/ui/primitives/Button.vue";
 import Dialog from "@/components/ui/primitives/Dialog.vue";

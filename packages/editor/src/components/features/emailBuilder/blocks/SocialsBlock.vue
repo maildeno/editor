@@ -1,7 +1,15 @@
 <template>
   <SidebarBlockButton label="Socials" component-type="socials">
     <!-- Lucide: Share2 -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-full">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="size-full"
+    >
       <circle cx="18" cy="5" r="3" />
       <circle cx="6" cy="12" r="3" />
       <circle cx="18" cy="19" r="3" />
@@ -11,6 +19,6 @@
   </SidebarBlockButton>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SidebarBlockButton from "../sidebar/SidebarBlockButton.vue";
 </script>

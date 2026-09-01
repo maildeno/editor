@@ -1,6 +1,10 @@
 <template>
   <div v-if="colors.length" class="mt-3">
-    <p class="text-[10px] font-semibold tracking-widest uppercase text-(--md-text-subtle) mb-1.5">Recent</p>
+    <p
+      class="text-[10px] font-semibold tracking-widest uppercase text-(--md-text-subtle) mb-1.5"
+    >
+      Recent
+    </p>
     <div class="flex gap-1 flex-wrap">
       <button
         v-for="c in colors"
@@ -15,9 +19,14 @@
   </div>
 </template>
 
-<script setup>
-defineProps({ colors: { type: Array, default: () => [] } });
-defineEmits(['select']);
+<script setup lang="ts">
+import type { PropType } from "vue";
+defineProps({
+  // Typed as string[] rather than bare Array: the template uses each entry
+  // as a :key and a colour string, both of which reject `unknown`.
+  colors: { type: Array as PropType<string[]>, default: () => [] },
+});
+defineEmits(["select"]);
 </script>
 
 <style scoped>
@@ -28,7 +37,11 @@ defineEmits(['select']);
     linear-gradient(45deg, transparent 75%, #ccc 75%),
     linear-gradient(-45deg, transparent 75%, #ccc 75%);
   background-size: 6px 6px;
-  background-position: 0 0, 0 3px, 3px -3px, -3px 0;
+  background-position:
+    0 0,
+    0 3px,
+    3px -3px,
+    -3px 0;
   background-color: white;
 }
 </style>

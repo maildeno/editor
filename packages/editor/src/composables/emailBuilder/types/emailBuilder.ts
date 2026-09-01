@@ -34,9 +34,7 @@ export interface Visibility {
 // ─── Discriminated union — the heart of the recursive model ──────────────────
 
 export type CanvasChild =
-  | CanvasComponentNode
-  | CanvasRowNode
-  | CanvasSpacerNode;
+  CanvasComponentNode | CanvasRowNode | CanvasSpacerNode;
 
 // A leaf: atomic content block (text, image, button, divider …)
 export interface CanvasComponentNode {

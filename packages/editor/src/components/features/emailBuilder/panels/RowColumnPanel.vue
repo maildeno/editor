@@ -5,7 +5,9 @@
     <!-- Background -->
     <PropertySection title="Background">
       <div>
-        <label class="block text-xs font-medium text-(--md-text-muted) mb-1">Background Color</label>
+        <label class="block text-xs font-medium text-(--md-text-muted) mb-1"
+          >Background Color</label
+        >
         <PropertyGradientColor
           :model-value="columnBackground"
           @update:model-value="onBackgroundChange"
@@ -35,8 +37,14 @@
               class="max-h-full object-contain"
             />
             <div v-else class="flex flex-col items-center gap-1">
-              <Icon name="image" class="text-(--md-text-subtle)" style="font-size: 16px" />
-              <span class="text-[9px] text-(--md-text-subtle)">Click to upload</span>
+              <Icon
+                name="image"
+                class="text-(--md-text-subtle)"
+                style="font-size: 16px"
+              />
+              <span class="text-[9px] text-(--md-text-subtle)"
+                >Click to upload</span
+              >
             </div>
           </div>
           <input
@@ -48,7 +56,9 @@
           />
 
           <!-- Upload error feedback -->
-          <p v-if="bgUploadError" class="text-xs text-(--md-danger)">{{ bgUploadError }}</p>
+          <p v-if="bgUploadError" class="text-xs text-(--md-danger)">
+            {{ bgUploadError }}
+          </p>
         </div>
       </div>
 
@@ -56,7 +66,9 @@
       <template v-if="column.backgroundImage">
         <!-- Background Size -->
         <div>
-          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5">Size</label>
+          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
+            >Size</label
+          >
           <div class="flex gap-1">
             <button
               v-for="opt in bgSizeOptions"
@@ -77,7 +89,9 @@
 
         <!-- Background Repeat -->
         <div class="mt-3">
-          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5">Repeat</label>
+          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
+            >Repeat</label
+          >
           <div class="flex gap-1">
             <button
               v-for="opt in bgRepeatOptions"
@@ -98,7 +112,9 @@
 
         <!-- Background Position -->
         <div class="mt-3">
-          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5">Position</label>
+          <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
+            >Position</label
+          >
           <div class="grid grid-cols-3 gap-1">
             <button
               v-for="pos in backgroundPositions"
@@ -124,7 +140,7 @@
         label="Vertical Align"
         :model-value="column.verticalAlign"
         :options="verticalAlignOptions"
-         placeholder="Search vertical align..."
+        placeholder="Search vertical align..."
         @update:model-value="onVerticalAlignChange"
       />
     </PropertySection>
@@ -151,7 +167,9 @@
       />
       <div class="grid grid-cols-4 gap-2">
         <div class="col-span-2">
-          <label class="text-xs font-medium text-(--md-text-muted)">Color</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Color</label
+          >
           <PropertyColor
             label="Color"
             bare
@@ -161,7 +179,9 @@
           />
         </div>
         <div class="col-span-2">
-          <label class="text-xs font-medium text-(--md-text-muted)">Style</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Style</label
+          >
           <Select
             :model-value="column.border.style"
             :options="borderStyleOptions"
@@ -201,8 +221,6 @@ import PropertySelect from "./ui/PropertySelect.vue";
 import PropertyColor from "./ui/PropertyColor.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
 import PropertyGradientColor from "./ui/PropertyGradientColor.vue";
-
-
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

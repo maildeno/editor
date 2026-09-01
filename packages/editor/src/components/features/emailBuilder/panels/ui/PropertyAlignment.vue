@@ -2,7 +2,9 @@
 <template>
   <div class="space-y-1.5">
     <div class="flex items-center justify-between">
-      <label class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)">
+      <label
+        class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
+      >
         Alignment
         <OverrideBadge :show="isOverridden" />
       </label>
@@ -24,28 +26,48 @@
         <button
           @click="$emit('update:modelValue', option.value)"
           class="w-full h-7 flex items-center justify-center rounded-md border transition-all duration-100 focus:outline-none"
-          :class="modelValue === option.value
-            ? 'bg-(--md-selection-bg) border-(--md-selection) text-(--md-selection-fg)'
-            : 'border-(--md-border)/80 text-(--md-text-subtle) hover:bg-(--md-surface-hover) hover:text-(--md-text-muted) hover:border-(--md-border-strong)'"
+          :class="
+            modelValue === option.value
+              ? 'bg-(--md-selection-bg) border-(--md-selection) text-(--md-selection-fg)'
+              : 'border-(--md-border)/80 text-(--md-text-subtle) hover:bg-(--md-surface-hover) hover:text-(--md-text-muted) hover:border-(--md-border-strong)'
+          "
         >
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            class="w-3.5 h-3.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <template v-if="option.value === 'left'">
-              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="15" y2="12" />
+              <line x1="3" y1="18" x2="18" y2="18" />
             </template>
             <template v-else-if="option.value === 'center'">
-              <line x1="3" y1="6" x2="21" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="7" y1="12" x2="17" y2="12" />
+              <line x1="4" y1="18" x2="20" y2="18" />
             </template>
             <template v-else-if="option.value === 'right'">
-              <line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="9" y1="12" x2="21" y2="12" />
+              <line x1="6" y1="18" x2="21" y2="18" />
             </template>
             <template v-else-if="option.value === 'justify'">
-              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
             </template>
           </svg>
         </button>
 
         <!-- Tooltip -->
-        <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)">
+        <div
+          class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
+        >
           {{ option.label }}
         </div>
       </div>
@@ -53,20 +75,20 @@
   </div>
 </template>
 
-<script setup>
-import OverrideBadge from "../shared/OverrideBadge.vue"
+<script setup lang="ts">
+import OverrideBadge from "../shared/OverrideBadge.vue";
 
 defineProps({
-  modelValue: { type: String, default: 'left' },
+  modelValue: { type: String, default: "left" },
   isOverridden: { type: Boolean, default: false },
-})
+});
 
-defineEmits(['update:modelValue', 'reset'])
+defineEmits(["update:modelValue", "reset"]);
 
 const options = [
-  { value: 'left',    label: 'Align left'   },
-  { value: 'center',  label: 'Align center' },
-  { value: 'right',   label: 'Align right'  },
-  { value: 'justify', label: 'Justify'      },
-]
+  { value: "left", label: "Align left" },
+  { value: "center", label: "Align center" },
+  { value: "right", label: "Align right" },
+  { value: "justify", label: "Justify" },
+];
 </script>

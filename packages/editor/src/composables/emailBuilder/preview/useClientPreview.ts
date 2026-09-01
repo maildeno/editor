@@ -43,10 +43,7 @@ import { computed, readonly, ref, watch } from "vue";
 
 export type ClientPlatform = "web" | "desktop" | "mobile";
 export type DarkModeStrategy =
-  | "respects-meta"
-  | "near-black-swap"
-  | "partial-transparent"
-  | "none";
+  "respects-meta" | "near-black-swap" | "partial-transparent" | "none";
 
 export interface ClientCapabilities {
   // ── Typography ─────────────────────────────────────────────────────────
@@ -869,17 +866,13 @@ export function useClientPreview() {
   }
 
   /** WCAG-relative luminance, 0–1. */
-  function relativeLuminance(
-    c: { r: number; g: number; b: number },
-  ): number {
+  function relativeLuminance(c: { r: number; g: number; b: number }): number {
     const channel = (v: number) => {
       const n = v / 255;
       return n <= 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
     };
     return (
-      0.2126 * channel(c.r) +
-      0.7152 * channel(c.g) +
-      0.0722 * channel(c.b)
+      0.2126 * channel(c.r) + 0.7152 * channel(c.g) + 0.0722 * channel(c.b)
     );
   }
 
@@ -965,16 +958,14 @@ export function useClientPreview() {
     const lightBgThreshold = isPartial ? 0.78 : 0.92;
 
     // Target colors authored colors get mapped TO.
-    const liftedTextGmail = "#E6F2D9";   // mint-ish, matches real Gmail lift
+    const liftedTextGmail = "#E6F2D9"; // mint-ish, matches real Gmail lift
     const liftedTextOutlook = "#F3F3F3"; // Outlook lifts toward near-white
     const darkenedBg = "#1F1F1F";
 
     const liftedText = isPartial ? liftedTextGmail : liftedTextOutlook;
 
     // Walk all elements with inline style or bgcolor. One pass.
-    const candidates = doc.querySelectorAll<HTMLElement>(
-      "[style], [bgcolor]",
-    );
+    const candidates = doc.querySelectorAll<HTMLElement>("[style], [bgcolor]");
 
     candidates.forEach((el) => {
       const style = el.getAttribute("style") || "";
@@ -999,8 +990,7 @@ export function useClientPreview() {
           const lum = relativeLuminance(parsed);
           // !important authored colors get a tighter threshold (only swap
           // pure-black) since the author was emphatic.
-          const shouldLift =
-            lum < (isImportant ? 0.05 : darkTextThreshold);
+          const shouldLift = lum < (isImportant ? 0.05 : darkTextThreshold);
           if (shouldLift) {
             nextStyle = nextStyle.replace(
               /(^|;|\s)color\s*:\s*[^;]+?(?=;|$)/gi,
@@ -1026,8 +1016,7 @@ export function useClientPreview() {
         const parsed = parseColor(cleanBg);
         if (parsed && parsed.a > 0) {
           const lum = relativeLuminance(parsed);
-          const shouldDarken =
-            lum > (isImportant ? 0.95 : lightBgThreshold);
+          const shouldDarken = lum > (isImportant ? 0.95 : lightBgThreshold);
           if (shouldDarken) {
             nextStyle = nextStyle.replace(
               /(^|;|\s)background-color\s*:\s*[^;]+?(?=;|$)/gi,

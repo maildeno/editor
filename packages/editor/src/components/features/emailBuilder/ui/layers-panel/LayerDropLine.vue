@@ -21,7 +21,9 @@
         :style="{ left: indentPx }"
       >
         <!-- Dot -->
-        <div class="w-1.5 h-1.5 rounded-full bg-(--md-row-selection) shrink-0 -ml-0.75" />
+        <div
+          class="w-1.5 h-1.5 rounded-full bg-(--md-row-selection) shrink-0 -ml-0.75"
+        />
         <!-- Line -->
         <div class="flex-1 h-0.5 bg-(--md-row-selection) rounded-full" />
       </div>
@@ -52,10 +54,14 @@ const indentPx = computed(() => {
 
 <style scoped>
 .drop-line-enter-active {
-  transition: opacity 80ms ease, transform 80ms ease;
+  transition:
+    opacity 80ms ease,
+    transform 80ms ease;
 }
 .drop-line-leave-active {
-  transition: opacity 60ms ease, transform 60ms ease;
+  transition:
+    opacity 60ms ease,
+    transform 60ms ease;
 }
 .drop-line-enter-from,
 .drop-line-leave-to {

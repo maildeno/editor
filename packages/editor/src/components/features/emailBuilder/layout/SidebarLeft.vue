@@ -8,10 +8,8 @@
         @click="activeTab = tab"
         class="flex-1 px-3 py-1.5 text-sm font-medium transition-colors"
         :class="[
-          activeTab === tab
-            ? 'md-segment-active'
-            : 'md-segment-idle',
-          index < tabs.length - 1 ? 'md-segment-divider' : ''
+          activeTab === tab ? 'md-segment-active' : 'md-segment-idle',
+          index < tabs.length - 1 ? 'md-segment-divider' : '',
         ]"
       >
         {{ tab }}
@@ -27,7 +25,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import ContentTab from "../tabs/content/ContentTab.vue";
 import LayoutTab from "../tabs/LayoutTab.vue";

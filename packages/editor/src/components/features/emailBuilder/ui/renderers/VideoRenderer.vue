@@ -51,8 +51,12 @@ const props = defineProps<{
   };
 }>();
 
-const { linkTagPreviewContext, linkTagPreviewActive, previewMode, linksActive } =
-  useEmailBuilder();
+const {
+  linkTagPreviewContext,
+  linkTagPreviewActive,
+  previewMode,
+  linksActive,
+} = useEmailBuilder();
 
 /**
  * Prevents navigation if links are toggled off.
@@ -61,11 +65,10 @@ const { linkTagPreviewContext, linkTagPreviewActive, previewMode, linksActive } 
 const handleLinkClick = (event: MouseEvent) => {
   if (!linksActive.value) {
     event.preventDefault();
-    // Optional: You could trigger a small toast notification here 
+    // Optional: You could trigger a small toast notification here
     // to remind yourself why the link didn't open.
   }
 };
-
 
 // ─── Mobile prop resolution ───────────────────────────────────────────────────
 
@@ -82,27 +85,35 @@ const p = computed(() => {
 // ─── Merge tag resolution — all four personalisation targets ──────────────────
 
 const resolve = (val: string) =>
-  resolveString(val ?? "", linkTagPreviewContext.value, linkTagPreviewActive.value);
+  resolveString(
+    val ?? "",
+    linkTagPreviewContext.value,
+    linkTagPreviewActive.value,
+  );
 
-const resolvedSrc          = computed(() => resolve(props.component.props.src));
-const resolvedAlt          = computed(() => resolve(props.component.props.alt));
-const resolvedFallbackLink = computed(() => resolve(props.component.props.fallbackLink));
-const resolvedCoverImage   = computed(() => resolve(props.component.props.coverImage));
+const resolvedSrc = computed(() => resolve(props.component.props.src));
+const resolvedAlt = computed(() => resolve(props.component.props.alt));
+const resolvedFallbackLink = computed(() =>
+  resolve(props.component.props.fallbackLink),
+);
+const resolvedCoverImage = computed(() =>
+  resolve(props.component.props.coverImage),
+);
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const containerStyles = computed(() => ({
-  margin:    `${p.value.margin.top}px ${p.value.margin.right}px ${p.value.margin.bottom}px ${p.value.margin.left}px`,
-  padding:   `${p.value.padding.top}px ${p.value.padding.right}px ${p.value.padding.bottom}px ${p.value.padding.left}px`,
+  margin: `${p.value.margin.top}px ${p.value.margin.right}px ${p.value.margin.bottom}px ${p.value.margin.left}px`,
+  padding: `${p.value.padding.top}px ${p.value.padding.right}px ${p.value.padding.bottom}px ${p.value.padding.left}px`,
   textAlign: p.value.align,
 }));
 
 const videoStyles = computed(() => ({
-  width:        "100%",
-  height:       p.value.height === "auto" ? "auto" : `${p.value.height}px`,
+  width: "100%",
+  height: p.value.height === "auto" ? "auto" : `${p.value.height}px`,
   borderRadius: `${p.value.borderRadius}px`,
-  border:       `${p.value.border.width}px ${p.value.border.style} ${p.value.border.color}`,
-  display:      "inline-block",
+  border: `${p.value.border.width}px ${p.value.border.style} ${p.value.border.color}`,
+  display: "inline-block",
 }));
 
 // ─── Visibility ───────────────────────────────────────────────────────────────

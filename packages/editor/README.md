@@ -32,6 +32,9 @@ import { EmailEditor } from "@maildeno/editor";
 | `theme` | `{ primaryColor?, surfaceColor? }` |
 | `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json"> }` |
 | `onSendTestEmail` | `(payload) => Promise<void>` |
+| `brandName` | `string` |
+| `versions` | `boolean` |
+| `assistant` | `AssistantMount` |
 
 | Event | Payload |
 | --- | --- |
@@ -90,6 +93,10 @@ export default function Editor() {
 | `getMjml(mode?)` | Current template as MJML. |
 | `getReactEmail(mode?)` | Current template as React Email `.tsx` source. |
 | `getJson()` | Current template as a plain object. |
+| `setJson(data, opts?)` | Replace the canvas. Accepts what `getJson()` returns, so `setJson(getJson())` round-trips. `opts.history` is `"undoable"` (default) or `"reset"`. |
+| `getSelection()` | `{ id, type }` for the selected block, or `null`. `type` is the block type (`"paragraph"`, `"image"`…). |
+| `setSelection(id)` | Select by id, or clear with `null`. Returns `false` if no block has that id. |
+| `onChange(cb)` | Runs `cb` after each committed change. Returns an unsubscribe function. |
 | `destroy()` | Unmount and clean up. Always call this on unmount. |
 
 
@@ -170,6 +177,15 @@ const adapter: EditorStorageAdapter = {
   },
 
   // ── Saved rows (reusable snippets) ─────────────────────────
+  // Optional second, read-only row library — an org's shared blocks.
+  // Shown in a "Shared" tab beside the user's own rows, and only when
+  // this returns something, so omitting it changes nothing. There is no
+  // save/rename/delete counterpart: curating a shared library is an admin
+  // concern the editor has no user model to express.
+  async listSystemSavedRows() {
+    return api.get("/org/saved-rows");
+  },
+
   async listSavedRows() {
     return fetch("/api/saved-rows").then((r) => r.json());
   },

@@ -147,11 +147,9 @@ export const useEmailExportEngine = (
   generatorsOrHtmlFn: GeneratorBundle | ((comp: any) => string),
   reactFnOrSaveHistory?: ((comp: any) => string) | ((action: string) => void),
   mjmlFnOrVisibilityContext?:
-    | ((comp: any) => string)
-    | Ref<Record<string, string>>,
+    ((comp: any) => string) | Ref<Record<string, string>>,
   saveToHistoryFnOrTagSub?:
-    | ((action: string) => void)
-    | Ref<TagSubstitutionOptions>,
+    ((action: string) => void) | Ref<TagSubstitutionOptions>,
   visibilityContextOrUndefined?: Ref<Record<string, string>>,
   tagSubstitutionOrUndefined?: Ref<TagSubstitutionOptions>,
   /**
@@ -191,11 +189,9 @@ export const useEmailExportEngine = (
     generators = generatorsOrHtmlFn as GeneratorBundle;
     saveToHistoryFn = reactFnOrSaveHistory as (action: string) => void;
     visibilityContext = mjmlFnOrVisibilityContext as
-      | Ref<Record<string, string>>
-      | undefined;
+      Ref<Record<string, string>> | undefined;
     tagSubstitution = saveToHistoryFnOrTagSub as
-      | Ref<TagSubstitutionOptions>
-      | undefined;
+      Ref<TagSubstitutionOptions> | undefined;
   } else {
     // Legacy positional form
     generators = {
@@ -213,9 +209,11 @@ export const useEmailExportEngine = (
   const { open } = infoDialogInstance ?? useInfoDialog();
 
   // ── ESP config state (shared with VisibilityWrapESP component) ────────────
-  const espConfig = espConfigRef ?? ref<{ syntax: ESPSyntax }>({
-    syntax: "handlebars",
-  });
+  const espConfig =
+    espConfigRef ??
+    ref<{ syntax: ESPSyntax }>({
+      syntax: "handlebars",
+    });
 
   // ─────────────────────────────────────────────────────────────────────────
   // RECURSIVE TREE WALKER

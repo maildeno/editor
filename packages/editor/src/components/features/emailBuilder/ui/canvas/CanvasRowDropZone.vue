@@ -39,17 +39,28 @@
     </Transition>
 
     <!-- subtle visible divider while receptive but not hovered -->
-    <div v-if="!isEmpty && isAcceptingDrag && !isActive" class="cdz-ghost-line" />
+    <div
+      v-if="!isEmpty && isAcceptingDrag && !isActive"
+      class="cdz-ghost-line"
+    />
 
     <!-- Empty state content when fullHeight and not dragging -->
     <div v-if="fullHeight && !isAcceptingDrag" class="cdz-empty-state">
       <div class="cdz-empty-content">
-        <svg class="cdz-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <svg
+          class="cdz-empty-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
           <rect x="3" y="3" width="18" height="18" rx="2" />
           <path d="M8 12h8M12 8v8" />
         </svg>
         <p class="cdz-empty-title">Start Building Your Email</p>
-        <p class="cdz-empty-subtitle">Add rows from the "Layout" tab or drag a layout onto the canvas</p>
+        <p class="cdz-empty-subtitle">
+          Add rows from the "Layout" tab or drag a layout onto the canvas
+        </p>
       </div>
     </div>
   </div>
@@ -70,14 +81,16 @@ const emit = defineEmits<{
   (e: "drop", insertIndex: number): void;
 }>();
 
-const { isLayoutDragActive, layoutDragPayload, endLayoutDrag } = useLayoutDrag();
+const { isLayoutDragActive, layoutDragPayload, endLayoutDrag } =
+  useLayoutDrag();
 
 // Accept nested-row drags too (row being moved to canvas top-level)
 const { isTopLevelRowDragActive, isRowDragActive } = useEmailBuilder();
 
-const isAcceptingDrag = computed(() =>
-  isLayoutDragActive.value ||
-  (isRowDragActive.value && !isTopLevelRowDragActive.value)
+const isAcceptingDrag = computed(
+  () =>
+    isLayoutDragActive.value ||
+    (isRowDragActive.value && !isTopLevelRowDragActive.value),
 );
 
 let enterCount = 0;
@@ -93,7 +106,8 @@ const handleDragOver = (e: DragEvent) => {
   if (!isAcceptingDrag.value) return;
   if (e.dataTransfer) {
     const allowed = e.dataTransfer.effectAllowed;
-    e.dataTransfer.dropEffect = (allowed === "copy" || allowed === "copyMove") ? "copy" : "move";
+    e.dataTransfer.dropEffect =
+      allowed === "copy" || allowed === "copyMove" ? "copy" : "move";
   }
 };
 
@@ -167,7 +181,8 @@ const handleDrop = (e: DragEvent) => {
     color-mix(in srgb, var(--md-row-selection) 4%, var(--md-surface)) 0%,
     color-mix(in srgb, var(--md-row-selection) 8%, var(--md-surface)) 100%
   );
-  border: 2px dashed color-mix(in srgb, var(--md-row-selection) 22%, var(--md-surface));
+  border: 2px dashed
+    color-mix(in srgb, var(--md-row-selection) 22%, var(--md-surface));
   border-radius: 6px;
   transition: all 0.2s ease;
 }
@@ -273,8 +288,13 @@ const handleDrop = (e: DragEvent) => {
 }
 
 @keyframes ghost-pulse {
-  0%, 100% { opacity: 0.5; }
-  50%       { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* ── Active bar ─────────────────────────────────────────────── */
@@ -287,7 +307,8 @@ const handleDrop = (e: DragEvent) => {
   padding: 0 20px;
   background: color-mix(in srgb, var(--md-row-selection) 6%, transparent);
   border-radius: 8px;
-  border: 1.5px dashed color-mix(in srgb, var(--md-row-selection) 35%, transparent);
+  border: 1.5px dashed
+    color-mix(in srgb, var(--md-row-selection) 35%, transparent);
   pointer-events: none; /* let drag events fall through to the parent drop zone */
 }
 
@@ -308,8 +329,14 @@ const handleDrop = (e: DragEvent) => {
 }
 
 @keyframes line-expand {
-  from { transform: scaleX(0); opacity: 0; }
-  to   { transform: scaleX(1); opacity: 1; }
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
 }
 
 .cdz-pill {
@@ -323,15 +350,23 @@ const handleDrop = (e: DragEvent) => {
   white-space: nowrap;
   padding: 5px 14px;
   background: color-mix(in srgb, var(--md-row-selection) 8%, transparent);
-  border: 1.5px solid color-mix(in srgb, var(--md-row-selection) 35%, transparent);
+  border: 1.5px solid
+    color-mix(in srgb, var(--md-row-selection) 35%, transparent);
   border-radius: 100px;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--md-row-selection) 15%, transparent);
+  box-shadow: 0 2px 8px
+    color-mix(in srgb, var(--md-row-selection) 15%, transparent);
   animation: pill-pop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes pill-pop {
-  from { transform: scale(0.75); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
+  from {
+    transform: scale(0.75);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .cdz-icon {
@@ -341,12 +376,24 @@ const handleDrop = (e: DragEvent) => {
 }
 
 /* ── Transition ─────────────────────────────────────────────── */
-.cdz-bar-enter-active { animation: cdz-in 0.15s ease forwards; }
-.cdz-bar-leave-active { transition: opacity 0.1s ease; }
-.cdz-bar-leave-to     { opacity: 0; }
+.cdz-bar-enter-active {
+  animation: cdz-in 0.15s ease forwards;
+}
+.cdz-bar-leave-active {
+  transition: opacity 0.1s ease;
+}
+.cdz-bar-leave-to {
+  opacity: 0;
+}
 
 @keyframes cdz-in {
-  from { opacity: 0; transform: scaleY(0.6); }
-  to   { opacity: 1; transform: scaleY(1); }
+  from {
+    opacity: 0;
+    transform: scaleY(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 </style>

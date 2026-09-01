@@ -78,6 +78,9 @@ async function publish() {
 | `theme` | `{ primaryColor?, surfaceColor? }` |
 | `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json"> }` |
 | `onSendTestEmail` | `(payload) => Promise<void>` |
+| `brandName` | `string` |
+| `versions` | `boolean` |
+| `assistant` | `AssistantMount` |
 
 | Event | Payload |
 | --- | --- |
@@ -129,6 +132,52 @@ The one case where `init()` wins: it renders in a shadow root, so your app's
 global CSS can't reach the editor. If your stylesheets conflict with it, that
 isolation is worth the duplicate runtime.
 
+## Reading the canvas
+
+Content getters live on the component instance, so you need a template ref —
+they are not events or slot props.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { EmailEditor } from "@maildeno/editor";
+
+const editor = ref<InstanceType<typeof EmailEditor> | null>(null);
+
+function exportAll() {
+  editor.value?.getHtml();        // production-ready HTML email
+  editor.value?.getHtml("wrap");  // "prune" (default) | "wrap"
+  editor.value?.getMjml();
+  editor.value?.getReactEmail();  // .tsx source
+  editor.value?.getJson();        // portable template object
+}
+</script>
+
+<template>
+  <EmailEditor ref="editor" @save="onSave" />
+</template>
+```
+
+All five return `null` when the canvas is empty. `getJson()` returns the
+portable format — `template_id`, `template_name`, `canvas`, `rows`,
+`schema_version` — and `setJson()` accepts exactly that, so
+`setJson(getJson())` round-trips.
+
+The write side is on the same ref: `setJson`, `getSelection`, `setSelection`,
+`onChange`.
+
+> **Saving is opt-in.** `@save` is what reveals the Save button — writing the
+> listener is the opt-in, since Vue compiles `@save="fn"` to an `onSave` prop.
+> Omit it and the button, the save-status indicator and the autosave timer are
+> all absent, which is what you want for a guest editor.
+
+```vue
+<EmailEditor
+  ref="editor"
+  @save="({ templateId }) => console.log('saved', templateId, editor.value?.getHtml())"
+/>
+```
+
 ## Feature reference
 
 Everything below is identical across frameworks. Only the mounting differs.
@@ -153,6 +202,9 @@ Everything below is identical across frameworks. Only the mounting differs.
 | `theme` | `{ primaryColor?, surfaceColor? }` | Brand colour, expanded into a full 50–950 shade scale. |
 | `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json"> }` | Restrict which export formats appear. Omit for all four. |
 | `onSendTestEmail` | `(payload) => Promise<void>` | Enables the "Send test" button. Hidden entirely when omitted. |
+| `brandName` | `string` | Name in the desktop-only notice's "Powered by" line. Omit for the default; pass `""` to hide the line. |
+| `versions` | `boolean` | Replaces the saved-templates panel with version history. Needs the version adapter methods; the built-in localStorage adapter has them. |
+| `assistant` | `{ mount, unmount? }` | Fills the assistant drawer from a non-Vue host. Vue hosts can use the `#assistant` slot instead. |
 
 ### Getting content out
 
@@ -215,6 +267,15 @@ const adapter: EditorStorageAdapter = {
   },
 
   // ── Saved rows (reusable snippets) ─────────────────────────
+  // Optional second, read-only row library — an org's shared blocks.
+  // Shown in a "Shared" tab beside the user's own rows, and only when
+  // this returns something, so omitting it changes nothing. There is no
+  // save/rename/delete counterpart: curating a shared library is an admin
+  // concern the editor has no user model to express.
+  async listSystemSavedRows() {
+    return api.get("/org/saved-rows");
+  },
+
   async listSavedRows() {
     return fetch("/api/saved-rows").then((r) => r.json());
   },

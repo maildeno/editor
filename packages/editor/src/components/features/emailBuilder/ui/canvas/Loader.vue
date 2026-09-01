@@ -21,10 +21,10 @@ onUnmounted(() => {
           class="absolute w-16 h-16 rounded-full border-2 border-(--md-border) animate-ping opacity-75"
         />
         <div
-          class="absolute w-12 h-12 rounded-full border-2 border-t-[#42389E] border-r-[#42389E] border-b-transparent border-l-transparent animate-spin"
+          class="absolute w-12 h-12 rounded-full border-2 border-t-(--md-primary) border-r-(--md-primary-hover) border-b-transparent border-l-transparent animate-spin"
         />
         <div
-          class="w-8 h-8 rounded-full bg-gradient-to-br from-[#42389E] to-[#6B5BC9] animate-pulse"
+          class="w-8 h-8 rounded-full bg-gradient-to-br from-(--md-primary) to-(--md-primary-hover) animate-pulse"
         />
       </div>
     </div>

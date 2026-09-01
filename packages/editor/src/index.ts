@@ -12,10 +12,12 @@ export { default as EmailEditor } from "./components/features/emailBuilder/Email
 // ── Storage adapter ────────────────────────────────────────────────
 export { createLocalStorageAdapter } from "./adapters/localStorageAdapter";
 export type {
- EditorStorageAdapter,
- PartialStorageAdapter,
- TemplateSnapshot,
- SavedRow,
+  EditorStorageAdapter,
+  PartialStorageAdapter,
+  TemplateSnapshot,
+  TemplateSummary,
+  TemplateVersionSummary,
+  SavedRow,
 } from "./adapters/types";
 
 // ── Block registry ─────────────────────────────────────────────────
@@ -23,16 +25,13 @@ export { registerBlock, getBlock, getAllBlocks } from "./blocks/registry";
 export type { BlockDefinition, BlockRenderContext } from "./blocks/types";
 
 // ── ESP registry ───────────────────────────────────────────────────
-export {
- registerESPSyntax,
- getRegisteredCustomESPs,
-} from "./esp/registry";
+export { registerESPSyntax, getRegisteredCustomESPs } from "./esp/registry";
 export type { ESPWrapperOverrides } from "./esp/registry";
 
 // ── Merge tag registry ─────────────────────────────────────────────
 export {
- registerMergeTags,
- getRegisteredMergeTagIds,
+  registerMergeTags,
+  getRegisteredMergeTagIds,
 } from "./merge-tags/registry";
 export type { MergeTagRegistration } from "./merge-tags/registry";
 
@@ -49,3 +48,4 @@ export type { ThemeOptions, ThemeTokens } from "./theme";
 // including init() — lives at the "@maildeno/editor/element" entry
 // instead (see element.ts).
 export type { InitOptions, EditorHandle } from "./init";
+export type { EditorWriteApi, AssistantMount } from "./types/assistant";

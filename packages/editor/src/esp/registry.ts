@@ -64,12 +64,17 @@ export function getESPMetaSafe(
   return builtIn[syntax] ?? customMeta.get(syntax) ?? DEFAULT_META;
 }
 
-export function getESPOverrides(syntax: string): ESPWrapperOverrides | undefined {
+export function getESPOverrides(
+  syntax: string,
+): ESPWrapperOverrides | undefined {
   return customOverrides.get(syntax);
 }
 
 /** For UI pickers (the ESP syntax <select>) to list registered custom
  * entries alongside the 14 built-ins, not just avoid crashing on them. */
-export function getRegisteredCustomESPs(): Array<{ id: string; meta: ESPSyntaxMeta }> {
+export function getRegisteredCustomESPs(): Array<{
+  id: string;
+  meta: ESPSyntaxMeta;
+}> {
   return [...customMeta.entries()].map(([id, meta]) => ({ id, meta }));
 }

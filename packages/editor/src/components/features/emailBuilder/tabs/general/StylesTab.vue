@@ -78,7 +78,6 @@
           </span>
         </div>
       </div>
-
     </PropertySection>
 
     <!-- Body Background -->
@@ -115,8 +114,14 @@
             class="max-h-full object-contain"
           />
           <div v-else class="flex flex-col items-center gap-1">
-            <Icon name="image" class="text-(--md-text-subtle)" style="font-size: 16px" />
-            <span class="text-[9px] text-(--md-text-subtle)">Click to upload</span>
+            <Icon
+              name="image"
+              class="text-(--md-text-subtle)"
+              style="font-size: 16px"
+            />
+            <span class="text-[9px] text-(--md-text-subtle)"
+              >Click to upload</span
+            >
           </div>
         </div>
 
@@ -634,9 +639,9 @@ const getRepeatIcon = (value: string) => {
 .md-tag {
   display: inline-flex;
   align-items: center;
-  padding: 0.125rem 0.75rem; 
+  padding: 0.125rem 0.75rem;
   border-radius: 9999px;
-  font-size: 0.875rem; 
+  font-size: 0.875rem;
   font-weight: 500;
   background: var(--md-primary);
   color: var(--md-on-primary);

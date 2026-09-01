@@ -181,7 +181,7 @@ const optimizeSocialsPlatforms = (
   if (!Array.isArray(platforms)) return undefined;
 
   const kept = (platforms as SocialPlatform[]).filter(
-    (p) => !(p.enabled === true && p.link === "")
+    (p) => !(p.enabled === true && p.link === ""),
   );
 
   // All platforms are in default state — strip the whole array

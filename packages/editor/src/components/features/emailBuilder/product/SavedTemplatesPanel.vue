@@ -18,7 +18,10 @@ import { useStorageAdapter } from "@/adapters";
 import type { TemplateSummary } from "@/adapters/types";
 import Icon from "@/components/ui/Icon.vue";
 
-const props = defineProps<{ open: boolean; currentTemplateId?: string | null }>();
+const props = defineProps<{
+  open: boolean;
+  currentTemplateId?: string | null;
+}>();
 const emit = defineEmits<{
   close: [];
   select: [templateId: string];
@@ -53,7 +56,13 @@ async function load() {
 // Refetch each time it opens rather than caching: a template may have been
 // saved (or removed elsewhere) since the last look, and a stale list here is
 // worse than a brief spinner.
-watch(() => props.open, (isOpen) => { if (isOpen) load(); }, { immediate: true });
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) load();
+  },
+  { immediate: true },
+);
 
 async function remove(id: string, event: Event) {
   event.stopPropagation(); // don't also select the row being deleted
@@ -98,16 +107,28 @@ function relativeDate(iso?: string): string {
       v-if="props.open"
       class="w-65 sticky top-16 h-[calc(100vh-5.25rem)] z-80"
     >
-      <div class="bg-(--md-surface) flex flex-col h-full border-r border-(--md-border)/80">
+      <div
+        class="bg-(--md-surface) flex flex-col h-full border-r border-(--md-border)/80"
+      >
         <div class="flex items-center justify-between px-3.5 py-3 shrink-0">
           <div class="flex items-center gap-2">
-            <svg class="w-3.5 h-3.5 text-(--md-text-subtle)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              class="w-3.5 h-3.5 text-(--md-text-subtle)"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <rect width="7" height="7" x="3" y="3" rx="1" />
               <rect width="7" height="7" x="14" y="3" rx="1" />
               <rect width="7" height="7" x="14" y="14" rx="1" />
               <rect width="7" height="7" x="3" y="14" rx="1" />
             </svg>
-            <span class="text-[11px] font-semibold text-(--md-text-subtle) uppercase tracking-[.08em]">
+            <span
+              class="text-[11px] font-semibold text-(--md-text-subtle) uppercase tracking-[.08em]"
+            >
               Saved Templates
             </span>
           </div>
@@ -124,20 +145,34 @@ function relativeDate(iso?: string): string {
         </div>
 
         <div class="flex-1 overflow-y-auto px-2 pb-2">
-          <p v-if="!supported" class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center leading-relaxed">
+          <p
+            v-if="!supported"
+            class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center leading-relaxed"
+          >
             This editor's storage adapter doesn't support listing templates.
           </p>
 
-          <p v-else-if="loading" class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center">
+          <p
+            v-else-if="loading"
+            class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center"
+          >
             Loading…
           </p>
 
-          <p v-else-if="errored" class="px-2 py-6 text-[11px] text-(--md-danger) text-center leading-relaxed">
+          <p
+            v-else-if="errored"
+            class="px-2 py-6 text-[11px] text-(--md-danger) text-center leading-relaxed"
+          >
             Couldn't load saved templates.<br />
-            <button class="underline hover:no-underline mt-1" @click="load">Retry</button>
+            <button class="underline hover:no-underline mt-1" @click="load">
+              Retry
+            </button>
           </p>
 
-          <p v-else-if="!templates.length" class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center leading-relaxed">
+          <p
+            v-else-if="!templates.length"
+            class="px-2 py-6 text-[11px] text-(--md-text-subtle) text-center leading-relaxed"
+          >
             No saved templates yet.<br />Save one and it'll appear here.
           </p>
 
@@ -146,7 +181,11 @@ function relativeDate(iso?: string): string {
               v-for="t in templates"
               :key="t.templateId"
               class="group flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-(--md-surface-hover) transition-colors cursor-pointer"
-              :class="t.templateId === props.currentTemplateId ? 'bg-(--md-row-selection-bg)/70' : ''"
+              :class="
+                t.templateId === props.currentTemplateId
+                  ? 'bg-(--md-row-selection-bg)/70'
+                  : ''
+              "
               @click="emit('select', t.templateId)"
             >
               <div class="min-w-0 flex-1">
@@ -158,7 +197,9 @@ function relativeDate(iso?: string): string {
                 </div>
               </div>
 
-              <span class="text-[10px] text-(--md-text-subtle) shrink-0 tabular-nums">
+              <span
+                class="text-[10px] text-(--md-text-subtle) shrink-0 tabular-nums"
+              >
                 {{ relativeDate(t.updatedAt) }}
               </span>
 
@@ -207,8 +248,17 @@ function relativeDate(iso?: string): string {
 }
 
 /* Scrollbar — thin, unobtrusive. Matches SavedRowsPanel. */
-.overflow-y-auto::-webkit-scrollbar { width: 6px; }
-.overflow-y-auto::-webkit-scrollbar-track { background: transparent; }
-.overflow-y-auto::-webkit-scrollbar-thumb { background: var(--md-border-strong); border-radius: 9999px; }
-.overflow-y-auto::-webkit-scrollbar-thumb:hover { background: var(--md-text-subtle); }
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: var(--md-border-strong);
+  border-radius: 9999px;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: var(--md-text-subtle);
+}
 </style>

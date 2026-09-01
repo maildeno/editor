@@ -7,8 +7,10 @@ import {
   onMounted,
   onUnmounted,
   onBeforeUnmount,
+  useSlots,
 } from "vue";
 import { useToast } from "@/composables/ui/useToast";
+import { useStorageAdapter, useHasTemplateLibrary } from "@/adapters";
 import { useTeleportTarget } from "@/composables/ui/useTeleportTarget";
 
 interface ExportCapabilities {
@@ -18,6 +20,12 @@ interface ExportCapabilities {
 
 interface HeaderProps {
   savedTemplatesOpen?: boolean;
+  /** Mirrors EmailEditor's `versions`. Only changes this button's icon,
+   *  label and tooltip — the panel swap itself happens in EmailEditor, and
+   *  the toggle event is shared, since only one panel occupies the slot. */
+  versions?: boolean;
+  /** Mirrors EmailEditor's onSave presence — see the note there. */
+  canSave?: boolean;
   /** If provided, the "Send test" button appears and calls this on submit.
    * If omitted, the button doesn't render at all — this is the
    * "capability" pattern for this feature: derived from whether the host
@@ -39,6 +47,8 @@ const emit = defineEmits<{
 
 const props = withDefaults(defineProps<HeaderProps>(), {
   savedTemplatesOpen: false,
+  versions: false,
+  canSave: false,
   onSendTestEmail: null,
   capabilities: () => ({}) as ExportCapabilities,
 });
@@ -100,6 +110,61 @@ const templateName = computed({
 
 // ── Export settings (minify toggle) ──────────────────────────────────────────
 const { minifyOutput: minifyEnabled, toggleMinify } = useExportSettings();
+
+// ── Host header actions ──────────────────────────────────────────────────────
+//
+// Read via useSlots rather than $slots in the template so the v-if can be a
+// plain boolean expression, and so the reason for the guard is stated once
+// here rather than inline.
+const slots = useSlots();
+const storageAdapter = useStorageAdapter();
+
+/**
+ * Whether saving is possible at all.
+ *
+ * Gated on the adapter implementing saveTemplate rather than on a separate
+ * prop, because that is the same presence/absence idiom the rest of the
+ * package uses (onSendTestEmail's presence reveals the Send-test button) and
+ * because it cannot get out of sync: a Save button that is shown while the
+ * adapter has no way to save is a button that always errors.
+ *
+ * A guest-facing host passes a PartialStorageAdapter with loadTemplate but no
+ * saveTemplate, and gets a read/export-only editor — no Save button, no save
+ * status, and no autosave attempts firing 401s in the background.
+ */
+const canSave = computed(() => props.canSave === true);
+
+/**
+ * The saved-templates / version-history panel button.
+ *
+ * `versions` forces it on — a host asking for version history obviously wants
+ * the button that opens it, and versions come from their own adapter methods
+ * rather than the template library. Otherwise it follows whether the host
+ * gave us a template library at all.
+ */
+const hasTemplateLibrary = useHasTemplateLibrary();
+const showPanelButton = computed(
+  () => props.versions === true || hasTemplateLibrary,
+);
+
+/**
+ * State a host control almost certainly needs, passed to the slot so it
+ * doesn't have to reach for a template ref or duplicate the editor's own
+ * save state.
+ *
+ * Deliberately small and read-only. A host wanting to *drive* the editor uses
+ * the write API on the component ref; this is for rendering a label or
+ * disabling a button while a save is in flight.
+ */
+const headerSlotProps = computed(() => ({
+  templateId: templateId.value ?? null,
+  isSaving: isSaving.value,
+  // The editor's own autosave status: "idle" | "saving" | "saved" | "error".
+  // Passed through as-is rather than reduced to a dirty boolean — there is no
+  // such flag here, and deriving one would mean inventing a fifth state the
+  // editor doesn't actually track.
+  saveStatus: saveStatus.value,
+}));
 
 // ── Preview overlay ──────────────────────────────────────────────────────────
 // PreviewScreen is rendered
@@ -404,18 +469,17 @@ onUnmounted(() => {
 
 <template>
   <header
-    class="2xl:container 2xl:mx-auto px-3 w-full fixed lg:sticky top-0 lg:left-0 -left-full z-100 flex flex-col lg:flex-row items-start lg:items-center justify-center lg:justify-between gap-6 h-screen lg:h-13 overflow-y-auto lg:overflow-visible md-surface-header"
+    class="2xl:container 2xl:mx-auto px-3 w-full fixed lg:sticky top-0 lg:left-0 -left-full z-100 flex flex-col lg:flex-row items-start lg:items-center justify-center lg:justify-between gap-4 h-screen lg:h-13 overflow-y-auto lg:overflow-visible md-surface-header"
   >
-    <!-- ── Left: Logo + Template name ────────────────────────────────────── -->
-    <div class="flex items-center gap-3 w-1/3">
-      <div class="flex items-center shrink-0">
-        <!-- No hardcoded Maildeno branding — this used to point at
- /builder-logo.svg (a Nuxt public/ asset that doesn't exist in
- this architecture). Beyond the broken path, an embeddable
- open-source editor shouldn't force its own logo on a host's
- product. Slot, empty by default. -->
+    <!-- ── Left: Template name + Anchor lock + Preview ────────────────────────────────────── -->
+    <div class="flex items-center gap-3 w-[30%]">
+      <!-- <div class="flex items-center shrink-0">
+        No hardcoded Maildeno branding — this used to point at /builder-logo.svg
+        (an asset that doesn't exist in this architecture). Beyond the broken
+        path, an embeddable open-source editor shouldn't force its own logo on a
+        host's product. Slot, empty by default.
         <slot name="logo" />
-      </div>
+      </div> -->
       <input
         id="templateName"
         name="templateName"
@@ -446,14 +510,7 @@ onUnmounted(() => {
           ></div>
         </div>
       </button>
-      <!-- Preview overlay toggle.
- Replaces the former <NuxtLink to="/preview"> — that did a route
- change which forced the builder page to unmount and re-fetch the
- template on return. The overlay pattern keeps PreviewScreen mounted
- (v-show, not v-if), so closing and reopening costs zero refetch.
 
- Tooltip style mirrors the Links/Locked button just above this for
- visual consistency. Lucide "eye" inline (no package install needed). -->
       <button
         type="button"
         :aria-pressed="previewOverlayOpen"
@@ -497,17 +554,15 @@ onUnmounted(() => {
       </button>
     </div>
 
-    <!-- <ClientOnly>
- <div class="flex flex-row">
- {{ historyStatus }}
- </div>
- <template #fallback>
- <div class="flex flex-row">0 / 0</div>
- </template>
- </ClientOnly> -->
+    <!-- <div class="flex flex-row">
+      {{ historyStatus }}
+    </div>
+    <template #fallback>
+      <div class="flex flex-row">0 / 0</div>
+    </template> -->
 
-    <!-- ── Center: Health + Preview toggle + Undo/Redo ───────────────────── -->
-    <div class="w-[28%] flex flex-row items-center justify-between">
+    <!-- ── Center: Health + Preview toggle + Undo/Redo + templates + New template ───────────────────── -->
+    <div class="w-[30%] flex flex-row items-center justify-between">
       <HealthIndicator />
 
       <div class="flex bg-(--md-surface-hover) rounded-lg p-1">
@@ -612,18 +667,15 @@ onUnmounted(() => {
           </svg>
         </button>
       </div>
-    </div>
 
-    <!-- ── Right: Auto-save indicator + Send test + DB Save + Export dropdown ─── -->
-    <div class="flex items-center gap-4 w-[40%] justify-end">
       <!-- Saved templates + New template. Grouped with a tighter gap than the
- surrounding controls so they read as one pair, and placed beside
- "Send test" where the other document-level actions live. -->
-      <div class="flex items-center gap-3">
+      surrounding controls so they read as one pair, and placed beside "Send
+      test" where the other document-level actions live. -->
+      <div v-if="showPanelButton" class="flex items-center gap-3">
         <button
           type="button"
           :aria-pressed="props.savedTemplatesOpen"
-          aria-label="Saved templates"
+          :aria-label="props.versions ? 'Version history' : 'Saved templates'"
           @click="emit('toggle-saved-templates')"
           class="relative group flex items-center justify-center rounded-md text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-muted) p-1 transition-colors"
           :class="
@@ -632,11 +684,14 @@ onUnmounted(() => {
               : ''
           "
         >
-          <Icon name="th-large" style="font-size: 14px" />
+          <Icon
+            :name="props.versions ? 'history' : 'th-large'"
+            style="font-size: 14px"
+          />
           <div
             class="absolute top-full left-1/2 -translate-x-1/2 mt-1 px-1.75 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[10px] rounded shadow-sm whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10"
           >
-            Saved templates
+            {{ props.versions ? "Version history" : "Saved templates" }}
             <div
               class="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-(--md-tooltip-bg) rotate-45"
             ></div>
@@ -677,12 +732,15 @@ onUnmounted(() => {
           </div>
         </button>
       </div>
+    </div>
 
+    <!-- ── Right: Auto-save indicator + Send test + DB Save + Export dropdown ─── -->
+    <div class="flex items-center gap-4 w-[40%] justify-end">
       <!-- ── Auto-save status pill ──────────────────────────────────────────
- Four states. Uses Vue's <Transition mode="out-in"> so the pill
- cross-fades cleanly without layout shift.
- aria-live keeps screen readers informed without being disruptive.
- ─────────────────────────────────────────────────────────────────────── -->
+      Four states. Uses Vue's <Transition mode="out-in"> so the pill
+      cross-fades cleanly without layout shift.
+      aria-live keeps screen readers informed without being disruptive.
+      ─────────────────────────────────────────────────────────────────────── -->
       <Transition name="autosave-fade" mode="out-in">
         <!-- SAVING: spinner + label -->
         <div
@@ -801,13 +859,13 @@ onUnmounted(() => {
       </Transition>
 
       <!-- ── Send test email button ────────────────────────────────────────
- Original had `v-if="auth.user && auth.user.subscription?.plan
- !== 'free'"` — Maildeno's own auth/tier check. Replaced with the
- capability pattern: visible only if the host actually wired up
- a way to send (onSendTestEmail prop), not a hardcoded plan check.
- Visual: secondary action, sits between auto-save pill and Save.
- Uses pure Tailwind, matching the Export button styling.
- ─────────────────────────────────────────────────────────────────────── -->
+      Original had `v-if="auth.user && auth.user.subscription?.plan
+      !== 'free'"` — Maildeno's own auth/tier check. Replaced with the
+      capability pattern: visible only if the host actually wired up
+      a way to send (onSendTestEmail prop), not a hardcoded plan check.
+      Visual: secondary action, sits between auto-save pill and Save.
+      Uses pure Tailwind, matching the Export button styling.
+      ─────────────────────────────────────────────────────────────────────── -->
       <button
         v-if="props.onSendTestEmail"
         @click="sendEmailVisible = true"
@@ -829,11 +887,30 @@ onUnmounted(() => {
         Send test
       </button>
 
-      <!-- Save button -->
-      <div class="flex items-center gap-2">
+      <!-- ── Host actions ───────────────────────────────────────────────────
+        Anything the host wants beside Save: a plan-gated control, an
+        ownership label, a fork button.
+
+        Immediately before Save rather than at the far end of the bar, because
+        these are almost always about the save itself ("save as a system
+        template", "saving as: alice@…") and reading them after the button
+        they qualify is backwards.
+
+        Renders nothing when unused — no wrapper, no gap — so a host that
+        passes no slot sees the header exactly as it is today.
+      ───────────────────────────────────────────────────────────────────── -->
+      <div v-if="!!slots['header-actions']" class="flex items-center gap-2">
+        <slot name="header-actions" v-bind="headerSlotProps" />
+      </div>
+
+      <!-- Save button. Absent entirely when the adapter can't save — see
+        canSave. Hidden rather than disabled: a permanently greyed-out Save
+        tells a guest the feature exists and they're not allowed it, which is
+        a worse answer than not raising the question. -->
+      <div v-if="canSave" class="flex items-center gap-2">
         <!-- ── DB Save button ─────────────────────────────────────────────────
- Label: create mode → "Save", edit mode → "Save" / "Saved" flash.
- ──────────────────────────────────────────────────────────────────────── -->
+        Label: create mode → "Save", edit mode → "Save" / "Saved" flash.
+        ──────────────────────────────────────────────────────────────────────── -->
         <button
           @click="handleSave"
           :disabled="isSaving || builderMode === 'view'"
@@ -979,7 +1056,9 @@ onUnmounted(() => {
           <div class="border-t border-(--md-border) mx-3 my-1.5"></div>
 
           <!-- Snapshot / Master tabs -->
-          <div class="flex mx-3 mb-2 bg-(--md-surface-hover) rounded-lg p-0.5 gap-0.5">
+          <div
+            class="flex mx-3 mb-2 bg-(--md-surface-hover) rounded-lg p-0.5 gap-0.5"
+          >
             <button
               @click="exportTab = 'snap'"
               :class="[
@@ -1311,18 +1390,23 @@ onUnmounted(() => {
             <span
               class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-danger-bg) shrink-0"
             >
-              <Icon name="trash" class="text-(--md-danger)" style="font-size: 13px" />
+              <Icon
+                name="trash"
+                class="text-(--md-danger)"
+                style="font-size: 13px"
+              />
             </span>
-            <span class="text-sm font-medium text-(--md-danger)">Clear template</span>
+            <span class="text-sm font-medium text-(--md-danger)"
+              >Clear template</span
+            >
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Send test email modal — mounted at the header level so it's always
-  available regardless of context. The modal owns the form and
-  validation; onSend (the host's onSendTestEmail) owns what actually
-  happens on submit. -->
+    <!-- Send test email modal — mounted at the header level so it's always available
+    regardless of context. The modal owns the form and validation; onSend (the
+    host's onSendTestEmail) owns what actually happens on submit. -->
     <SendEmail
       v-if="props.onSendTestEmail"
       v-model:visible="sendEmailVisible"

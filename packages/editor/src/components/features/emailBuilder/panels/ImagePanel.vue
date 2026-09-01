@@ -154,7 +154,9 @@
     <!-- Border -->
     <PropertySection title="Border">
       <div class="flex items-center justify-between mb-1">
-        <span class="text-xs font-medium text-(--md-text-muted) italic">Mobile override</span>
+        <span class="text-xs font-medium text-(--md-text-muted) italic"
+          >Mobile override</span
+        >
         <button
           v-if="isBorderOverridden()"
           @click="resetBorder"
@@ -221,7 +223,8 @@
             placeholder="Select style"
             class="w-full text-sm capitalize"
             :class="{
-              'ring-1 ring-(--md-selection) rounded': isBorderPropOverridden('style'),
+              'ring-1 ring-(--md-selection) rounded':
+                isBorderPropOverridden('style'),
             }"
           />
         </div>
@@ -301,8 +304,6 @@ import PropertyToggle from "./ui/PropertyToggle.vue";
 import PropertyVisibility from "./ui/PropertyVisibility.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
 
-
-
 // ─── Store ────────────────────────────────────────────────────────────────────
 
 const {
@@ -332,7 +333,6 @@ const editMode = computed<EditMode>({
     previewMode.value = v;
   },
 });
-
 
 const {
   displayValue,

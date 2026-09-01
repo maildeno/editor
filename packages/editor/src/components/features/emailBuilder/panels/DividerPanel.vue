@@ -6,7 +6,9 @@
     <PropertySection title="Appearance">
       <div class="mb-5">
         <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-medium text-(--md-text-muted)">Background</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Background</label
+          >
           <button
             v-if="isBackgroundOverridden()"
             type="button"
@@ -60,7 +62,11 @@
     <PropertySection title="Spacing">
       <SpacingControl
         label="Margin"
-        :model-value="editMode === 'mobile' ? component.props.mobile.margin : component.props.margin"
+        :model-value="
+          editMode === 'mobile'
+            ? component.props.mobile.margin
+            : component.props.margin
+        "
         :desktop-value="component.props.margin"
         :is-mobile-edit="editMode === 'mobile'"
         @update:model-value="onSpacingUpdate('margin', $event)"
@@ -106,7 +112,8 @@ import SpacingControl from "./ui/SpacingControl.vue";
 import PropertyVisibility from "./ui/PropertyVisibility.vue";
 import PropertyToggle from "./ui/PropertyToggle.vue";
 
-const { rows, findComponent, selectedId, previewMode, saveToHistory } = useEmailBuilder();
+const { rows, findComponent, selectedId, previewMode, saveToHistory } =
+  useEmailBuilder();
 const component = computed(() => {
   // Reactive dep on tree so this computed re-evaluates after structural ops
   // (drag-drop, undo/redo) which can swap the node reference under our ID.
@@ -123,7 +130,6 @@ const editMode = computed<EditMode>({
     previewMode.value = v;
   },
 });
-
 
 const {
   displayValue,

@@ -109,11 +109,10 @@ function colStyle(col: any, parentRow?: any) {
   const widthPct = col.width ?? 50;
   const siblingCount = parentRow?.columns?.length || 1;
   const gapPx = parentRow?.gap ?? 0;
-  const gapShare = siblingCount > 1 ? (gapPx * (siblingCount - 1)) / siblingCount : 0;
+  const gapShare =
+    siblingCount > 1 ? (gapPx * (siblingCount - 1)) / siblingCount : 0;
   const widthValue =
-    gapShare > 0
-      ? `calc(${widthPct}% - ${gapShare}px)`
-      : `${widthPct}%`;
+    gapShare > 0 ? `calc(${widthPct}% - ${gapShare}px)` : `${widthPct}%`;
 
   const style: Record<string, string> = {
     flex: `0 0 ${widthValue}`,
@@ -122,7 +121,7 @@ function colStyle(col: any, parentRow?: any) {
     boxSizing: "border-box",
     background: resolveBackground(col),
     padding: `${col.padding?.top ?? 10}px ${col.padding?.right ?? 10}px ${col.padding?.bottom ?? 10}px ${col.padding?.left ?? 10}px`,
-     border: `${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
+    border: `${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
     borderRadius: `${col.border?.radius ?? 0}px`,
     overflow: "hidden",
     minWidth: "0",

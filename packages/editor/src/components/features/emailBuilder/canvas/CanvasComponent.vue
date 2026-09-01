@@ -34,43 +34,43 @@
          action bar to match Canva / Postcards-by-Designmodo style. -->
 
     <Teleport v-if="teleportTarget" :to="teleportTarget">
-    <div
-      v-if="hasVisibility"
-      class="fixed -translate-x-full z-60 group/vis"
-      :style="{ top: badgePos.top + 'px', left: badgePos.left + 'px' }"
-    >
       <div
-        class="flex items-center gap-1 bg-linear-to-br from-[var(--md-selection)] to-[var(--md-selection-fg)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-lg cursor-default select-none ring-2 ring-[var(--md-surface)]"
+        v-if="hasVisibility"
+        class="fixed -translate-x-full z-60 group/vis"
+        :style="{ top: badgePos.top + 'px', left: badgePos.left + 'px' }"
       >
-        <svg
-          class="w-2 h-2 shrink-0"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-          />
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-        {{ visibilityRuleCount(component.props.visibility) }}
-      </div>
-      <div
-        class="absolute right-0 top-5 w-60 opacity-0 pointer-events-none group-hover/vis:opacity-100 group-hover/vis:pointer-events-auto duration-150 translate-y-1 group-hover/vis:translate-y-0 z-50"
-      >
-        <VisibilityPopover :visibility="component.props.visibility" />
         <div
-          class="absolute -top-1.5 right-4 w-3 h-3 bg-gray-950 border-r border-t border-white/10 rotate-45"
-        />
+          class="flex items-center gap-1 bg-linear-to-br from-[var(--md-selection)] to-[var(--md-selection-fg)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-lg cursor-default select-none ring-2 ring-[var(--md-surface)]"
+        >
+          <svg
+            class="w-2 h-2 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          {{ visibilityRuleCount(component.props.visibility) }}
+        </div>
+        <div
+          class="absolute right-0 top-5 w-60 opacity-0 pointer-events-none group-hover/vis:opacity-100 group-hover/vis:pointer-events-auto duration-150 translate-y-1 group-hover/vis:translate-y-0 z-50"
+        >
+          <VisibilityPopover :visibility="component.props.visibility" />
+          <div
+            class="absolute -top-1.5 right-4 w-3 h-3 bg-gray-950 border-r border-t border-white/10 rotate-45"
+          />
+        </div>
       </div>
-    </div>
     </Teleport>
 
     <!-- Registered blocks render here — takes priority for any type that's
@@ -431,7 +431,10 @@ const TOOLBAR_REFLOW_DEBOUNCE_MS = 300;
 let toolbarReflowTimer: ReturnType<typeof setTimeout> | null = null;
 const debouncedUpdateToolbarPosition = () => {
   if (toolbarReflowTimer !== null) clearTimeout(toolbarReflowTimer);
-  toolbarReflowTimer = setTimeout(updateToolbarPosition, TOOLBAR_REFLOW_DEBOUNCE_MS);
+  toolbarReflowTimer = setTimeout(
+    updateToolbarPosition,
+    TOOLBAR_REFLOW_DEBOUNCE_MS,
+  );
 };
 
 // Recompute the moment this component becomes selected (nextTick so the DOM
@@ -449,7 +452,9 @@ onMounted(() => {
   window.addEventListener("scroll", updateToolbarPosition, true);
   window.addEventListener("resize", updateToolbarPosition);
   if (rootEl.value) {
-    componentResizeObserver = new ResizeObserver(debouncedUpdateToolbarPosition);
+    componentResizeObserver = new ResizeObserver(
+      debouncedUpdateToolbarPosition,
+    );
     componentResizeObserver.observe(rootEl.value);
   }
 });
@@ -611,5 +616,4 @@ const handleDrop = (e: DragEvent) => {
 // If you need to force-load a single font from this component in the future
 // (e.g. a font-preview hover), use `loadGoogleFont(family)` directly — still
 // exported for that exact one-off use case.
-
 </script>

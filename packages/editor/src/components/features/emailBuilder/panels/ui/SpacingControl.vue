@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-(--md-surface) border border-(--md-border) rounded-xl p-4 space-y-4">
+  <div
+    class="bg-(--md-surface) border border-(--md-border) rounded-xl p-4 space-y-4"
+  >
     <div class="flex items-center justify-between">
       <h4 class="text-xs font-medium text-(--md-text-muted)">{{ label }}</h4>
       <div class="flex items-center gap-3">
@@ -12,7 +14,10 @@
             :aria-label="linked ? 'Unlink sides' : 'Link all sides'"
             :aria-pressed="linked"
           >
-            <Icon :name="linked ? 'lock' : 'lock-open'" style="font-size: 13px" />
+            <Icon
+              :name="linked ? 'lock' : 'lock-open'"
+              style="font-size: 13px"
+            />
           </button>
 
           <div

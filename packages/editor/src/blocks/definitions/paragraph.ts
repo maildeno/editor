@@ -6,10 +6,18 @@ import { normalizeRichTextContent } from "@/composables/emailBuilder/export/help
 function renderHtml(props: any, ctx: BlockRenderContext): string {
   const { marginStyle, paddingStyle, resolveBgCss, getResponsiveClasses } = ctx;
 
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const paragraphClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const paragraphClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
   return `              <p style="${marginStyle} ${paddingStyle} font-size:${props.fontSize}px; line-height:${props.lineHeight}; ${letterSpacingStyle} color:${props.color}; font-weight:${props.fontWeight}; font-family:'${props.fontFamily}', Arial, sans-serif; font-style:${props.fontStyle}; ${backgroundCss} text-transform:${props.textTransform}; text-decoration:${props.textDecoration}; text-align:${props.align};" class="${paragraphClasses}">${normalizeRichTextContent(props.content)}</p>
 `;
@@ -18,10 +26,18 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
 function renderMjml(props: any, ctx: BlockRenderContext): string {
   const { marginStyle, paddingStyle, resolveBgCss, getResponsiveClasses } = ctx;
 
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const paragraphClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const paragraphClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
   return `<mj-text  padding="0" 
       font-size="0" 
@@ -31,10 +47,22 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
 
 function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { resolveBgCss, getResponsiveClasses, react } = ctx;
-  const { parseMarginPaddingDiscrete, parseCssString, normalizeFontFamily, buildInlineJsx, normalizeInlineStylesToReact } = react;
+  const {
+    parseMarginPaddingDiscrete,
+    parseCssString,
+    normalizeFontFamily,
+    buildInlineJsx,
+    normalizeInlineStylesToReact,
+  } = react;
 
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const paragraphClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const paragraphClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   return buildInlineJsx(
     "Text",
@@ -48,7 +76,9 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
       }),
       color: props.color,
       fontWeight: String(props.fontWeight),
-      fontFamily: normalizeFontFamily(`'${props.fontFamily}', Arial, sans-serif`),
+      fontFamily: normalizeFontFamily(
+        `'${props.fontFamily}', Arial, sans-serif`,
+      ),
       fontStyle: props.fontStyle,
       ...(backgroundCss ? parseCssString(backgroundCss) : {}),
       textTransform: props.textTransform,

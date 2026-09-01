@@ -36,12 +36,20 @@ const SEVERITY_ICON: Record<string, string> = {
         class="md-toast"
         :class="SEVERITY_CLASS[t.severity ?? 'info'] ?? 'md-toast--info'"
       >
-        <Icon :name="SEVERITY_ICON[t.severity ?? 'info'] ?? 'info-circle'" class="md-toast__icon" />
+        <Icon
+          :name="SEVERITY_ICON[t.severity ?? 'info'] ?? 'info-circle'"
+          class="md-toast__icon"
+        />
         <div class="md-toast__body">
           <div v-if="t.summary" class="md-toast__summary">{{ t.summary }}</div>
           <div v-if="t.detail" class="md-toast__detail">{{ t.detail }}</div>
         </div>
-        <button type="button" class="md-toast__close" aria-label="Dismiss" @click="removeToast(t.id)">
+        <button
+          type="button"
+          class="md-toast__close"
+          aria-label="Dismiss"
+          @click="removeToast(t.id)"
+        >
           <Icon name="times" />
         </button>
       </div>
@@ -73,16 +81,61 @@ const SEVERITY_ICON: Record<string, string> = {
   border-radius: 0.75rem;
   box-shadow: 0 8px 30px rgb(0 0 0 / 0.12);
 }
-.md-toast__icon { font-size: 15px; flex-shrink: 0; margin-top: 0.0625rem; }
-.md-toast__body { flex: 1; min-width: 0; }
-.md-toast__summary { font-weight: 500; }
-.md-toast__detail { font-size: 12px; opacity: 0.8; margin-top: 0.125rem; }
-.md-toast__close { flex-shrink: 0; opacity: 0.5; background: none; border: 0; cursor: pointer; color: inherit; }
-.md-toast__close:hover { opacity: 1; }
-.md-toast--success { background: var(--md-success-bg); border-color: var(--md-success-border); color: var(--md-success-fg); }
-.md-toast--info { background: var(--md-info-bg); border-color: var(--md-info-border); color: var(--md-info-fg); }
-.md-toast--warn { background: var(--md-surface)beb; border-color: var(--md-warning-border); color: var(--md-warning-fg); }
-.md-toast--error { background: var(--md-danger-bg); border-color: var(--md-danger-border); color: var(--md-danger-fg); }
-.md-toast-enter-active, .md-toast-leave-active { transition: all 0.2s ease; }
-.md-toast-enter-from, .md-toast-leave-to { opacity: 0; transform: translateX(20px); }
+.md-toast__icon {
+  font-size: 15px;
+  flex-shrink: 0;
+  margin-top: 0.0625rem;
+}
+.md-toast__body {
+  flex: 1;
+  min-width: 0;
+}
+.md-toast__summary {
+  font-weight: 500;
+}
+.md-toast__detail {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 0.125rem;
+}
+.md-toast__close {
+  flex-shrink: 0;
+  opacity: 0.5;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
+}
+.md-toast__close:hover {
+  opacity: 1;
+}
+.md-toast--success {
+  background: var(--md-success-bg);
+  border-color: var(--md-success-border);
+  color: var(--md-success-fg);
+}
+.md-toast--info {
+  background: var(--md-info-bg);
+  border-color: var(--md-info-border);
+  color: var(--md-info-fg);
+}
+.md-toast--warn {
+  background: var(--md-surface);
+  border-color: var(--md-warning-border);
+  color: var(--md-warning-fg);
+}
+.md-toast--error {
+  background: var(--md-danger-bg);
+  border-color: var(--md-danger-border);
+  color: var(--md-danger-fg);
+}
+.md-toast-enter-active,
+.md-toast-leave-active {
+  transition: all 0.2s ease;
+}
+.md-toast-enter-from,
+.md-toast-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
 </style>

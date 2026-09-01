@@ -222,7 +222,7 @@ const isVisible = computed(() => {
       ? props.component.visibility
       : props.component.props?.visibility;
   // `visibilityPreviewContext` is a useState ref. Vue auto-unwraps refs in
-  // *template* expressions but NOT inside <script setup> — and evaluateVisibility
+  // *template* expressions but NOT inside <script setup lang="ts"> — and evaluateVisibility
   // does `context[rule.tag.toLowerCase()]` against the raw arg, so if we pass
   // the Ref itself every rawValue lookup returns undefined and rules silently
   // misbehave (positive operators all fail, negations all pass). Unwrap with

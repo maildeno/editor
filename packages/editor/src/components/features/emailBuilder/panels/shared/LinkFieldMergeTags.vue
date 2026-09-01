@@ -1,11 +1,17 @@
 <template>
-  <div class="border border-(--md-border)/80 rounded-lg p-3 bg-(--md-surface) space-y-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+  <div
+    class="border border-(--md-border)/80 rounded-lg p-3 bg-(--md-surface) space-y-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+  >
     <!-- Header -->
     <div class="flex items-center justify-between">
-      <label class="text-[10px] font-medium uppercase tracking-[.06em] text-[var(--md-text-muted)]">
+      <label
+        class="text-[10px] font-medium uppercase tracking-[.06em] text-[var(--md-text-muted)]"
+      >
         Personalization
       </label>
-      <span class="text-[10px] text-(--md-text-subtle) bg-(--md-surface-muted) px-2 py-0.5 rounded-full tabular-nums">
+      <span
+        class="text-[10px] text-(--md-text-subtle) bg-(--md-surface-muted) px-2 py-0.5 rounded-full tabular-nums"
+      >
         {{ defaultTags.length }} available
       </span>
     </div>
@@ -15,7 +21,9 @@
       v-if="resolvedFields.length > 1"
       class="flex items-center gap-1.5 flex-wrap"
     >
-      <span class="text-[10px] text-(--md-text-subtle) shrink-0">Insert into:</span>
+      <span class="text-[10px] text-(--md-text-subtle) shrink-0"
+        >Insert into:</span
+      >
       <button
         v-for="field in resolvedFields"
         :key="field"
@@ -33,11 +41,7 @@
 
     <!-- Default tag pills -->
     <div class="flex flex-wrap gap-1.5">
-      <div
-        v-for="tag in defaultTags"
-        :key="tag"
-        class="relative group/pill"
-      >
+      <div v-for="tag in defaultTags" :key="tag" class="relative group/pill">
         <button
           @click="prefill(tag)"
           class="px-2 py-1 text-xs bg-(--md-surface-hover) text-(--md-text-muted) border border-(--md-border) rounded-md hover:border-(--md-selection) hover:bg-(--md-selection-bg) hover:text-(--md-selection-fg) transition-all focus:outline-none"
@@ -45,7 +49,9 @@
           &#123;&#123; {{ tag }} &#125;&#125;
         </button>
         <!-- Tooltip -->
-        <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/pill:opacity-100 translate-y-1 group-hover/pill:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)">
+        <div
+          class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/pill:opacity-100 translate-y-1 group-hover/pill:translate-y-0 transition-all duration-150 z-50 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
+        >
           Insert &#123;&#123; {{ tag }} &#125;&#125;
         </div>
       </div>
@@ -55,7 +61,9 @@
     <div class="space-y-1.5">
       <div class="flex items-center gap-1.5">
         <div class="relative flex-1">
-          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-(--md-text-subtle) text-xs pointer-events-none select-none">
+          <span
+            class="absolute left-2 top-1/2 -translate-y-1/2 text-(--md-text-subtle) text-xs pointer-events-none select-none"
+          >
             &#123;&#123;
           </span>
           <input
@@ -78,7 +86,9 @@
 
       <!-- Fallback default — only shown when a tag name is present -->
       <div v-if="customTag.trim()" class="relative mt-2">
-        <span class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-(--md-text-subtle) pointer-events-none select-none">
+        <span
+          class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-(--md-text-subtle) pointer-events-none select-none"
+        >
           default
         </span>
         <input
@@ -90,13 +100,17 @@
         />
       </div>
 
-      <p v-if="customTag.trim()" class="text-[10px] text-(--md-text-subtle) break-all">
+      <p
+        v-if="customTag.trim()"
+        class="text-[10px] text-(--md-text-subtle) break-all"
+      >
         {{ tokenPreview }}
       </p>
     </div>
 
     <p class="text-[10px] text-(--md-text-subtle)">
-      Use underscores: <span class="font-mono">reset_token</span>, <span class="font-mono">confirm_url</span>
+      Use underscores: <span class="font-mono">reset_token</span>,
+      <span class="font-mono">confirm_url</span>
     </p>
   </div>
 </template>

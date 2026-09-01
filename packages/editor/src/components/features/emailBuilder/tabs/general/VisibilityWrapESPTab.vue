@@ -1,12 +1,20 @@
 <template>
-  <div class="border border-(--md-border) rounded-lg bg-(--md-surface) overflow-hidden">
+  <div
+    class="border border-(--md-border) rounded-lg bg-(--md-surface) overflow-hidden"
+  >
     <!-- Header -->
     <div
       class="flex items-center justify-between px-3 py-2 bg-(--md-surface-hover) border-b border-(--md-border)"
     >
       <div class="flex items-center gap-2">
-        <Icon name="code" class="text-(--md-text-subtle)" style="font-size: 11px" />
-        <span class="text-xs font-medium text-(--md-text-muted)">ESP Wrap Config</span>
+        <Icon
+          name="code"
+          class="text-(--md-text-subtle)"
+          style="font-size: 11px"
+        />
+        <span class="text-xs font-medium text-(--md-text-muted)"
+          >ESP Wrap Config</span
+        >
       </div>
       <span
         class="text-[10px] px-1.5 py-0.5 rounded-full border font-mono"
@@ -73,10 +81,14 @@
         v-if="nestingWarning"
         class="flex items-start gap-2 bg-(--md-warning-bg) border border-(--md-warning-border) rounded-md px-3 py-2.5"
       >
-        <span class="text-(--md-warning) mt-0.5 shrink-0" style="font-size: 11px"
+        <span
+          class="text-(--md-warning) mt-0.5 shrink-0"
+          style="font-size: 11px"
           >⚠</span
         >
-        <div class="text-[10px] text-(--md-warning-fg) leading-relaxed space-y-1">
+        <div
+          class="text-[10px] text-(--md-warning-fg) leading-relaxed space-y-1"
+        >
           <p>
             <strong class="font-semibold"
               >Group structure will be flattened</strong
@@ -86,7 +98,9 @@
           <p class="text-(--md-warning-fg)/80">
             All rules inside your groups will be merged into a single flat list
             and evaluated using the top-level
-            <code class="font-mono bg-(--md-warning-border) rounded px-0.5">match</code>
+            <code class="font-mono bg-(--md-warning-border) rounded px-0.5"
+              >match</code
+            >
             mode (<strong>{{ firstActiveMatchMode }}</strong
             >). Group-level
             <code class="font-mono bg-(--md-warning-border) rounded px-0.5"
@@ -106,7 +120,9 @@
         <span class="text-(--md-danger) mt-0.5 shrink-0" style="font-size: 11px"
           >✕</span
         >
-        <div class="text-[10px] text-(--md-danger-fg) leading-relaxed space-y-0.5">
+        <div
+          class="text-[10px] text-(--md-danger-fg) leading-relaxed space-y-0.5"
+        >
           <p>
             <strong class="font-semibold"
               >{{ skippedOperators.length }} operator{{
@@ -137,10 +153,14 @@
         v-if="degradedOperators.length > 0"
         class="flex items-start gap-2 bg-(--md-warning-bg) border border-(--md-warning-border) rounded-md px-3 py-2.5"
       >
-        <span class="text-(--md-warning) mt-0.5 shrink-0" style="font-size: 11px"
+        <span
+          class="text-(--md-warning) mt-0.5 shrink-0"
+          style="font-size: 11px"
           >⚠</span
         >
-        <div class="text-[10px] text-(--md-warning-fg) leading-relaxed space-y-0.5">
+        <div
+          class="text-[10px] text-(--md-warning-fg) leading-relaxed space-y-0.5"
+        >
           <p>
             <strong class="font-semibold"
               >{{ degradedOperators.length }} operator{{
@@ -190,7 +210,9 @@
         <p class="text-[10px] text-(--md-info-fg) leading-relaxed">
           <strong class="font-semibold">Mailchimp OR logic:</strong> each
           condition is wrapped in its own
-          <code class="font-mono bg-(--md-info-border) px-0.5 rounded">*|IF|*</code>
+          <code class="font-mono bg-(--md-info-border) px-0.5 rounded"
+            >*|IF|*</code
+          >
           block. If more than one condition is true, the subscriber may see the
           content more than once. This is a Mailchimp limitation for complex OR
           rules.
@@ -199,7 +221,8 @@
 
       <!-- Live tag preview -->
       <div v-if="firstBlockPreview" class="space-y-1">
-        <label class="block text-[10px] text-(--md-text-subtle) uppercase tracking-wide"
+        <label
+          class="block text-[10px] text-(--md-text-subtle) uppercase tracking-wide"
           >Tag Preview</label
         >
         <div class="bg-gray-950 rounded-md p-2.5 space-y-1 overflow-x-auto">
@@ -216,7 +239,10 @@
       </div>
 
       <!-- No conditional blocks -->
-      <div v-else class="bg-(--md-surface-hover) rounded-md px-3 py-2.5 text-center">
+      <div
+        v-else
+        class="bg-(--md-surface-hover) rounded-md px-3 py-2.5 text-center"
+      >
         <p class="text-[10px] text-(--md-text-subtle) leading-relaxed">
           No conditional blocks found.<br />
           Add a visibility rule to a row or component to see a preview.
@@ -224,7 +250,9 @@
       </div>
 
       <!-- Info callout -->
-      <div class="bg-(--md-warning-bg) border border-(--md-warning-border) rounded-md px-3 py-2.5">
+      <div
+        class="bg-(--md-warning-bg) border border-(--md-warning-border) rounded-md px-3 py-2.5"
+      >
         <p class="text-[10px] text-(--md-warning-fg) leading-relaxed">
           <strong class="font-semibold">Wrap mode</strong> keeps every row in
           the exported HTML and adds ESP conditional tags so your mail server
@@ -244,7 +272,9 @@
         aria-label="Toggle operator support matrix"
         class="w-full flex items-center justify-between px-3 py-2 bg-(--md-surface-hover)/50 hover:bg-(--md-surface-muted) transition-colors"
       >
-        <span class="text-xs font-medium text-(--md-text-muted)">Operator Support</span>
+        <span class="text-xs font-medium text-(--md-text-muted)"
+          >Operator Support</span
+        >
         <svg
           class="w-3 h-3 text-(--md-text-subtle) transition-transform"
           :class="showMatrix ? 'rotate-180' : ''"
@@ -265,7 +295,9 @@
         <table class="text-[10px] border-collapse min-w-full">
           <thead>
             <tr class="text-left text-(--md-text-subtle)">
-              <th class="pb-1.5 font-medium pr-2 sticky left-0 bg-(--md-surface)">
+              <th
+                class="pb-1.5 font-medium pr-2 sticky left-0 bg-(--md-surface)"
+              >
                 ESP
               </th>
               <th
@@ -290,7 +322,9 @@
               <td
                 class="py-1 font-mono text-(--md-text-muted) pr-2 sticky left-0 whitespace-nowrap"
                 :class="
-                  row.syntax === espConfig.syntax ? 'bg-(--md-selection-bg)' : 'bg-(--md-surface)'
+                  row.syntax === espConfig.syntax
+                    ? 'bg-(--md-selection-bg)'
+                    : 'bg-(--md-surface)'
                 "
               >
                 {{ row.label }}
@@ -347,7 +381,9 @@
         <p
           class="mt-2 text-[10px]"
           :class="
-            currentMeta.supportsNesting ? 'text-(--md-text-subtle)' : 'text-(--md-warning)'
+            currentMeta.supportsNesting
+              ? 'text-(--md-text-subtle)'
+              : 'text-(--md-warning)'
           "
         >
           {{ currentMeta.label }}:
@@ -382,7 +418,9 @@ import Icon from "@/components/ui/Icon.vue";
 const { rows, espConfig } = useEmailBuilder();
 
 // ── Meta for selected syntax ─────────────────────────────────────────────────
-const currentMeta = computed(() => getESPMetaSafe(espConfig.value.syntax, ESP_SYNTAX_META));
+const currentMeta = computed(() =>
+  getESPMetaSafe(espConfig.value.syntax, ESP_SYNTAX_META),
+);
 
 const syntaxBadgeClass = computed(() => {
   const map: Record<string, string> = {
@@ -526,8 +564,7 @@ const firstActiveMatchMode = computed((): string => {
         // Recurse into nested rows
         if (child.type === "row") {
           for (const nestedCol of child.columns ?? []) {
-            const nestedKids =
-              nestedCol.children ?? nestedCol.components ?? [];
+            const nestedKids = nestedCol.children ?? nestedCol.components ?? [];
             for (const nested of nestedKids) {
               const nvis =
                 nested.type === "component"
@@ -682,8 +719,7 @@ const firstBlockPreview = computed(() => {
         // Check nested row children
         if (child.type === "row") {
           for (const nestedCol of child.columns ?? []) {
-            const nestedKids =
-              nestedCol.children ?? nestedCol.components ?? [];
+            const nestedKids = nestedCol.children ?? nestedCol.components ?? [];
             for (const nested of nestedKids) {
               const nvis =
                 nested.type === "component"

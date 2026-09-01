@@ -71,7 +71,12 @@ const props = defineProps<{
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 
-const { linkTagPreviewContext, linkTagPreviewActive, previewMode, linksActive } = useEmailBuilder();
+const {
+  linkTagPreviewContext,
+  linkTagPreviewActive,
+  previewMode,
+  linksActive,
+} = useEmailBuilder();
 
 const { loadGoogleFont } = useGoogleFonts();
 
@@ -82,7 +87,7 @@ const { loadGoogleFont } = useGoogleFonts();
 const handleLinkClick = (event: MouseEvent) => {
   if (!linksActive.value) {
     event.preventDefault();
-    // Optional: You could trigger a small toast notification here 
+    // Optional: You could trigger a small toast notification here
     // to remind yourself why the link didn't open.
   }
 };

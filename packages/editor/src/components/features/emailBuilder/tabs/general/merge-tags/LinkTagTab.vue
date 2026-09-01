@@ -1,11 +1,16 @@
 <template>
-  <div ref="rootEl" class="border border-(--md-border) rounded-lg bg-(--md-surface) overflow-hidden">
+  <div
+    ref="rootEl"
+    class="border border-(--md-border) rounded-lg bg-(--md-surface) overflow-hidden"
+  >
     <!-- ── Header ─────────────────────────────────────────────────────────── -->
     <div
       class="flex items-center justify-between px-3 py-2 bg-(--md-surface-hover) border-b border-(--md-border)"
     >
       <div class="flex items-center gap-2">
-        <span class="text-xs font-medium text-(--md-text-muted)">Tag Preview</span>
+        <span class="text-xs font-medium text-(--md-text-muted)"
+          >Tag Preview</span
+        >
         <span
           v-if="allDetectedTags.length"
           class="text-[10px] text-(--md-text-subtle) bg-(--md-surface) px-1.5 py-0.5 rounded-full border border-(--md-border)"
@@ -106,7 +111,10 @@
     </div>
 
     <!-- ── Auto-detected tags ────────────────────────────────────────────── -->
-    <div v-if="allDetectedTags.length > 0" class="border-t border-(--md-border)">
+    <div
+      v-if="allDetectedTags.length > 0"
+      class="border-t border-(--md-border)"
+    >
       <button
         @click="showDetectedSummary = !showDetectedSummary"
         class="w-full flex items-center justify-between px-3 py-2 bg-(--md-surface-hover)/50 hover:bg-(--md-surface-muted) transition-colors"
@@ -153,7 +161,9 @@
             </span>
           </button>
         </div>
-        <p class="text-[11px] text-(--md-text-subtle) mt-2 flex items-center gap-1">
+        <p
+          class="text-[11px] text-(--md-text-subtle) mt-2 flex items-center gap-1"
+        >
           <Icon name="info-circle" style="font-size: 8px" />
           Click a tag to add a preview value
         </p>
@@ -161,7 +171,10 @@
     </div>
 
     <!-- ── Tag origins ───────────────────────────────────────────────────── -->
-    <div v-if="tagOrigins.size > 0" class="border-t border-(--md-border) px-3 py-2">
+    <div
+      v-if="tagOrigins.size > 0"
+      class="border-t border-(--md-border) px-3 py-2"
+    >
       <span
         class="text-[10px] font-medium text-(--md-text-subtle)/75 uppercase tracking-wider"
         >Tag origins</span
@@ -172,7 +185,9 @@
           :key="tag"
           class="flex items-start gap-2 text-[10px] text-(--md-text-subtle)"
         >
-          <span class="font-mono text-(--md-text-muted) shrink-0">{{ tag }}</span>
+          <span class="font-mono text-(--md-text-muted) shrink-0">{{
+            tag
+          }}</span>
           <span class="text-(--md-text-subtle)">—</span>
           <span>{{ origins.join(", ") }}</span>
         </div>
@@ -246,7 +261,9 @@
             </div>
             <!-- Master row -->
             <div class="flex items-center gap-2 text-[10px]">
-              <span class="text-(--md-text-subtle) shrink-0 w-14 text-right">master</span>
+              <span class="text-(--md-text-subtle) shrink-0 w-14 text-right"
+                >master</span
+              >
               <span class="font-mono text-(--md-text-subtle) shrink-0"
                 >&#123;&#123; {{ entry.tag
                 }}{{
@@ -406,7 +423,8 @@ const quickAddTag = (tag: string) => {
       const idx = tagEntries.value.findIndex(
         (e) => e.tag.trim().toLowerCase().replace(/\s+/g, "_") === key,
       );
-      const inputs = queryAllFromRoot<HTMLInputElement>(rootEl.value, 
+      const inputs = queryAllFromRoot<HTMLInputElement>(
+        rootEl.value,
         "[data-link-tag-value]",
       );
       inputs[idx]?.focus();
@@ -415,7 +433,8 @@ const quickAddTag = (tag: string) => {
   }
   tagEntries.value.push({ tag, value: "", default: "" });
   nextTick(() => {
-    const inputs = queryAllFromRoot<HTMLInputElement>(rootEl.value, 
+    const inputs = queryAllFromRoot<HTMLInputElement>(
+      rootEl.value,
       "[data-link-tag-value]",
     );
     inputs[inputs.length - 1]?.focus();

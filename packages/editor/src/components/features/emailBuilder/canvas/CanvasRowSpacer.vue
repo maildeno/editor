@@ -53,46 +53,46 @@
 
     <!-- Visibility Rules Badge -->
     <Teleport v-if="teleportTarget" :to="teleportTarget">
-    <div
-      v-if="isVisibilityActive(spacer.visibility)"
-      class="fixed z-60 group/vis -translate-y-1/2"
-      :style="{ top: badgePos.top + 'px', left: badgePos.left + 'px' }"
-    >
-      <!-- Pill trigger -->
       <div
-        class="flex items-center gap-1 bg-gradient-to-r from-(--md-row-selection) to-(--md-row-selection-fg) text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
+        v-if="isVisibilityActive(spacer.visibility)"
+        class="fixed z-60 group/vis -translate-y-1/2"
+        :style="{ top: badgePos.top + 'px', left: badgePos.left + 'px' }"
       >
-        <svg
-          class="w-2.5 h-2.5 shrink-0"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-          />
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-        IF {{ visibilityRuleCount(spacer.visibility) }}
-      </div>
-
-      <!-- Hover popover — opens RIGHT -->
-      <div
-        class="absolute left-0 top-5 w-60 opacity-0 pointer-events-none group-hover/vis:opacity-100 group-hover/vis:pointer-events-auto duration-150 translate-y-1 group-hover/vis:translate-y-0 z-50"
-      >
-        <VisibilityPopover :visibility="spacer.visibility" />
+        <!-- Pill trigger -->
         <div
-          class="absolute -top-1.5 left-4 w-3 h-3 bg-gray-950 border-l border-t border-white/10 rotate-45"
-        />
+          class="flex items-center gap-1 bg-gradient-to-r from-(--md-row-selection) to-(--md-row-selection-fg) text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
+        >
+          <svg
+            class="w-2.5 h-2.5 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          IF {{ visibilityRuleCount(spacer.visibility) }}
+        </div>
+
+        <!-- Hover popover — opens RIGHT -->
+        <div
+          class="absolute left-0 top-5 w-60 opacity-0 pointer-events-none group-hover/vis:opacity-100 group-hover/vis:pointer-events-auto duration-150 translate-y-1 group-hover/vis:translate-y-0 z-50"
+        >
+          <VisibilityPopover :visibility="spacer.visibility" />
+          <div
+            class="absolute -top-1.5 left-4 w-3 h-3 bg-gray-950 border-l border-t border-white/10 rotate-45"
+          />
+        </div>
       </div>
-    </div>
     </Teleport>
 
     <!-- Drop overlay -->
@@ -367,7 +367,8 @@ const handleDelete = () => {
     header: "Confirm Delete",
     acceptLabel: "Delete",
     rejectLabel: "Cancel",
-    acceptClass: "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
+    acceptClass:
+      "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
     rejectClass:
       "!bg-[var(--md-border)] !hover:bg-[var(--md-border-strong)] !text-[var(--md-text)] !border-[var(--md-border)] !px-6 !py-2",
     accept: () => deleteRow(props.spacer.id),
@@ -549,5 +550,4 @@ onUnmounted(() => {
   spacerResizeObserver?.disconnect();
   if (badgeRaf !== null) cancelAnimationFrame(badgeRaf);
 });
-
 </script>

@@ -4,8 +4,14 @@ import type { BlockDefinition, BlockRenderContext } from "../types";
 
 function renderHtml(props: any, ctx: BlockRenderContext): string {
   const { uid, resolveBgCss, getResponsiveClasses } = ctx;
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const spacerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const spacerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   return `<div class="${spacerClasses}"><div class="${uid}-spacer-td" height="${props.height}" style="height:${props.height}px;line-height:${props.height}px;font-size:1px;mso-line-height-rule:exactly;${backgroundCss}">&nbsp;</div></div>
 `;
@@ -13,8 +19,14 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
 
 function renderMjml(props: any, ctx: BlockRenderContext): string {
   const { uid, resolveBgCss, getResponsiveClasses } = ctx;
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const spacerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const spacerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   return `<mj-text  padding="0" 
       font-size="0" 
@@ -26,8 +38,14 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
 function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { uid, resolveBgCss, getResponsiveClasses, react } = ctx;
   const { parseCssString, styleObj } = react;
-  const backgroundCss = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const spacerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const backgroundCss = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const spacerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
 
   return `<div
   className="${spacerClasses}"

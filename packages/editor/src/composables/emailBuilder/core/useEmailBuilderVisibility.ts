@@ -145,7 +145,6 @@ const parseDateUTC = (value: string | undefined): Date | null => {
       );
 };
 
-
 // ─── Core rule evaluator ──────────────────────────────────────────────────────
 
 export const evaluateRule = (

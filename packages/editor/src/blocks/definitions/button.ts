@@ -29,13 +29,24 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const bgInlineStyle = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const { vmlOpen, vmlClose } = resolveBgVml(props.backgroundGradient, props.backgroundColor);
+  const bgInlineStyle = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const { vmlOpen, vmlClose } = resolveBgVml(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
 
-  const buttonContainerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const buttonContainerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const buttonLinkClasses = getResponsiveClasses(false, false, "link");
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
   const hasIcon = !!props.icon;
   const iconSize = props.iconSize ?? 20;
@@ -54,7 +65,9 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
     `border-radius:${props.borderRadius}px; ` +
     `border:${props.border.width}px ${props.border.style} ${props.border.color}; ` +
     `text-decoration:none; ` +
-    (hasIcon ? `line-height:0; font-size:0;` : `line-height:normal; ${textStyles}`);
+    (hasIcon
+      ? `line-height:0; font-size:0;`
+      : `line-height:normal; ${textStyles}`);
 
   let innerContent: string;
 
@@ -109,11 +122,19 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const bgInlineStyle = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const buttonContainerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const bgInlineStyle = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const buttonContainerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const buttonLinkClasses = getResponsiveClasses(false, false, "link");
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
   const hasIcon = !!props.icon;
   const iconSize = props.iconSize ?? 20;
@@ -132,7 +153,9 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
     `border-radius:${props.borderRadius}px; ` +
     `border:${props.border.width}px ${props.border.style} ${props.border.color}; ` +
     `text-decoration:none; ` +
-    (hasIcon ? `line-height:0; font-size:0;` : `line-height:normal; ${textStyles}`);
+    (hasIcon
+      ? `line-height:0; font-size:0;`
+      : `line-height:normal; ${textStyles}`);
 
   let innerContent: string;
 
@@ -170,14 +193,25 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
 }
 
 function renderReactEmail(props: any, ctx: BlockRenderContext): string {
-  const { escapeAttr, safeUrl, resolveBgCss, getResponsiveClasses, react } = ctx;
+  const { escapeAttr, safeUrl, resolveBgCss, getResponsiveClasses, react } =
+    ctx;
   const { parseMarginPaddingDiscrete, styleObj } = react;
 
   const btnAlign =
-    props.align === "center" ? "center" : props.align === "right" ? "right" : "left";
+    props.align === "center"
+      ? "center"
+      : props.align === "right"
+        ? "right"
+        : "left";
 
-  const bgInlineStyle = resolveBgCss(props.backgroundGradient, props.backgroundColor);
-  const buttonContainerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const bgInlineStyle = resolveBgCss(
+    props.backgroundGradient,
+    props.backgroundColor,
+  );
+  const buttonContainerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const buttonLinkClasses = getResponsiveClasses(false, false, "link");
 
   const hasIcon = !!props.icon;
@@ -190,7 +224,9 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
     color: props.color,
     fontSize: `${props.fontSize}px`,
     fontWeight: String(props.fontWeight),
-    fontFamily: react.normalizeFontFamily(`'${props.fontFamily}', Arial, sans-serif`),
+    fontFamily: react.normalizeFontFamily(
+      `'${props.fontFamily}', Arial, sans-serif`,
+    ),
     ...((props.letterSpacing as number) > 0 && {
       letterSpacing: `${props.letterSpacing}px`,
     }),
@@ -203,7 +239,9 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
     borderRadius: `${props.borderRadius}px`,
     border: `${props.border.width}px ${props.border.style} ${props.border.color}`,
     textDecoration: "none",
-    ...(hasIcon ? { lineHeight: 0, fontSize: 0 } : { lineHeight: "normal", ...textStyles }),
+    ...(hasIcon
+      ? { lineHeight: 0, fontSize: 0 }
+      : { lineHeight: "normal", ...textStyles }),
   };
 
   let innerContent: string;
@@ -213,7 +251,9 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
       padding: 0,
       lineHeight: 0,
       fontSize: 0,
-      ...(iconIsBefore ? { paddingRight: `${iconGap}px` } : { paddingLeft: `${iconGap}px` }),
+      ...(iconIsBefore
+        ? { paddingRight: `${iconGap}px` }
+        : { paddingLeft: `${iconGap}px` }),
     };
     const textCellStyle: Record<string, any> = {
       padding: 0,

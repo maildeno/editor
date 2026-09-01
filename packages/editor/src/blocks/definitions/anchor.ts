@@ -17,10 +17,15 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const anchorContainerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const anchorContainerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const anchorLinkClasses = getResponsiveClasses(false, false, "link");
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
   return `              <div style="${marginStyle} ${paddingStyle} ${anchorAlign}" class="${anchorContainerClasses}">
                 <a href="${safeUrl(props.link)}" style="color:${props.color}; font-size:${props.fontSize}px; font-weight:${props.fontWeight}; font-family:'${props.fontFamily}', Arial, sans-serif; line-height: normal; ${letterSpacingStyle} text-decoration:${props.textDecoration};" target="_blank" rel="noopener noreferrer nofollow" class="${anchorLinkClasses}">${props.text}</a>
@@ -38,10 +43,15 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
         ? "text-align:right;"
         : "text-align:left;";
 
-  const anchorContainerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const anchorContainerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const anchorLinkClasses = getResponsiveClasses(false, false, "link");
   const letterSpacingStyle =
-    (props.letterSpacing as number) > 0 ? `letter-spacing:${props.letterSpacing}px;` : "";
+    (props.letterSpacing as number) > 0
+      ? `letter-spacing:${props.letterSpacing}px;`
+      : "";
 
   return `<mj-text  padding="0" 
       font-size="0" 
@@ -57,9 +67,16 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const { parseMarginPaddingDiscrete, styleObj, normalizeFontFamily } = react;
 
   const anchorAlign =
-    props.align === "center" ? "center" : props.align === "right" ? "right" : "left";
+    props.align === "center"
+      ? "center"
+      : props.align === "right"
+        ? "right"
+        : "left";
 
-  const anchorContainerClasses = getResponsiveClasses(props.desktopHide, props.mobileHide);
+  const anchorContainerClasses = getResponsiveClasses(
+    props.desktopHide,
+    props.mobileHide,
+  );
   const anchorLinkClasses = getResponsiveClasses(false, false, "link");
 
   const anchorLinkStyle: Record<string, any> = {

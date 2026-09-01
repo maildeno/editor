@@ -1,6 +1,6 @@
 {
   "name": "@maildeno/editor",
-  "version": "0.1.4",
+  "version": "0.4.2",
   "description": "An open-source, framework-agnostic email template editor. Drag-and-drop block editing, HTML/MJML/React Email/JSON export, and a pluggable ESP-conditional-logic engine with zero required backend.",
   "type": "module",
   "types": "./dist/index.d.ts",
@@ -22,6 +22,7 @@
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
@@ -29,7 +30,9 @@
     "dev:element": "vite build --config vite.config.element.ts --watch",
     "build": "vite build && vite build --config vite.config.element.ts",
     "typecheck": "vue-tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit",
-    "prepublishOnly": "npm run typecheck && npm run build"
+    "prepublishOnly": "npm run typecheck && npm run build",
+    "format": "prettier --write \"src/**/*.{ts,vue}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,vue}\""
   },
   "sideEffects": [
     "**/*.css"

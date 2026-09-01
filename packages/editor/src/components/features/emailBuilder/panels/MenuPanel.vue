@@ -31,7 +31,9 @@
               <button
                 @click="onItemEnabledToggle(item)"
                 class="relative w-7 h-4 rounded-full transition-colors shrink-0"
-                :class="item.enabled ? 'bg-(--md-selection)/75' : 'bg-(--md-border)'"
+                :class="
+                  item.enabled ? 'bg-(--md-selection)/75' : 'bg-(--md-border)'
+                "
               >
                 <span
                   class="absolute top-0.5 h-3 w-3 rounded-full bg-(--md-surface) shadow-sm transition-all"
@@ -45,12 +47,16 @@
               >
                 <Icon
                   class="text-(--md-text-subtle) transition-transform"
-                  :name="isItemCollapsed(Number(index))
+                  :name="
+                    isItemCollapsed(Number(index))
                       ? 'chevron-right'
-                      : 'chevron-down'"
+                      : 'chevron-down'
+                  "
                   style="font-size: 12px"
                 />
-                <span class="text-xs font-medium truncate text-(--md-text-muted)">
+                <span
+                  class="text-xs font-medium truncate text-(--md-text-muted)"
+                >
                   {{ item.label || "Untitled" }}
                 </span>
               </button>
@@ -105,19 +111,27 @@
             class="p-3 pt-0 space-y-2 border-t border-(--md-border)"
           >
             <div class="mt-2">
-              <label class="text-[10px] text-(--md-text-subtle) mb-1 block">Label</label>
+              <label class="text-[10px] text-(--md-text-subtle) mb-1 block"
+                >Label</label
+              >
               <InputText
                 :model-value="item.label"
-                @update:model-value="(value) => onLabelInput(value, Number(index))"
+                @update:model-value="
+                  (value) => onLabelInput(value, Number(index))
+                "
                 placeholder="e.g., Home"
                 class="w-full text-xs"
               />
             </div>
             <div>
-              <label class="text-[10px] text-(--md-text-subtle) mb-1 block">URL</label>
+              <label class="text-[10px] text-(--md-text-subtle) mb-1 block"
+                >URL</label
+              >
               <InputText
                 :model-value="item.link"
-                @update:model-value="(value) => onUrlInput(value, Number(index))"
+                @update:model-value="
+                  (value) => onUrlInput(value, Number(index))
+                "
                 type="url"
                 placeholder="https://…"
                 class="w-full text-xs"
@@ -229,7 +243,9 @@
     <PropertySection title="Appearance">
       <div>
         <div class="flex items-center justify-between mb-1">
-          <label class="text-xs font-medium text-(--md-text-muted)">Background</label>
+          <label class="text-xs font-medium text-(--md-text-muted)"
+            >Background</label
+          >
           <button
             v-if="isBackgroundOverridden()"
             type="button"
@@ -361,7 +377,6 @@ const toggleItemCollapse = (index: number) => {
   }
 };
 
-
 const {
   displayValue,
   isOverridden,
@@ -385,7 +400,6 @@ const activeOverrides = computed(() => {
   const keys = ["fontWeight", "fontStyle", "textTransform", "textDecoration"];
   return new Set(keys.filter((k) => isOverridden(k)));
 });
-
 
 // ─── Props mutation handlers (each calls saveToHistory) ─────────────────
 

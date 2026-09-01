@@ -70,10 +70,29 @@
         </div>
 
         <!-- ─────────────────────────────────────────────────────────────────
-        Header label (was a two-tab selector — system tab removed)
+        Tabs. Collapses to a plain label when there is only one library, so a
+        host without a shared library sees no tab strip rather than a single
+        pointless tab.
         ───────────────────────────────────────────────────────────────────── -->
         <div class="px-3.5 pb-2 shrink-0">
-          <span class="text-[11px] font-medium text-(--md-text-subtle)"
+          <div v-if="showSystemTab" class="flex items-center gap-1">
+            <button
+              v-for="t in ['user', 'system'] as const"
+              :key="t"
+              type="button"
+              class="px-2 py-1 rounded-md text-[11px] font-medium transition-colors"
+              :class="
+                activeTab === t
+                  ? 'bg-(--md-accent-bg) text-(--md-accent-text)'
+                  : 'text-(--md-text-subtle) hover:text-(--md-text-muted) hover:bg-(--md-surface-muted)'
+              "
+              :aria-pressed="activeTab === t"
+              @click="activeTab = t"
+            >
+              {{ t === "user" ? "My Rows" : "Shared" }}
+            </button>
+          </div>
+          <span v-else class="text-[11px] font-medium text-(--md-text-subtle)"
             >My Rows</span
           >
         </div>
@@ -130,9 +149,7 @@
               <p class="text-xs font-medium text-(--md-text-subtle)">
                 No saved rows yet
               </p>
-              <p
-                class="text-[11px] text-(--md-text-subtle) leading-relaxed"
-              >
+              <p class="text-[11px] text-(--md-text-subtle) leading-relaxed">
                 Select a row on the canvas,<br />then click
                 <span class="text-(--md-row-selection-fg) font-medium"
                   >Save</span
@@ -323,6 +340,7 @@ import {
 import { useConfirm } from "@/composables/ui/useConfirm";
 import { useToast } from "@/composables/ui/useToast";
 import { useProductRows } from "@/composables/emailBuilder/components/useProductRows";
+import { useSystemRows } from "@/composables/emailBuilder/components/useSystemRows";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useLayoutDrag } from "@/composables/emailBuilder/core/ui/useLayoutDrag";
 import { useSavedRowsPanel } from "@/composables/system/useSavedRowsPanel";
@@ -330,17 +348,25 @@ import RowPreview from "./RowPreview.vue";
 
 // ─── Composables ──────────────────────────────────────────────────────────────
 //
-// this panel used to have a "system" tab backed by
-// useSystemSavedRows — a composable that was never part of the uploaded
-// source — showing Maildeno's shared row library alongside the user's own
-// rows. That's product content curation, not editor functionality, so it's
-// removed rather than stubbed. Only the user/local rows source remains.
-// usePermissions and the auth-based save-target messaging are gone for the
-// same Batch-0 reason as everywhere else in this pass.
+// Two row libraries: the user's own (read/write) and an optional shared one
+// supplied by the host (read-only). The RowSource interface below is what lets
+// the rest of this file stay tab-agnostic.
+//
+// The shared library is host content, not editor content — the package
+// curates nothing. It appears only when the host's adapter implements
+// listSystemSavedRows AND that call returns something, so the built-in
+// localStorage adapter (which returns an empty list, by design) shows no tab.
+//
+// usePermissions and the auth-based save-target messaging remain absent: the
+// editor has no user model, so "may this person curate shared rows" is a
+// question the host answers in its own admin UI, not here. That is also why
+// the shared tab has no rename or delete — there are no adapter methods to
+// back them.
 
 const { isOpen, close } = useSavedRowsPanel();
 
 const userRowsApi = useProductRows();
+const systemRowsApi = useSystemRows();
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -349,8 +375,8 @@ const { startLayoutDrag, endLayoutDrag } = useLayoutDrag();
 
 // Always true for now — no plan/tier concept in the editor. See README
 // "Capabilities" for the host-controlled replacement, wired.
-const canEdit = computed(() => true);
-const canDeleteEntry = computed(() => true);
+// canEdit / canDeleteEntry are declared with isReadOnlyTab further down,
+// next to the tab state they derive from.
 
 interface RowSource {
   rows: {
@@ -368,6 +394,22 @@ interface RowSource {
   cloneForCanvas: (id: string) => Record<string, any> | null;
 }
 
+/** Read-only: rename/remove are unreachable because the shared tab never
+ *  renders those controls, but they throw rather than silently no-op so a
+ *  future refactor that does reach them fails loudly. */
+const systemSource: RowSource = {
+  rows: systemRowsApi.systemRows,
+  isFetching: systemRowsApi.isFetching,
+  ensureFetched: () => systemRowsApi.fetchRows(),
+  rename: () => {
+    throw new Error("Shared rows are read-only");
+  },
+  remove: () => {
+    throw new Error("Shared rows are read-only");
+  },
+  cloneForCanvas: (id) => systemRowsApi.cloneRowForCanvas(id),
+};
+
 const userSource: RowSource = {
   rows: userRowsApi.productRows,
   isFetching: userRowsApi.isFetching,
@@ -379,7 +421,46 @@ const userSource: RowSource = {
   cloneForCanvas: (id) => userRowsApi.cloneRowForCanvas(id),
 };
 
-const current = computed<RowSource>(() => userSource);
+const activeTab = ref<"user" | "system">("user");
+
+/**
+ * Whether the shared tab exists at all.
+ *
+ * Requires both that the adapter implements the method and that it returned
+ * rows. Presence alone isn't enough: EditorStorageAdapter is a complete
+ * contract, so the built-in localStorage adapter implements the method and
+ * returns [] — gating on presence would give every local user a permanently
+ * empty tab.
+ */
+const showSystemTab = computed(
+  () =>
+    systemRowsApi.isSupported.value &&
+    systemRowsApi.systemRows.value.length > 0,
+);
+
+// If the shared library disappears while its tab is open — a failed refetch,
+// or a host swapping adapters — fall back rather than leaving the panel
+// pointed at a tab that is no longer rendered.
+watch(showSystemTab, (visible) => {
+  if (!visible && activeTab.value === "system") activeTab.value = "user";
+});
+
+const current = computed<RowSource>(() =>
+  activeTab.value === "system" && showSystemTab.value
+    ? systemSource
+    : userSource,
+);
+
+// The shared tab has no rename or delete controls — there are no adapter
+// methods behind them. These already gate the per-row buttons in the template.
+const isReadOnlyTab = computed(() => activeTab.value === "system");
+
+// Gate the per-row rename/delete controls. Declared here rather than beside
+// the other computeds above so they sit next to the state they read — a
+// computed referencing a const declared 70 lines later happens to work
+// (computeds are lazy) but is the kind of thing a later refactor breaks.
+const canEdit = computed(() => !isReadOnlyTab.value);
+const canDeleteEntry = computed(() => !isReadOnlyTab.value);
 
 // ─── First-fetch trigger ──────────────────────────────────────────────────────
 //
@@ -393,7 +474,10 @@ watch(
   isOpen,
   async (open) => {
     if (!open) return;
-    await userRowsApi.fetchRows();
+    // Both are idempotent (internal hasFetched guard), so this is safe on
+    // every open. The shared list is fetched even before its tab is shown —
+    // that fetch is what decides whether the tab exists.
+    await Promise.all([userRowsApi.fetchRows(), systemRowsApi.fetchRows()]);
   },
   { immediate: true },
 );

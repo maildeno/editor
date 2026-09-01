@@ -37,21 +37,39 @@ const props = withDefaults(
   border-radius: 0.375rem;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
 }
-.md-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.md-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .md-btn--primary {
   background: var(--md-button-primary-bg);
   color: var(--md-button-primary-text);
 }
-.md-btn--primary:not(:disabled):hover { background: var(--md-button-primary-hover-bg); }
+.md-btn--primary:not(:disabled):hover {
+  background: var(--md-button-primary-hover-bg);
+}
 .md-btn--secondary {
   background: var(--md-button-secondary-bg);
   color: var(--md-button-secondary-text);
   border-color: var(--md-border);
 }
-.md-btn--secondary:not(:disabled):hover { background: var(--md-button-secondary-hover-bg); }
-.md-btn--danger { background: var(--md-danger); color: var(--md-on-danger); }
-.md-btn--danger:not(:disabled):hover { filter: brightness(0.94); }
-.md-btn--success { background: var(--md-success); color: var(--md-surface); }
+.md-btn--secondary:not(:disabled):hover {
+  background: var(--md-button-secondary-hover-bg);
+}
+.md-btn--danger {
+  background: var(--md-danger);
+  color: var(--md-on-danger);
+}
+.md-btn--danger:not(:disabled):hover {
+  filter: brightness(0.94);
+}
+.md-btn--success {
+  background: var(--md-success);
+  color: var(--md-surface);
+}
 </style>

@@ -10,10 +10,9 @@
       :index="index"
       :is-first="isFirst"
       :is-last="isLast"
-      v-show="evaluateVisibility(
-        element.props?.visibility,
-        visibilityPreviewContext
-      )"
+      v-show="
+        evaluateVisibility(element.props?.visibility, visibilityPreviewContext)
+      "
     />
 
     <!-- ── Nested row ───────────────────────────────────────────────────── -->
@@ -24,10 +23,7 @@
       :is-first="isFirst"
       :is-last="isLast"
       :depth="(depth ?? 0) + 1"
-      v-show="evaluateVisibility(
-        element.visibility,
-        visibilityPreviewContext
-      )"
+      v-show="evaluateVisibility(element.visibility, visibilityPreviewContext)"
     />
 
     <!-- ── Row spacer ────────────────────────────────────────────────────── -->
@@ -37,10 +33,7 @@
       :index="index"
       :is-first="isFirst"
       :is-last="isLast"
-      v-show="evaluateVisibility(
-        element.visibility,
-        visibilityPreviewContext
-      )"
+      v-show="evaluateVisibility(element.visibility, visibilityPreviewContext)"
     />
 
     <!-- ── Unknown type fallback ─────────────────────────────────────────── -->
@@ -71,7 +64,7 @@ import { useEmailBuilderVisibility } from "@/composables/emailBuilder/core/useEm
 // "breaking a circular import cycle". That wasn't needed — ES modules handle
 // the cycle CanvasColumn → CanvasElement → CanvasRow → CanvasColumn correctly
 // as long as the imports are only READ from inside component render functions
-// (which is always true in <script setup>, since the template uses them only
+// (which is always true in <script setup lang="ts">, since the template uses them only
 // when Vue calls render()). Module evaluation order doesn't matter because
 // by the time any render() fires, all modules have finished loading.
 //

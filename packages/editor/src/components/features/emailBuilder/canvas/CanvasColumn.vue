@@ -136,7 +136,8 @@ const {
   canvasHoveredId,
   layerHoveredId,
 } = useEmailBuilder();
-const { endLayoutDrag, isLayoutDragActive, layoutDragPayload } = useLayoutDrag();
+const { endLayoutDrag, isLayoutDragActive, layoutDragPayload } =
+  useLayoutDrag();
 const { cloneRowForCanvas } = useProductRows();
 
 // ── Children ─────────────────────────────────────────────────────────────────
@@ -154,7 +155,9 @@ const hasSelectedChild = computed(() =>
 );
 
 // ── Hover isolation ───────────────────────────────────────────────────────────
-const isColumnLayerHovered = computed(() => layerHoveredId.value === String(props.column.id));
+const isColumnLayerHovered = computed(
+  () => layerHoveredId.value === String(props.column.id),
+);
 
 const isAnyChildHovered = computed(() => {
   if (!canvasHoveredId.value) return false;

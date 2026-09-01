@@ -55,8 +55,7 @@ export const displayName = (name: string): string =>
  * Generates a default row name.
  * e.g. "row_B3e4", "row_ X3f4i"
  */
-const defaultRowName = (): string =>
-  `row_${generateId().slice(0, 4)}`; 
+const defaultRowName = (): string => `row_${generateId().slice(0, 4)}`;
 
 // ─── Gradient factory helpers ─────────────────────────────────────────────────
 

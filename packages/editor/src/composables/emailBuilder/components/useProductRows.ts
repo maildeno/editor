@@ -14,66 +14,68 @@ import { ref, provide, inject, type InjectionKey } from "vue";
 import { useStorageAdapter } from "@/adapters";
 import type { SavedRow, EditorStorageAdapter } from "@/adapters/types";
 
-function createProductRowsInstance(storageAdapterInstance?: EditorStorageAdapter) {
- const adapter = storageAdapterInstance ?? useStorageAdapter();
+function createProductRowsInstance(
+  storageAdapterInstance?: EditorStorageAdapter,
+) {
+  const adapter = storageAdapterInstance ?? useStorageAdapter();
 
- const productRows = ref<SavedRow[]>([]);
- const isFetching = ref(false);
- let hasFetched = false;
+  const productRows = ref<SavedRow[]>([]);
+  const isFetching = ref(false);
+  let hasFetched = false;
 
- async function fetchRows() {
- if (hasFetched) return;
- hasFetched = true;
- isFetching.value = true;
- try {
- productRows.value = await adapter.listSavedRows();
- } finally {
- isFetching.value = false;
- }
- }
+  async function fetchRows() {
+    if (hasFetched) return;
+    hasFetched = true;
+    isFetching.value = true;
+    try {
+      productRows.value = await adapter.listSavedRows();
+    } finally {
+      isFetching.value = false;
+    }
+  }
 
- async function saveProductRow(
- row: Record<string, any>,
- name: string,
- ): Promise<SavedRow | null> {
- const entry = await adapter.saveSavedRow(row, name);
- if (entry) {
- productRows.value = [entry, ...productRows.value];
- }
- return entry;
- }
+  async function saveProductRow(
+    row: Record<string, any>,
+    name: string,
+  ): Promise<SavedRow | null> {
+    const entry = await adapter.saveSavedRow(row, name);
+    if (entry) {
+      productRows.value = [entry, ...productRows.value];
+    }
+    return entry;
+  }
 
- async function deleteProductRow(entryId: string) {
- await adapter.deleteSavedRow(entryId);
- productRows.value = productRows.value.filter((r) => r.id !== entryId);
- }
+  async function deleteProductRow(entryId: string) {
+    await adapter.deleteSavedRow(entryId);
+    productRows.value = productRows.value.filter((r) => r.id !== entryId);
+  }
 
- async function renameProductRow(entryId: string, newName: string) {
- await adapter.renameSavedRow(entryId, newName);
- productRows.value = productRows.value.map((r) =>
- r.id === entryId ? { ...r, name: newName.trim() || r.name } : r,
- );
- return productRows.value;
- }
+  async function renameProductRow(entryId: string, newName: string) {
+    await adapter.renameSavedRow(entryId, newName);
+    productRows.value = productRows.value.map((r) =>
+      r.id === entryId ? { ...r, name: newName.trim() || r.name } : r,
+    );
+    return productRows.value;
+  }
 
- function cloneRowForCanvas(entryId: string): Record<string, any> | null {
- return adapter.cloneSavedRowForCanvas(entryId);
- }
+  function cloneRowForCanvas(entryId: string): Record<string, any> | null {
+    return adapter.cloneSavedRowForCanvas(entryId);
+  }
 
- return {
- productRows,
- isFetching,
- fetchRows,
- saveProductRow,
- deleteProductRow,
- renameProductRow,
- cloneRowForCanvas,
- };
+  return {
+    productRows,
+    isFetching,
+    fetchRows,
+    saveProductRow,
+    deleteProductRow,
+    renameProductRow,
+    cloneRowForCanvas,
+  };
 }
 
 type ProductRowsInstance = ReturnType<typeof createProductRowsInstance>;
 const ProductRowsKey: InjectionKey<ProductRowsInstance> = Symbol(
- "maildeno-editor:product-rows",
+  "maildeno-editor:product-rows",
 );
 
 /** Called once, at the EmailEditor root. storageAdapterInstance is the
@@ -82,19 +84,21 @@ const ProductRowsKey: InjectionKey<ProductRowsInstance> = Symbol(
  * component's own provides, so useStorageAdapter() called from anywhere
  * within EmailEditor.vue's own setup() can never find what
  * provideStorageAdapter() (also called there) just provided. */
-export function provideProductRows(storageAdapterInstance?: EditorStorageAdapter) {
- const instance = createProductRowsInstance(storageAdapterInstance);
- provide(ProductRowsKey, instance);
- return instance;
+export function provideProductRows(
+  storageAdapterInstance?: EditorStorageAdapter,
+) {
+  const instance = createProductRowsInstance(storageAdapterInstance);
+  provide(ProductRowsKey, instance);
+  return instance;
 }
 
 /** Every other file calls this exactly as before. */
 export const useProductRows = (): ProductRowsInstance => {
- const instance = inject(ProductRowsKey);
- if (!instance) {
- throw new Error(
- "[maildeno-editor] useProductRows() was called outside an EmailEditor instance.",
- );
- }
- return instance;
+  const instance = inject(ProductRowsKey);
+  if (!instance) {
+    throw new Error(
+      "[maildeno-editor] useProductRows() was called outside an EmailEditor instance.",
+    );
+  }
+  return instance;
 };

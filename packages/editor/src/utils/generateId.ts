@@ -1,1 +1,2 @@
-export const generateId = () => crypto.randomUUID().replace(/-/g, "").slice(0, 16);
+export const generateId = () =>
+  crypto.randomUUID().replace(/-/g, "").slice(0, 16);

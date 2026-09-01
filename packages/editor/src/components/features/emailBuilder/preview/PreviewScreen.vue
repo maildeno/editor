@@ -135,7 +135,8 @@ defineEmits<{
 }>();
 
 const builder = useEmailBuilder();
-const { rows, canvasStyles, getExportedHTML, initFromStorage, isBuilderReady } = builder;
+const { rows, canvasStyles, getExportedHTML, initFromStorage, isBuilderReady } =
+  builder;
 
 const {
   selectedClients,

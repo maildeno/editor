@@ -39,132 +39,132 @@
 import { watch, onUnmounted, type Ref, getCurrentInstance } from "vue";
 
 function getScrollParent(el: HTMLElement): HTMLElement {
- let node: HTMLElement | null = el.parentElement;
- while (node && node !== document.documentElement) {
- const { overflowY, overflow } = window.getComputedStyle(node);
- if (
- /(auto|scroll)/.test(overflowY + overflow) &&
- node.scrollHeight > node.clientHeight
- ) {
- return node;
- }
- node = node.parentElement;
- }
- return document.documentElement;
+  let node: HTMLElement | null = el.parentElement;
+  while (node && node !== document.documentElement) {
+    const { overflowY, overflow } = window.getComputedStyle(node);
+    if (
+      /(auto|scroll)/.test(overflowY + overflow) &&
+      node.scrollHeight > node.clientHeight
+    ) {
+      return node;
+    }
+    node = node.parentElement;
+  }
+  return document.documentElement;
 }
 
 function scrollContainerTo(
- container: HTMLElement,
- top: number,
- behavior: ScrollBehavior,
+  container: HTMLElement,
+  top: number,
+  behavior: ScrollBehavior,
 ) {
- if (container === document.documentElement) {
- window.scrollTo({ top, behavior });
- } else {
- container.scrollTo({ top, behavior });
- }
+  if (container === document.documentElement) {
+    window.scrollTo({ top, behavior });
+  } else {
+    container.scrollTo({ top, behavior });
+  }
 }
 
 export function useLayerHoverScroll(
- layerHoveredId: Ref<string | null>,
- options?: {
- canvasSelector?: string;
- behavior?: ScrollBehavior;
- delay?: number;
- /**
- * Margin (in px) from the viewport edges within which the target is
- * considered "comfortably visible" and no scroll is needed. Default 80 px
- * gives breathing room on both sides without being so generous that
- * elements land right against an edge.
- */
- inViewMargin?: number;
- /**
- * If the target is more than this many pixels from the current scroll
- * position, use instant jump instead of smooth scroll. Default 600 px
- * covers roughly half a typical viewport — anything farther than that
- * should teleport, not animate.
- */
- instantThreshold?: number;
-}) {
- const instance = getCurrentInstance();
- const {
- canvasSelector = "[data-canvas-scroll]",
- behavior = "smooth",
- // Bumped from 80 → 150 ms. See header comment for rationale.
- delay = 150,
- inViewMargin = 80,
- instantThreshold = 600,
- } = options ?? {};
+  layerHoveredId: Ref<string | null>,
+  options?: {
+    canvasSelector?: string;
+    behavior?: ScrollBehavior;
+    delay?: number;
+    /**
+     * Margin (in px) from the viewport edges within which the target is
+     * considered "comfortably visible" and no scroll is needed. Default 80 px
+     * gives breathing room on both sides without being so generous that
+     * elements land right against an edge.
+     */
+    inViewMargin?: number;
+    /**
+     * If the target is more than this many pixels from the current scroll
+     * position, use instant jump instead of smooth scroll. Default 600 px
+     * covers roughly half a typical viewport — anything farther than that
+     * should teleport, not animate.
+     */
+    instantThreshold?: number;
+  },
+) {
+  const instance = getCurrentInstance();
+  const {
+    canvasSelector = "[data-canvas-scroll]",
+    behavior = "smooth",
+    // Bumped from 80 → 150 ms. See header comment for rationale.
+    delay = 150,
+    inViewMargin = 80,
+    instantThreshold = 600,
+  } = options ?? {};
 
- let timer: ReturnType<typeof setTimeout> | null = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
 
- const scrollToId = (id: string | null) => {
- if (!id) return;
- // Rooted at the calling component's own node rather than document:
- // document.querySelector cannot see into a shadow root, so this
- // returned null for the entire custom-element build and silently
- // disabled layer hover-scroll there while working fine in the plain
- // Vue path. Resolved lazily (not at setup time) because the root
- // element does not exist until after mount.
- const hostEl = instance?.proxy?.$el as Element | undefined;
- const searchRoot = (hostEl?.getRootNode() ?? document) as
- | Document
- | ShadowRoot;
- const scope =
- searchRoot.querySelector<HTMLElement>(canvasSelector) ?? searchRoot;
- const el = scope.querySelector<HTMLElement>(`[data-layer-id="${id}"]`);
- if (!el) return;
+  const scrollToId = (id: string | null) => {
+    if (!id) return;
+    // Rooted at the calling component's own node rather than document:
+    // document.querySelector cannot see into a shadow root, so this
+    // returned null for the entire custom-element build and silently
+    // disabled layer hover-scroll there while working fine in the plain
+    // Vue path. Resolved lazily (not at setup time) because the root
+    // element does not exist until after mount.
+    const hostEl = instance?.proxy?.$el as Element | undefined;
+    const searchRoot = (hostEl?.getRootNode() ?? document) as
+      Document | ShadowRoot;
+    const scope =
+      searchRoot.querySelector<HTMLElement>(canvasSelector) ?? searchRoot;
+    const el = scope.querySelector<HTMLElement>(`[data-layer-id="${id}"]`);
+    if (!el) return;
 
- const scrollContainer = getScrollParent(el);
- const currentScrollTop =
- scrollContainer === document.documentElement
- ? window.pageYOffset
- : scrollContainer.scrollTop;
- const viewportHeight =
- scrollContainer === document.documentElement
- ? window.innerHeight
- : scrollContainer.clientHeight;
- const containerRect =
- scrollContainer === document.documentElement
- ? { top: 0 }
- : scrollContainer.getBoundingClientRect();
+    const scrollContainer = getScrollParent(el);
+    const currentScrollTop =
+      scrollContainer === document.documentElement
+        ? window.pageYOffset
+        : scrollContainer.scrollTop;
+    const viewportHeight =
+      scrollContainer === document.documentElement
+        ? window.innerHeight
+        : scrollContainer.clientHeight;
+    const containerRect =
+      scrollContainer === document.documentElement
+        ? { top: 0 }
+        : scrollContainer.getBoundingClientRect();
 
- const elOffsetTop =
- el.getBoundingClientRect().top - containerRect.top + currentScrollTop;
- const elHeight = el.offsetHeight;
- const elOffsetBottom = elOffsetTop + elHeight;
+    const elOffsetTop =
+      el.getBoundingClientRect().top - containerRect.top + currentScrollTop;
+    const elHeight = el.offsetHeight;
+    const elOffsetBottom = elOffsetTop + elHeight;
 
- // ── Skip if already comfortably in view ──────────────────────────────────
- // Visible region in content-space: [currentScrollTop, currentScrollTop + viewportHeight]
- // With margin, the "comfortable" window shrinks on both ends.
- const viewTop = currentScrollTop + inViewMargin;
- const viewBottom = currentScrollTop + viewportHeight - inViewMargin;
+    // ── Skip if already comfortably in view ──────────────────────────────────
+    // Visible region in content-space: [currentScrollTop, currentScrollTop + viewportHeight]
+    // With margin, the "comfortable" window shrinks on both ends.
+    const viewTop = currentScrollTop + inViewMargin;
+    const viewBottom = currentScrollTop + viewportHeight - inViewMargin;
 
- if (elOffsetTop >= viewTop && elOffsetBottom <= viewBottom) {
- // Fully inside the comfortable window — no scroll needed.
- return;
- }
+    if (elOffsetTop >= viewTop && elOffsetBottom <= viewBottom) {
+      // Fully inside the comfortable window — no scroll needed.
+      return;
+    }
 
- // ── Compute target scroll (centre element vertically) ────────────────────
- const targetScrollTop = elOffsetTop - viewportHeight / 2 + elHeight / 2;
+    // ── Compute target scroll (centre element vertically) ────────────────────
+    const targetScrollTop = elOffsetTop - viewportHeight / 2 + elHeight / 2;
 
- // ── Choose behaviour based on distance ──────────────────────────────────
- // Large jumps use "auto" to avoid the "slowly chasing" feeling.
- // Small corrections use the caller-preferred behaviour (default smooth).
- const distance = Math.abs(targetScrollTop - currentScrollTop);
- const chosenBehavior: ScrollBehavior =
- distance > instantThreshold ? "auto" : behavior;
+    // ── Choose behaviour based on distance ──────────────────────────────────
+    // Large jumps use "auto" to avoid the "slowly chasing" feeling.
+    // Small corrections use the caller-preferred behaviour (default smooth).
+    const distance = Math.abs(targetScrollTop - currentScrollTop);
+    const chosenBehavior: ScrollBehavior =
+      distance > instantThreshold ? "auto" : behavior;
 
- scrollContainerTo(scrollContainer, targetScrollTop, chosenBehavior);
- };
+    scrollContainerTo(scrollContainer, targetScrollTop, chosenBehavior);
+  };
 
- watch(layerHoveredId, (id) => {
- if (timer) clearTimeout(timer);
- if (!id) return;
- timer = setTimeout(() => scrollToId(id), delay);
- });
+  watch(layerHoveredId, (id) => {
+    if (timer) clearTimeout(timer);
+    if (!id) return;
+    timer = setTimeout(() => scrollToId(id), delay);
+  });
 
- onUnmounted(() => {
- if (timer) clearTimeout(timer);
- });
+  onUnmounted(() => {
+    if (timer) clearTimeout(timer);
+  });
 }

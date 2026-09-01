@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { scopeInjectedCssPlugin } from "./scopeInjectedCss";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
 import tailwindcss from "@tailwindcss/vite";
@@ -78,9 +79,22 @@ export default defineConfig({
     },
   },
   plugins: [
+    // Scopes the injected stylesheet to the editor subtree so it can't
+    // restyle the host page. Must run before the ?inline import is frozen.
+    scopeInjectedCssPlugin(),
     vue(),
     tailwindcss(),
-    dts({ tsconfigPath: "./tsconfig.json" }),
+    dts({
+      tsconfigPath: "./tsconfig.json",
+      // Required for SFC declarations. Defaults to "ts", under which
+      // unplugin-dts skips .vue entirely and emits nothing for them —
+      // silently, because its own warning only fires when the entry or
+      // an include glob literally contains ".vue", and neither does
+      // here (entry is index.ts, include is "src"). That silence is why
+      // dist/index.d.ts shipped re-exporting EmailEditor.vue from a
+      // path that was never emitted.
+      processor: "vue",
+    }),
     injectExtractedCssViaJs(),
   ],
   build: {

@@ -218,7 +218,8 @@
             placeholder="Select style"
             class="w-full text-sm capitalize"
             :class="{
-              'ring-1 ring-(--md-selection) rounded': isBorderPropOverridden('style'),
+              'ring-1 ring-(--md-selection) rounded':
+                isBorderPropOverridden('style'),
             }"
           />
         </div>
@@ -324,7 +325,6 @@ const editMode = computed<EditMode>({
     previewMode.value = v;
   },
 });
-
 
 const {
   displayValue,

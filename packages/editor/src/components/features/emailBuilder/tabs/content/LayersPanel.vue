@@ -164,7 +164,9 @@
               v-if="row.type === 'row'"
               class="size-3.25 shrink-0"
               :class="
-                isRowSelected(row.id) ? 'text-[var(--md-row-selection)]' : 'text-[var(--md-text-subtle)]'
+                isRowSelected(row.id)
+                  ? 'text-[var(--md-row-selection)]'
+                  : 'text-[var(--md-text-subtle)]'
               "
             >
               <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -182,7 +184,9 @@
               stroke-linejoin="round"
               class="w-3.25 h-3.25 shrink-0"
               :class="
-                isRowSelected(row.id) ? 'text-(--md-row-selection)' : 'text-(--md-text-muted)'
+                isRowSelected(row.id)
+                  ? 'text-(--md-row-selection)'
+                  : 'text-(--md-text-muted)'
               "
             >
               <polyline points="8 18 12 22 16 18" />

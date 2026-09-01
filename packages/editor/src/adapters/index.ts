@@ -1,4 +1,4 @@
-import { provide, inject, type InjectionKey } from "vue";
+import { provide, inject, computed, type InjectionKey, type Ref } from "vue";
 import type { EditorStorageAdapter, PartialStorageAdapter } from "./types";
 import { createLocalStorageAdapter } from "./localStorageAdapter";
 
@@ -65,11 +65,67 @@ function mergeWithDefaults(
   return merged as unknown as EditorStorageAdapter;
 }
 
+/**
+ * Whether the host opted into saving — mirrors EmailEditor's onSave presence.
+ *
+ * Provided here rather than derived from the adapter because the adapter
+ * cannot answer it: mergeWithDefaults fills saveTemplate from the localStorage
+ * defaults, so it is always a function by the time anything reads it.
+ *
+ * Needed as a separate signal because mergeWithDefaults deliberately fills
+ * every missing method from createLocalStorageAdapter — so the *resolved*
+ * adapter always has saveTemplate and `typeof adapter.saveTemplate` can never
+ * be false. Only the host's own partial knows the answer.
+ *
+ * Passing no adapter at all still counts as "can save": that is the
+ * zero-config demo path, where localStorage persistence is the whole point.
+ * Only a host that supplies a partial adapter and deliberately leaves
+ * saveTemplate out — a guest/read-only session — gets false.
+ */
+const CanSaveKey: InjectionKey<Ref<boolean>> = Symbol(
+  "maildeno-editor:can-save",
+);
+
+export function useCanSave(): Ref<boolean> {
+  return inject(
+    CanSaveKey,
+    computed(() => true),
+  );
+}
+
+export function provideCanSave(canSave: Ref<boolean>): void {
+  provide(CanSaveKey, canSave);
+}
+
+/**
+ * Whether the saved-templates panel should exist.
+ *
+ * True when the host supplied listTemplates, or supplied no adapter at all
+ * (the zero-config demo, where browsing localStorage templates is the point).
+ * False for a host that passes a partial adapter and leaves listTemplates
+ * out — a guest session, where the panel would otherwise list templates from
+ * localStorage that the user never saved and cannot see anywhere else.
+ *
+ * Same before-merge reasoning as canSave: after mergeWithDefaults the method
+ * always exists.
+ */
+const HasTemplateLibraryKey: InjectionKey<boolean> = Symbol(
+  "maildeno-editor:has-template-library",
+);
+
+export function useHasTemplateLibrary(): boolean {
+  return inject(HasTemplateLibraryKey, true);
+}
+
 export function provideStorageAdapter(
   adapter?: PartialStorageAdapter,
 ): EditorStorageAdapter {
   const instance = mergeWithDefaults(adapter);
   provide(StorageAdapterKey, instance);
+  provide(
+    HasTemplateLibraryKey,
+    !adapter || typeof adapter.listTemplates === "function",
+  );
   return instance;
 }
 

@@ -15,47 +15,47 @@ import { useToast } from "@/composables/ui/useToast";
 import { useProductRows } from "@/composables/emailBuilder/components/useProductRows";
 
 export function useProductRowActions() {
- const toast = useToast();
- const { saveProductRow } = useProductRows();
+  const toast = useToast();
+  const { saveProductRow } = useProductRows();
 
- /**
- * Save a row, handling all toast notifications.
- * Returns true on success so the caller can close its UI.
- */
- async function saveProductRowWithToast(
- row: Record<string, any>,
- name: string,
- ): Promise<boolean> {
- try {
- const entry = await saveProductRow(row, name);
+  /**
+   * Save a row, handling all toast notifications.
+   * Returns true on success so the caller can close its UI.
+   */
+  async function saveProductRowWithToast(
+    row: Record<string, any>,
+    name: string,
+  ): Promise<boolean> {
+    try {
+      const entry = await saveProductRow(row, name);
 
- // local.ts returns null when the localStorage cap is hit
- if (!entry || !entry.id) {
- toast.add({
- severity: "warn",
- summary: "Save failed",
- detail: "Limit reached. Delete some items to save more.",
- life: 3000,
- });
- return false;
- }
+      // local.ts returns null when the localStorage cap is hit
+      if (!entry || !entry.id) {
+        toast.add({
+          severity: "warn",
+          summary: "Save failed",
+          detail: "Limit reached. Delete some items to save more.",
+          life: 3000,
+        });
+        return false;
+      }
 
- toast.add({
- severity: "success",
- summary: "Row saved",
- life: 3000,
- });
- return true;
- } catch {
- toast.add({
- severity: "error",
- summary: "Failed to save row",
- detail: "Please try again",
- life: 5000,
- });
- return false;
- }
- }
+      toast.add({
+        severity: "success",
+        summary: "Row saved",
+        life: 3000,
+      });
+      return true;
+    } catch {
+      toast.add({
+        severity: "error",
+        summary: "Failed to save row",
+        detail: "Please try again",
+        life: 5000,
+      });
+      return false;
+    }
+  }
 
- return { saveProductRowWithToast };
+  return { saveProductRowWithToast };
 }

@@ -151,9 +151,7 @@ const filteredOptions = computed(() => {
   }
 
   return props.options.filter((option) =>
-    labelOf(option)
-      .toLowerCase()
-      .includes(query),
+    labelOf(option).toLowerCase().includes(query),
   );
 });
 
@@ -166,10 +164,7 @@ function onSelect(option: unknown) {
     return;
   }
 
-  emit(
-    "update:modelValue",
-    valueOf(option),
-  );
+  emit("update:modelValue", valueOf(option));
 
   open.value = false;
   search.value = "";
@@ -232,10 +227,7 @@ function openDropdown() {
            NON-FILTERED SELECT
            =================================================== -->
 
-      <ComboboxTrigger
-        v-else
-        class="md-sel__triggerText"
-      >
+      <ComboboxTrigger v-else class="md-sel__triggerText">
         <span
           :class="{
             'md-sel__ph': !displayLabel,
@@ -294,9 +286,7 @@ function openDropdown() {
         <ComboboxViewport class="md-sel__viewport">
           <!-- Empty state -->
 
-          <ComboboxEmpty class="md-sel__empty">
-            No results
-          </ComboboxEmpty>
+          <ComboboxEmpty class="md-sel__empty"> No results </ComboboxEmpty>
 
           <!-- Options -->
 
@@ -311,9 +301,7 @@ function openDropdown() {
               {{ labelOf(option) }}
             </span>
 
-            <ComboboxItemIndicator
-              class="md-sel__check"
-            >
+            <ComboboxItemIndicator class="md-sel__check">
               <Icon name="check" />
             </ComboboxItemIndicator>
           </ComboboxItem>

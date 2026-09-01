@@ -274,7 +274,7 @@ ${columnsHtml}
 
     // ── Define border flags before building styles ──
     const hasBorderRadius = (row.border?.radius ?? 0) > 0;
-    
+
     const rowTdStyles: string[] = [
       ...rowBackgroundStyles,
       hasBorderRadius ? `border-radius:${row.border.radius + 2}px` : "",

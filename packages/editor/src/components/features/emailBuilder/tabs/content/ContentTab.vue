@@ -1,14 +1,14 @@
 <template>
-  <div class="w-full md-surface-sidebar-inner flex flex-col h-[calc(100vh-7.5rem)]">
+  <div
+    class="w-full md-surface-sidebar-inner flex flex-col h-[calc(100vh-7.5rem)]"
+  >
     <!-- Tab bar -->
     <div class="md-tabstrip flex gap-4 px-2 pt-2 shrink-0">
       <button
         @click="sidebarTab = 'layers'"
         :class="[
           'relative pb-2 text-xs font-medium transition-colors',
-          sidebarTab === 'layers'
-            ? 'md-tab-active'
-            : 'md-tab-idle',
+          sidebarTab === 'layers' ? 'md-tab-active' : 'md-tab-idle',
         ]"
       >
         <span class="flex items-center gap-1.5 text-sm">
@@ -43,9 +43,7 @@
         @click="sidebarTab = 'properties'"
         :class="[
           'relative pb-2 text-xs font-medium transition-colors',
-          sidebarTab === 'properties'
-            ? 'md-tab-active'
-            : 'md-tab-idle',
+          sidebarTab === 'properties' ? 'md-tab-active' : 'md-tab-idle',
         ]"
       >
         <span class="flex items-center gap-1.5 text-sm">
@@ -107,7 +105,9 @@
             />
           </svg>
         </div>
-        <p class="text-sm font-medium text-(--md-text-subtle) mb-1">Nothing selected</p>
+        <p class="text-sm font-medium text-(--md-text-subtle) mb-1">
+          Nothing selected
+        </p>
         <p class="text-xs text-(--md-text-subtle)">
           Click a row or component on the canvas, or browse via the Layers tab
         </p>
@@ -369,7 +369,8 @@ const handleDeleteRow = () => {
     header: "Confirm Delete",
     acceptLabel: "Delete",
     rejectLabel: "Cancel",
-    acceptClass: "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
+    acceptClass:
+      "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
     rejectClass:
       "!bg-[var(--md-border)] !hover:bg-[var(--md-border-strong)] !text-[var(--md-text)] !border-[var(--md-border)] !px-6 !py-2",
     accept: () => {

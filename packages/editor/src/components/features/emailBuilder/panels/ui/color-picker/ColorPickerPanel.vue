@@ -2,7 +2,7 @@
   <Teleport v-if="teleportTarget" :to="teleportTarget">
     <div
       ref="panelRef"
-      data-color-panel
+      data-color-panel="true"
       class="fixed z-9999 w-68 bg-(--md-overlay-bg) border border-(--md-overlay-border) rounded-xl shadow-(--md-overlay-shadow) p-3 select-none"
       :style="positionStyle"
     >
@@ -86,7 +86,10 @@
               min="0"
               max="100"
               :value="Math.round(a * 100)"
-              @change="a = clamp($event.target.value, 0, 100) / 100"
+              @change="
+                a =
+                  clamp(($event.target as HTMLInputElement).value, 0, 100) / 100
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -108,7 +111,9 @@
               min="0"
               max="255"
               :value="rgb[i]"
-              @change="onRgbChange(i, $event.target.value)"
+              @change="
+                onRgbChange(i, ($event.target as HTMLInputElement).value)
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -122,7 +127,10 @@
               min="0"
               max="100"
               :value="Math.round(a * 100)"
-              @change="a = clamp($event.target.value, 0, 100) / 100"
+              @change="
+                a =
+                  clamp(($event.target as HTMLInputElement).value, 0, 100) / 100
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -140,7 +148,13 @@
               min="0"
               max="360"
               :value="hsl.h"
-              @change="setFromHsl($event.target.value, hsl.s, hsl.l)"
+              @change="
+                setFromHsl(
+                  Number(($event.target as HTMLInputElement).value),
+                  hsl.s,
+                  hsl.l,
+                )
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -154,7 +168,13 @@
               min="0"
               max="100"
               :value="hsl.s"
-              @change="setFromHsl(hsl.h, $event.target.value, hsl.l)"
+              @change="
+                setFromHsl(
+                  hsl.h,
+                  Number(($event.target as HTMLInputElement).value),
+                  hsl.l,
+                )
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -168,7 +188,13 @@
               min="0"
               max="100"
               :value="hsl.l"
-              @change="setFromHsl(hsl.h, hsl.s, $event.target.value)"
+              @change="
+                setFromHsl(
+                  hsl.h,
+                  hsl.s,
+                  Number(($event.target as HTMLInputElement).value),
+                )
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -182,7 +208,10 @@
               min="0"
               max="100"
               :value="Math.round(a * 100)"
-              @change="a = clamp($event.target.value, 0, 100) / 100"
+              @change="
+                a =
+                  clamp(($event.target as HTMLInputElement).value, 0, 100) / 100
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -200,7 +229,13 @@
               min="0"
               max="360"
               :value="hsb.h"
-              @change="setFromHsb($event.target.value, hsb.s, hsb.b)"
+              @change="
+                setFromHsb(
+                  Number(($event.target as HTMLInputElement).value),
+                  hsb.s,
+                  hsb.b,
+                )
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -214,7 +249,13 @@
               min="0"
               max="100"
               :value="hsb.s"
-              @change="setFromHsb(hsb.h, $event.target.value, hsb.b)"
+              @change="
+                setFromHsb(
+                  hsb.h,
+                  Number(($event.target as HTMLInputElement).value),
+                  hsb.b,
+                )
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -228,7 +269,13 @@
               min="0"
               max="100"
               :value="hsb.b"
-              @change="setFromHsb(hsb.h, hsb.s, $event.target.value)"
+              @change="
+                setFromHsb(
+                  hsb.h,
+                  hsb.s,
+                  Number(($event.target as HTMLInputElement).value),
+                )
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -242,7 +289,10 @@
               min="0"
               max="100"
               :value="Math.round(a * 100)"
-              @change="a = clamp($event.target.value, 0, 100) / 100"
+              @change="
+                a =
+                  clamp(($event.target as HTMLInputElement).value, 0, 100) / 100
+              "
             />
             <label
               class="text-[9px] text-(--md-text-subtle) font-semibold tracking-widest uppercase mb-0.5 pl-0.5"
@@ -257,8 +307,9 @@
   </Teleport>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
+import type { PropType, CSSProperties } from "vue";
 import { useColor } from "@/composables/system/useColor";
 import { useTeleportTarget } from "@/composables/ui/useTeleportTarget";
 import SVPanel from "./SVPanel.vue";
@@ -268,12 +319,16 @@ import RecentColors from "./RecentColors.vue";
 
 const props = defineProps({
   modelValue: { type: String, default: "#ff0000" },
-  anchor: { type: Object, default: null },
+  // The anchor really is an element — computePosition calls
+  // getBoundingClientRect on it. Bare Object widened it to a plain record,
+  // so callers passing a template ref (HTMLElement | null) failed.
+  anchor: { type: Object as PropType<HTMLElement | null>, default: null },
 });
 const emit = defineEmits(["update:modelValue", "close"]);
 const teleportTarget = useTeleportTarget();
 
-const clamp = (v, min, max) => Math.min(Math.max(Number(v) || 0, min), max);
+const clamp = (v: string | number, min: number, max: number) =>
+  Math.min(Math.max(Number(v) || 0, min), max);
 
 const {
   h,
@@ -304,8 +359,8 @@ watch(hex, (val) => {
   hexError.value = false;
 });
 
-const onHexInput = (e) => {
-  hexInputValue.value = e.target.value;
+const onHexInput = (e: Event) => {
+  hexInputValue.value = (e.target as HTMLInputElement).value;
   hexError.value = false;
 };
 const onHexBlur = () => {
@@ -314,10 +369,10 @@ const onHexBlur = () => {
   if (!ok) hexInputValue.value = hex.value;
 };
 
-const onRgbChange = (index, rawVal) => {
+const onRgbChange = (index: number, rawVal: string | number) => {
   const arr = [...rgb.value];
   arr[index] = clamp(rawVal, 0, 255);
-  setFromRgb(...arr);
+  setFromRgb(arr[0], arr[1], arr[2]);
 };
 
 const RECENT_KEY = "maildeno_cp:recentColors";
@@ -332,7 +387,7 @@ const loadRecent = () => {
 };
 const recent = ref(loadRecent());
 
-const persistRecent = (val) => {
+const persistRecent = (val: string) => {
   const updated = [val, ...recent.value.filter((c) => c !== val)].slice(0, 16);
   recent.value = updated;
   try {
@@ -342,7 +397,7 @@ const persistRecent = (val) => {
   }
 };
 
-const onRecentSelect = (color) => {
+const onRecentSelect = (color: string) => {
   if (color === "transparent") {
     emit("update:modelValue", "transparent");
     return;
@@ -367,8 +422,12 @@ const activeTab = ref("HEX");
 
 const GAP = 6;
 const MARGIN = 8;
-const panelRef = ref(null);
-const positionStyle = ref({ top: "0px", left: "0px", visibility: "hidden" });
+const panelRef = ref<HTMLElement | null>(null);
+const positionStyle = ref<CSSProperties>({
+  top: "0px",
+  left: "0px",
+  visibility: "hidden",
+});
 
 const computePosition = () => {
   if (!props.anchor || !panelRef.value) return;
@@ -393,7 +452,7 @@ const computePosition = () => {
   };
 };
 
-const onEsc = (e) => {
+const onEsc = (e: KeyboardEvent) => {
   if (e.key === "Escape") {
     // Persist happens in onBeforeUnmount once the parent unmounts the panel.
     emit("close");

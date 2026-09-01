@@ -240,7 +240,10 @@ function applyTokens(target: HTMLElement, tokens: ThemeTokens): void {
 
 function applyDarkTokens(target: HTMLElement, tokens: ThemeTokens): void {
   const declarations = Object.entries(tokens)
-    .filter(([k, v]) => typeof v === "string" && v && VAR_NAMES[k as keyof ThemeTokens])
+    .filter(
+      ([k, v]) =>
+        typeof v === "string" && v && VAR_NAMES[k as keyof ThemeTokens],
+    )
     .map(([k, v]) => `  ${VAR_NAMES[k as keyof ThemeTokens]}: ${v};`)
     .join("\n");
 
@@ -314,7 +317,13 @@ export function setEditorTheme(
  */
 export function palette(hex: string): Record<string, string> {
   const h = hex.trim().replace(/^#/, "");
-  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
   if (!/^[0-9a-fA-F]{6}$/.test(full)) return {};
 
   const rgb: [number, number, number] = [
@@ -324,7 +333,9 @@ export function palette(hex: string): Record<string, string> {
   ];
 
   const toHex = (n: number) =>
-    Math.round(Math.min(255, Math.max(0, n))).toString(16).padStart(2, "0");
+    Math.round(Math.min(255, Math.max(0, n)))
+      .toString(16)
+      .padStart(2, "0");
 
   /** Mixes toward white (amount > 0) or black (amount < 0). */
   const mix = ([r, g, b]: [number, number, number], amount: number) => {
@@ -334,11 +345,21 @@ export function palette(hex: string): Record<string, string> {
   };
 
   const amounts: Record<number, number> = {
-    50: 0.95, 100: 0.9, 200: 0.75, 300: 0.6, 400: 0.3,
-    500: 0, 600: -0.15, 700: -0.3, 800: -0.45, 900: -0.6, 950: -0.75,
+    50: 0.95,
+    100: 0.9,
+    200: 0.75,
+    300: 0.6,
+    400: 0.3,
+    500: 0,
+    600: -0.15,
+    700: -0.3,
+    800: -0.45,
+    900: -0.6,
+    950: -0.75,
   };
 
   const out: Record<string, string> = {};
-  for (const [stop, amount] of Object.entries(amounts)) out[stop] = mix(rgb, amount);
+  for (const [stop, amount] of Object.entries(amounts))
+    out[stop] = mix(rgb, amount);
   return out;
 }

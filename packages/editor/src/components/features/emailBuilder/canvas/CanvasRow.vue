@@ -546,7 +546,8 @@ const handleDelete = () => {
     header: "Confirm Delete",
     acceptLabel: "Delete",
     rejectLabel: "Cancel",
-    acceptClass: "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
+    acceptClass:
+      "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
     rejectClass:
       "!bg-[var(--md-border)] !hover:bg-[var(--md-border-strong)] !text-[var(--md-text)] !border-[var(--md-border)] !px-6 !py-2",
     accept: () => deleteRow(props.row.id),

@@ -8,9 +8,18 @@
     >
       <!-- Traffic-light dots — decorative window indicator. -->
       <div class="flex items-center gap-1.5 shrink-0">
-        <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" aria-hidden="true" />
-        <span class="w-2.5 h-2.5 rounded-full bg-[#febc2e]" aria-hidden="true" />
-        <span class="w-2.5 h-2.5 rounded-full bg-[#28c840]" aria-hidden="true" />
+        <span
+          class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"
+          aria-hidden="true"
+        />
+        <span
+          class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"
+          aria-hidden="true"
+        />
+        <span
+          class="w-2.5 h-2.5 rounded-full bg-[#28c840]"
+          aria-hidden="true"
+        />
       </div>
 
       <!-- "Address bar" style label -->
@@ -98,14 +107,18 @@
               <div
                 v-if="row.type === 'row-spacer'"
                 :style="rowSpacerStyle(row)"
-                v-show="evaluateVisibility(row.visibility, visibilityPreviewContext)"
+                v-show="
+                  evaluateVisibility(row.visibility, visibilityPreviewContext)
+                "
               />
 
               <!-- Row -->
               <div
                 v-else-if="row.type === 'row'"
                 :style="rowStyles(row)"
-                v-show="evaluateVisibility(row.visibility, visibilityPreviewContext)"
+                v-show="
+                  evaluateVisibility(row.visibility, visibilityPreviewContext)
+                "
               >
                 <div
                   v-for="col in row.columns || []"
@@ -189,9 +202,7 @@ const props = defineProps<{
 const { visibilityPreviewContext } = useEmailBuilder();
 const { evaluateVisibility } = useEmailBuilderVisibility();
 
-const bodyBg = computed(
-  () => props.canvas?.bodyBackgroundColor ?? "#f9fafb",
-);
+const bodyBg = computed(() => props.canvas?.bodyBackgroundColor ?? "#f9fafb");
 
 const hasContent = computed(() => (props.rows ?? []).length > 0);
 

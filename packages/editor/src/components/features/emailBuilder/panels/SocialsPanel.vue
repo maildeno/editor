@@ -67,7 +67,11 @@
               <button
                 @click="onPlatformEnabledToggle(platform)"
                 class="relative w-7 h-4 rounded-full transition-colors shrink-0"
-                :class="platform.enabled ? 'bg-(--md-selection)/75' : 'bg-(--md-border)'"
+                :class="
+                  platform.enabled
+                    ? 'bg-(--md-selection)/75'
+                    : 'bg-(--md-border)'
+                "
               >
                 <span
                   class="absolute top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-all"
@@ -109,7 +113,9 @@
                     style="font-size: 8px"
                   />
                 </div>
-                <span class="text-xs font-medium truncate text-(--md-text-muted)">
+                <span
+                  class="text-xs font-medium truncate text-(--md-text-muted)"
+                >
                   {{ platform.name || "Untitled" }}
                 </span>
               </button>
@@ -189,7 +195,9 @@
               />
             </div>
             <div>
-              <label class="text-[10px] text-(--md-text-subtle) mb-1 block">Icon</label>
+              <label class="text-[10px] text-(--md-text-subtle) mb-1 block"
+                >Icon</label
+              >
 
               <div
                 v-if="platform.icon"
@@ -203,7 +211,9 @@
                     @error="platform.icon = ''"
                   />
                 </div>
-                <span class="text-[10px] text-(--md-text-subtle) truncate flex-1">
+                <span
+                  class="text-[10px] text-(--md-text-subtle) truncate flex-1"
+                >
                   {{
                     platform.icon.startsWith("data:")
                       ? "✓ Image uploaded"

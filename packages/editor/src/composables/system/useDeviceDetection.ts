@@ -40,7 +40,10 @@ function createDesktopRef(): Ref<boolean> {
   // Guarded for SSR and for any environment without matchMedia. Defaulting to
   // desktop is the safer failure: the editor renders rather than showing a
   // "desktop only" notice to someone who is on a desktop.
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+  if (
+    typeof window === "undefined" ||
+    typeof window.matchMedia !== "function"
+  ) {
     return ref(true);
   }
 
