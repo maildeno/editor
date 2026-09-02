@@ -15,7 +15,7 @@
     Teleported content (dialogs, toasts, the assistant drawer, colour
     pickers) leaves this subtree, which is why useTeleportTarget points at
     an element INSIDE the editor rather than document.body. -->
-  <div ref="rootEl" class="md-editor-scope">
+  <div ref="rootEl" class="md-editor-scope" :class="{ dark: isDark }">
     <DesktopOnlyNotice :brand-name="brandName" />
     <div v-if="isDesktop" class="flex flex-col min-h-screen">
       <!-- Mounted first, deliberately, before Header/Toast/ConfirmDialog and
@@ -152,10 +152,15 @@ import {
   watch,
   getCurrentInstance,
   ref,
+  toRef,
   useSlots,
   nextTick,
 } from "vue";
 import { useDeviceDetection } from "@/composables/system/useDeviceDetection";
+import {
+  useColorScheme,
+  type ColorMode,
+} from "@/composables/system/useColorScheme";
 import { provideEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { provideSavedRowsPanel } from "@/composables/system/useSavedRowsPanel";
 import { provideLayoutDrag } from "@/composables/emailBuilder/core/ui/useLayoutDrag";
@@ -196,14 +201,26 @@ const props = withDefaults(
      * (create mode) — matches the original app's /create vs /edit split,
      * now driven by a prop instead of a route. */
     templateId?: string;
-    /** Applied on mount via CSS custom properties (see theme.ts) — works
-     * whether this component is used directly or wrapped by element.ts's
-     * defineCustomElement. `host` below (a direct instance.ce read, see
-     * its own comment) is the shadow host when running as a custom
-     * element, null otherwise, so the right target (:host vs :root) is
-     * picked automatically — the consumer never needs to know which mode
-     * they're in. */
+    /** Applied via CSS custom properties (see theme.ts) — works whether this
+     * component is used directly or wrapped by element.ts's
+     * defineCustomElement, because both write to the same place: this
+     * component's own root element, which is where the package's bundled
+     * defaults land too once the library build has scoped them. Reactive:
+     * assigning a new object re-themes live, no remount. */
     theme?: ThemeOptions;
+    /**
+     * Which half of `theme` applies.
+     *
+     * `auto` (the default) follows the host page: useColorScheme.ts watches
+     * for a `dark` class on <html> or <body> and mirrors it onto the editor
+     * root. A host that already has a Tailwind-style theme switcher needs no
+     * wiring at all — flipping the class moves the editor in the same frame.
+     *
+     * Pass `light` or `dark` to pin the editor regardless of the page: a
+     * light editor deliberately embedded in a dark shell, or a host whose
+     * switcher signals something other than a class.
+     */
+    colorMode?: ColorMode;
     /** If provided, the "Send test" button appears in the header. Editor
      * owns the form/validation UI; this callback owns what actually
      * happens on submit (SMTP, an API, anything) — same host-owns-the-
@@ -301,6 +318,10 @@ const props = withDefaults(
   }>(),
   {
     isReady: true,
+    // Explicit rather than left undefined, so defineCustomElement declares
+    // `color-mode` as a real attribute — `<maildeno-editor color-mode="dark">`
+    // works with no JavaScript, the same way `brand-name` does.
+    colorMode: "auto",
   },
 );
 
@@ -384,6 +405,13 @@ const { isDesktop } = useDeviceDetection();
 // useHost() source) but isn't part of ComponentInternalInstance's public
 // type surface, hence the cast.
 const host = (getCurrentInstance() as { ce?: HTMLElement } | null)?.ce ?? null;
+
+// Mirrors the host page's dark class onto the editor. `isDark` drives the
+// class on the root div below; the composable additionally reflects it onto
+// `host` so `:host(.dark)` matches in the custom-element build. Without this
+// nothing in the package's dark palette applies once the library build has
+// scoped the stylesheet — see useColorScheme.ts for the full explanation.
+const { isDark } = useColorScheme(toRef(props, "colorMode"), host);
 
 // The real fix this exists for: makes "just import EmailEditor" genuinely
 // enough for styling, with zero separate CSS import needed — matching how
@@ -637,13 +665,32 @@ defineExpose({
   onChange,
 });
 
-watch(
-  () => props.theme,
-  (theme) => {
-    if (theme) setEditorTheme(theme, host ?? undefined);
-  },
-  { immediate: true, deep: true },
-);
+/**
+ * Theme tokens go on THIS component's root element, not on <html>.
+ *
+ * The library build runs the injected stylesheet through scopeInjectedCss.ts,
+ * which rewrites `:root`/`:host` to `.md-editor-scope` so the editor's CSS
+ * cannot restyle the host page. That lands the package's default tokens
+ * directly on the root div below — and a custom property declared on an
+ * element beats any value inherited from an ancestor, whatever the
+ * specificity. A theme written to <html> was therefore shadowed by the
+ * defaults and never arrived, in either build. Same element, same cascade,
+ * and the runtime sheet wins on source order because it is appended after the
+ * bundled CSS.
+ *
+ * This was invisible from the playground, which aliases straight to `src` and
+ * never runs the scoper, so `:root` stayed `:root` and inheritance worked.
+ *
+ * onMounted rather than a `{ immediate: true }` watch: rootEl does not exist
+ * during setup. Vue runs mounted hooks synchronously at the end of the patch,
+ * before the browser paints, so there is still no frame of unthemed editor.
+ */
+function applyTheme() {
+  if (props.theme && rootEl.value) setEditorTheme(props.theme, rootEl.value);
+}
+
+onMounted(applyTheme);
+watch(() => props.theme, applyTheme, { deep: true });
 
 onMounted(async () => {
   if (!props.templateId) {
