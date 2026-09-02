@@ -118,8 +118,8 @@ function handleSave({ templateId }: { templateId: string | null }) {
    --md-* variable, which is the failure it exists to catch. */
 .pg-theme-switch {
   position: fixed;
-  right: 12px;
-  bottom: 12px;
+  right: 42px;
+  bottom: 2px;
   z-index: 2147483000;
   display: flex;
   gap: 2px;

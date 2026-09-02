@@ -7,31 +7,30 @@
    (github.com/tailwindlabs/tailwindcss/issues/13136), confirmed here by
    directly inspecting the compiled output: zero arbitrary-value bracket
    classes (text-[11px] etc, used extensively throughout this package's
-   components) were present at all before this line was added, despite
-   this exact file being correctly imported. "../.." resolves relative to
+   components) were present at all before this line was added, despite this
+   exact file being correctly imported. "../.." resolves relative to
    THIS file's own location (src/assets/css/main.css → up to src/),
-   covering every component in the package, not just whatever the
-   consuming app's own Vite root happens to already include. */
+   covering every component in the package, not just whatever the consuming
+   app's own Vite root happens to already include. */
 @source "../..";
 
 @custom-variant dark (&:where(.dark, .dark *, :host(.dark), :host(.dark) *));
 
 /* ─── Theme tokens ───────────────────────────────────────────────────────────
-   Semantic variables every themed surface reads. Two layers on purpose:
+   Semantic variables every themed surface reads.
+
+   Two layers on purpose:
 
      Core        primary / background / surface / text / border …
      Semantic    header-bg, sidebar-bg, input-bg, overlay-bg …
 
    Semantic tokens default to core ones, so setting `primary` alone re-themes
-   the whole editor coherently, while a host that wants only a different
-   header can set `headerBg` without touching anything else. Without that
-   split, customising one surface would mean redefining all of them — which
-   is how themes end up looking half-finished.
+   the whole editor coherently.
 
    Everything is declared on both :root and :host so it works in the plain
-   Vue build (light DOM) and the custom-element build (shadow root), where
-   :root does not reach inside.
+   Vue build and the custom-element build.
    ──────────────────────────────────────────────────────────────────────── */
+
 :root,
 :host {
   /* Core */
@@ -51,15 +50,17 @@
   --md-border: #e5e7eb;
   --md-border-strong: #d1d5db;
 
+  /* Health / semantic colors */
   --md-danger: #ef4444;
   --md-on-danger: #ffffff;
+
   --md-success: #22c55e;
   --md-warning: #f59e0b;
   --md-info: #0a5bdd;
 
   --md-shadow: 0 8px 30px rgb(0 0 0 / 0.12);
 
-  /* Semantic — each defaults to a core token */
+  /* Semantic surfaces */
   --md-header-bg: var(--md-surface);
   --md-header-text: var(--md-text);
   --md-header-border: var(--md-border);
@@ -67,15 +68,13 @@
   --md-sidebar-bg: var(--md-surface);
   --md-sidebar-text: var(--md-text);
   --md-sidebar-border: var(--md-border);
-  /* Selected tab / segment. Defaults to the brand colour so a single
-     `primary` still themes the whole control set coherently. */
+
   --md-accent-bg: var(--md-primary);
   --md-accent-text: var(--md-on-primary);
 
   --md-canvas-bg: var(--md-background);
 
-  /* Dialogs, toasts, dropdowns and floating toolbars share one surface so
-     they stay visually consistent when a host themes only one of them. */
+  /* Dialogs, toasts, dropdowns and floating toolbars */
   --md-overlay-bg: var(--md-surface);
   --md-overlay-text: var(--md-text);
   --md-overlay-border: var(--md-border);
@@ -86,209 +85,236 @@
   --md-toolbar-text: var(--md-text);
   --md-toolbar-border: var(--md-border);
 
-  /* Canvas interaction accents. Two independent families so a component
-     selection and a row selection stay visually distinct — see the comments on ThemeTokens. */
+  /* Canvas interaction accents */
   --md-selection: #4ade80;
   --md-selection-bg: #f0fdf4;
   --md-selection-fg: #16a34a;
 
-  /* Teal, not the same green as --md-selection above. These two were
-     byte-identical, which made the "components and rows can be told apart at
-     a glance" promise in ThemeTokens false in light mode — a row outline and
-     a component outline rendered the same colour. */
+  /* Row selection */
   --md-row-selection: #16919b;
   --md-row-selection-bg: #e2f2f3;
   --md-row-selection-fg: #0f6e75;
 
-  /* Small dark icon-button tooltips. Deliberately not derived from
-     `overlay` — see the ThemeTokens comment on `tooltipBg`. */
+  /* Tooltips */
   --md-tooltip-bg: #111827;
   --md-tooltip-text: #ffffff;
 
-  /* The primary action (Save / Update) is called out separately because it is
-     the most commonly branded control in the UI. */
+  /* Primary button */
   --md-button-primary-bg: var(--md-primary);
   --md-button-primary-text: var(--md-on-primary);
   --md-button-primary-hover-bg: var(--md-primary-hover);
 
+  /* Secondary button */
   --md-button-secondary-bg: var(--md-surface-muted);
   --md-button-secondary-text: var(--md-text);
   --md-button-secondary-hover-bg: var(--md-border);
 
-  /* Severity tints — used by toasts and inline messages. Declared as a set so
-     a dark theme can swap all of them at once instead of leaving pale
-     backgrounds sitting on a dark surface. */
+  /* Severity tints */
   --md-success-bg: #f0fdf4;
   --md-success-fg: #166534;
   --md-success-border: #bbf7d0;
+
   --md-info-bg: #eff6ff;
   --md-info-fg: #1e40af;
   --md-info-border: #bfdbfe;
+
   --md-warning-bg: #fffbeb;
   --md-warning-fg: #92400e;
   --md-warning-border: #fde68a;
+
   --md-danger-bg: #fef2f2;
   --md-danger-fg: #991b1b;
   --md-danger-border: #fecaca;
 
-  /* ── Extended set ─────────────────────────────────────────────────────
-     Added so this package and the dashboard speak one token vocabulary: a
-     component moved between the two keeps working, and a host can hand the
-     same object to both. Each has a dark counterpart below.
-
-     --md-inverse-surface is the one worth reading twice. It is the dark pill
-     (primary CTA, active tab) and it FLIPS to near-white in dark mode. Use it
-     rather than --md-text for a dark fill: a text token cannot invert that way
-     without making body copy invisible, and reusing one for a button is how a
-     themed UI ends up with an unreadable control. */
-
+  /* Extended tokens */
   --md-inverse-surface: #111111;
   --md-on-inverse: #fafaf7;
   --md-on-inverse-muted: #a8b3ab;
 
-  /* Secondary signal — AI surfaces and the row-selection family. */
+  /* Secondary accent */
   --md-accent: #0f6e75;
   --md-accent-hover: #0a555b;
   --md-on-accent: #ffffff;
   --md-accent-soft: #e2f2f3;
   --md-accent-border: color-mix(in srgb, #0f6e75 24%, transparent);
-
-  /* Code panels are terminals: dark in BOTH themes, which is why they are
-     their own tokens and not --md-inverse-surface. */
-
 }
 
 /* ─── Dark defaults ──────────────────────────────────────────────────────────
-   A host setting only `dark: { primary }` still gets a coherent dark UI,
-   because everything else here already holds.
 
-   These are sage, not slate. The set this replaces sat at hue ~222° (a blue
-   slate) with an indigo primary (#818cf8) — a palette with no relationship to
-   the green brand, so any host using the brand colour got green controls
-   floating on a blue-grey chassis. Every surface below is hue 142–150° at
-   12–17% saturation, the same family as the darkest brand value (#1c2620),
-   which itself reappears here as --md-surface-muted.
+   Status colors:
+     Good  → #22c55e / #4ade80
+     Warn  → #f59e0b / #fbbf24
+     Bad   → #ef4444 / #f87171
 
-   Contrast against --md-surface (#161e19):
-     text 14.3:1 · text-muted 8.2:1 · text-subtle 5.0:1 · primary 7.9:1
-     border-strong 3.3:1 (passes SC 1.4.11 for control boundaries)
+   The shell itself stays neutral charcoal/zinc. Status colors are reserved
+   for meaning and interaction rather than tinting the entire UI.
 
-   ── On the selector ────────────────────────────────────────────────
-   This was `:where(.dark, :host(.dark))`, which never applied. `:where()` is
-   specificity zero by definition; the light block above is `:root, :host` at
-   (0,1,0). Both match the same element, so light won and the whole dark
-   palette below was dead — invisible only because a host passing a complete
-   `dark` theme object overrides every token in it anyway.
+   Selectors:
+     :root.dark
+     :host(.dark)
+     .md-editor-scope.dark
 
-   Three selectors now, because the class can sit in three places and which
-   one applies depends on the build:
+   These intentionally have enough specificity to override the light tokens
+   while still allowing a runtime theme sheet to override them.
+   ─────────────────────────────────────────────────────────────────────── */
 
-     :root.dark             light DOM, unscoped — tokens are on <html>, and so
-                            is the host page's dark class
-     :host(.dark)           shadow DOM, unscoped — tokens are on the host
-     .md-editor-scope.dark  both scoped builds, where scopeInjectedCss.ts has
-                            rewritten :root/:host onto the editor's root div.
-                            Also the only match when `colorMode="dark"` pins a
-                            dark editor inside a light page.
-
-   Each is (0,2,0): beats the light block, ties with the runtime theme sheet
-   and loses to it on source order, which is what lets a host override these.
-   useColorScheme.ts is what puts the class on the editor root — without it
-   none of these match in a built package.
-   ───────────────────────────────────────────────────────────────────── */
 :root.dark,
 :host(.dark),
 .md-editor-scope.dark {
-  /* Primary borrows a lighter step than the brand green: sage at its own
-     lightness (L48) scores 1.8:1 on a dark ground and reads as mud. */
-  --md-primary: #7cc08d;
-  --md-primary-hover: #9ad3a8;
-  --md-on-primary: #0f1512;
+  /* ── Core shell ───────────────────────────────────────────────────────── */
 
-  --md-background: #0f1512;
-  --md-surface: #161e19;
-  --md-surface-muted: #1c2620;
-  --md-surface-hover: #243029;
+  --md-primary: #5c996c;
+  --md-primary-hover: #3f6b4c;
+  --md-on-primary: #052e16;
 
-  --md-text: #e6ede8;
-  --md-text-muted: #a9b8af;
-  --md-text-subtle: #7e8f84;
+  --md-background: #09090b;
+  --md-surface: #111113;
+  --md-surface-muted: #18181b;
+  --md-surface-hover: #202023;
 
-  --md-border: #2c3a32;
-  --md-border-strong: #5a7262;
+  --md-text: #f4f4f5;
+  --md-text-muted: #a1a1aa;
+  --md-text-subtle: #71717a;
 
-  --md-danger: #f87171;
-  --md-on-danger: #0f1512;
-  --md-success: #7ee0a1;
-  --md-warning: #f2c572;
-  --md-info: #8fc2f5;
+  --md-border: #27272a;
+  --md-border-strong: #3f3f46;
 
-  --md-shadow: 0 8px 30px rgb(0 0 0 / 0.55);
-  --md-scrim: rgb(0 0 0 / 0.65);
+  /* ── HealthIndicator semantic colors ─────────────────────────────────── */
 
-  /* The workspace behind the email goes deeper than the page, so the email —
-     which stays a light document, because that is what it will be in an
-     inbox — reads as a sheet lit against a dark room rather than a bright
-     rectangle punched out of the UI. */
-  --md-canvas-bg: #0b100d;
+  /* Good */
+  --md-success: #22c55e;
 
-  /* Sunken, not raised: in dark mode a field DARKER than its panel reads as
-     an input, while a lighter one reads as a button. */
+  /* Warning */
+  --md-warning: #f59e0b;
 
-  /* Component selection stays in the brand green. */
-  --md-selection: #7cc08d;
-  --md-selection-bg: #1f3327;
-  --md-selection-fg: #9ad3a8;
+  /* Danger */
+  --md-danger: #ef4444;
+  --md-on-danger: #ffffff;
 
-  /* Row selection is teal (hue 184°), 48° from the sage above — far enough
-     that a row outline and a component outline are never confused at a
-     glance, still cool enough to belong to the palette. This replaces a
-     purple (#c084fc) that was the only warm-cool break in the editor. */
-  --md-row-selection: #5fcbd4;
-  --md-row-selection-bg: #0e2c2f;
-  --md-row-selection-fg: #7fd7e0;
+  /* Supporting info */
+  --md-info: #60a5fa;
 
-  /* Flipped light-on-dark in dark mode — a near-black tooltip would sit
-     almost flush against an already-dark canvas. */
-  --md-tooltip-bg: #e6ede8;
-  --md-tooltip-text: #0f1512;
+  /* ── Shadows ─────────────────────────────────────────────────────────── */
 
-  /* Tints stay dark and desaturated so a toast reads as a surface in the UI
-     rather than a bright rectangle punched through it. */
-  --md-success-bg: #12281b;
-  --md-success-fg: #7ee0a1;
-  --md-success-border: #235c39;
-  --md-info-bg: #0e2133;
-  --md-info-fg: #8fc2f5;
-  --md-info-border: #1e4a72;
-  --md-warning-bg: #2a2010;
-  --md-warning-fg: #f2c572;
-  --md-warning-border: #6b5220;
-  --md-danger-bg: #2e1618;
-  --md-danger-fg: #f59b9b;
-  --md-danger-border: #7a2f31;
+  --md-shadow:
+    0 20px 60px rgb(0 0 0 / 0.55),
+    0 4px 16px rgb(0 0 0 / 0.35);
 
-  /* ── Extended set, mirroring the host app's tokens ───────────────────── */
+  --md-scrim: rgb(0 0 0 / 0.68);
 
-  --md-inverse-surface: #0f1512;
-  --md-on-inverse: #0f1512;
-  --md-on-inverse-muted: #38423b;
+  /* ── Structural surfaces ────────────────────────────────────────────── */
 
-  --md-accent: #5fcbd4;
-  --md-accent-hover: #7fd7e0;
-  --md-on-accent: #0f1512;
-  --md-accent-soft: #0e2c2f;
-  --md-accent-border: color-mix(in srgb, #5fcbd4 30%, transparent);
+  --md-header-bg: #111113;
+  --md-header-text: #f4f4f5;
+  --md-header-border: #27272a;
 
+  --md-sidebar-bg: #111113;
+  --md-sidebar-text: #f4f4f5;
+  --md-sidebar-border: #27272a;
+
+  /*
+   * Green is the primary interaction accent in dark mode.
+   * This ties buttons, active segments and selection together.
+   */
+  --md-accent-bg: #5c996c;
+  --md-accent-text: #052e16;
+
+  /*
+   * Canvas is intentionally darker than the sidebar.
+   * The email document remains a light document inside the dark workspace.
+   */
+  --md-canvas-bg: #09090b;
+
+  /* ── Overlays ────────────────────────────────────────────────────────── */
+
+  --md-overlay-bg: #18181b;
+  --md-overlay-text: #f4f4f5;
+  --md-overlay-border: #3f3f46;
+  --md-overlay-shadow: var(--md-shadow);
+
+  --md-toolbar-bg: #111113;
+  --md-toolbar-text: #f4f4f5;
+  --md-toolbar-border: #27272a;
+
+  /* ── Selection ───────────────────────────────────────────────────────── */
+
+  /*
+   * Component selection uses the same green family as HealthIndicator GOOD.
+   */
+  --md-selection: #5c996c;
+  --md-selection-bg: #052e16;
+  --md-selection-fg: #4ade80;
+
+  /*
+   * Row selection remains visually distinct.
+   * Amber is deliberately used as the secondary structural signal.
+   */
+  --md-row-selection: #f59e0b;
+  --md-row-selection-bg: #451a03;
+  --md-row-selection-fg: #fbbf24;
+
+  /* ── Tooltip ─────────────────────────────────────────────────────────── */
+
+  --md-tooltip-bg: #f4f4f5;
+  --md-tooltip-text: #18181b;
+
+  /* ── Buttons ─────────────────────────────────────────────────────────── */
+
+  --md-button-primary-bg: #5c996c;
+  --md-button-primary-text: #052e16;
+  --md-button-primary-hover-bg: #4ade80;
+
+  --md-button-secondary-bg: #27272a;
+  --md-button-secondary-text: #f4f4f5;
+  --md-button-secondary-hover-bg: #3f3f46;
+
+  /* ── Health / severity surfaces ─────────────────────────────────────── */
+
+  /*
+   * These are intentionally derived from the exact HealthIndicator colors.
+   * The background is a very dark version of the same semantic family.
+   */
+
+  /* Good */
+  --md-success-bg: #052e16;
+  --md-success-fg: #4ade80;
+  --md-success-border: #166534;
+
+  /* Info */
+  --md-info-bg: #172554;
+  --md-info-fg: #93c5fd;
+  --md-info-border: #1d4ed8;
+
+  /* Warning */
+  --md-warning-bg: #451a03;
+  --md-warning-fg: #fbbf24;
+  --md-warning-border: #92400e;
+
+  /* Bad */
+  --md-danger-bg: #450a0a;
+  --md-danger-fg: #f87171;
+  --md-danger-border: #991b1b;
+
+  /* ── Extended tokens ────────────────────────────────────────────────── */
+
+  /*
+   * Inverse surface is used for dark pills / high-contrast controls.
+   */
+  --md-inverse-surface: #09090b;
+  --md-on-inverse: #f4f4f5;
+  --md-on-inverse-muted: #52525b;
+
+
+  --md-accent: #22c55e;
+  --md-accent-hover: #4ade80;
+  --md-on-accent: #052e16;
+  --md-accent-soft: #052e16;
+  --md-accent-border: color-mix(in srgb, #22c55e 30%, transparent);
 }
 
 /* ── Restore default list styles ── */
+
 @layer base {
-  /* :host is what makes this work in the custom-element build — a shadow
-     root has no <body>, so the body selector alone matched nothing there
-     and the font silently fell back while working fine in the plain Vue
-     path. :host targets the shadow host itself, and font-family inherits
-     from it into the whole shadow tree. */
   :host,
   body,
   input,
@@ -300,6 +326,7 @@
   ul {
     list-style: disc;
   }
+
   ol {
     list-style: decimal;
   }
@@ -308,9 +335,11 @@
 /* ─────────────────────────────────────────
    Native number input — hide spinners
 ───────────────────────────────────────── */
+
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -320,6 +349,7 @@ input[type="number"]::-webkit-inner-spin-button {
 /* ─────────────────────────────────────────
    Range slider
 ───────────────────────────────────────── */
+
 input[type="range"] {
   -webkit-appearance: none;
   background: transparent;
@@ -333,7 +363,7 @@ input[type="range"]::-webkit-slider-thumb {
   border: 1.5px solid var(--md-border-strong);
   border-radius: 50%;
   margin-top: -4.5px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
   cursor: pointer;
   transition:
     border-color 0.1s,
@@ -353,13 +383,14 @@ input[type="range"]::-webkit-slider-runnable-track {
 }
 
 /* Firefox */
+
 input[type="range"]::-moz-range-thumb {
   width: 12px;
   height: 12px;
   background: var(--md-on-primary);
   border: 1.5px solid var(--md-border-strong);
   border-radius: 50%;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
   cursor: pointer;
 }
 
@@ -371,9 +402,8 @@ input[type="range"]::-moz-range-track {
 
 /* ─────────────────────────────────────────
    Global focus suppression
-   No blue/green outlines on any button or interactive element —
-   keyboard users get focus-visible only where we explicitly opt in.
 ───────────────────────────────────────── */
+
 button:focus,
 button:focus-visible,
 input[type="range"]:focus,
@@ -382,12 +412,8 @@ select:focus {
   box-shadow: none !important;
 }
 
-/* ─── Themed surfaces ────────────────────────────────────────────────────────
-   Applied as classes on the structural elements (header, sidebars, overlays)
-   so those surfaces read their colours from tokens rather than fixed utility
-   classes. Utilities like `bg-white` cannot respond to a theme; a class that
-   resolves to a variable can.
-   ──────────────────────────────────────────────────────────────────────── */
+/* ─── Themed surfaces ──────────────────────────────────────────────────────── */
+
 .md-surface-header {
   background: var(--md-header-bg);
   color: var(--md-header-text);
@@ -400,8 +426,6 @@ select:focus {
   border: 1px solid var(--md-sidebar-border);
 }
 
-/* Dialogs, dropdowns, toasts and floating toolbars. One class keeps them
-   consistent, so theming "the popovers" is a single decision. */
 .md-surface-overlay {
   background: var(--md-overlay-bg);
   color: var(--md-overlay-text);
@@ -420,25 +444,17 @@ select:focus {
   background: var(--md-canvas-bg);
 }
 
-/* ─── Themed controls ────────────────────────────────────────────────────────
-   Class hooks for controls that were previously written with fixed utility
-   colours. A utility like `bg-white` or `bg-[#42389E]` cannot respond to a
-   theme; these resolve to tokens instead, so the same markup follows whatever
-   the host sets — including dark mode.
-   ──────────────────────────────────────────────────────────────────────── */
+/* ─── Themed controls ──────────────────────────────────────────────────────── */
 
-/* Primary action — the Save / Update button. */
 .md-btn-primary {
   background: var(--md-button-primary-bg);
   color: var(--md-button-primary-text);
 }
+
 .md-btn-primary:not(:disabled):hover {
   background: var(--md-button-primary-hover-bg);
 }
 
-/* Panel body inside the sidebar. Transparent rather than a second surface
-   colour, so it inherits `sidebarBg` instead of needing its own token — a
-   host setting one sidebar colour expects one sidebar colour. */
 .md-surface-sidebar-inner {
   background: transparent;
   color: var(--md-sidebar-text);
@@ -447,36 +463,45 @@ select:focus {
 .md-tabstrip {
   border-bottom: 1px solid var(--md-sidebar-border);
 }
+
 .md-tab-active {
   color: var(--md-sidebar-text);
 }
+
 .md-tab-idle {
   color: var(--md-text-subtle);
 }
+
 .md-tab-idle:hover {
   color: var(--md-text-muted);
 }
 
-/* Segmented control (Content / Layout / General). */
+/* ── Segmented control ── */
+
 .md-segmented {
   border: 1px solid var(--md-border);
 }
+
 .md-segment-active {
   background: var(--md-accent-bg);
   color: var(--md-accent-text);
 }
+
 .md-segment-idle {
   background: var(--md-sidebar-bg);
   color: var(--md-text-muted);
 }
+
 .md-segment-idle:hover {
   background: var(--md-surface-hover);
 }
+
 .md-segment-divider {
   border-right: 1px solid var(--md-border);
 }
 
-/* Merge Tag input style */
+/* ── Merge Tag input ── */
+
 .mg-md-input {
   width: 100%;
   padding: 0.325rem 0.625rem;
@@ -491,20 +516,25 @@ select:focus {
     border-color 0.15s,
     box-shadow 0.15s;
 }
+
 .mg-md-input::placeholder {
   color: var(--md-text-subtle);
 }
+
 .mg-md-input:focus {
   border-color: var(--md-primary);
 }
+
 .mg-md-input:disabled {
   background: var(--md-surface-hover);
   color: var(--md-text-subtle);
   cursor: not-allowed;
 }
+
 .mg-md-input--invalid {
   border-color: var(--md-danger);
 }
+
 .mg-md-input--invalid:focus {
   border-color: var(--md-danger);
   box-shadow: 0 0 0 1px var(--md-danger);
