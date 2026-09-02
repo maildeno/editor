@@ -81,7 +81,7 @@
             >Conditional Blocks</span
           >
           <span
-            class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded-full font-medium"
+            class="bg-(--md-warning-bg) text-(--md-warning-fg) text-[10px] px-1.5 py-0.5 rounded-full font-medium"
           >
             {{ conditionalBlocks.length }}
           </span>
@@ -120,10 +120,10 @@
               class="text-[9px] font-semibold px-1.5 py-0.5 rounded border shrink-0"
               :class="
                 block.kind === 'row'
-                  ? 'bg-purple-50 text-purple-600 border-purple-200'
+                  ? 'bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)'
                   : block.kind === 'nested-row'
-                    ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
-                    : 'bg-blue-50 text-blue-600 border-blue-200'
+                    ? 'bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)'
+                    : 'bg-(--md-info-bg) text-(--md-info-fg) border-(--md-info-border)'
               "
             >
               {{
@@ -146,8 +146,8 @@
               class="text-[9px] font-bold px-1.5 py-0.5 rounded border shrink-0"
               :class="
                 block.match === 'all'
-                  ? 'bg-sky-50 text-sky-600 border-sky-200'
-                  : 'bg-amber-50 text-amber-600 border-amber-200'
+                  ? 'bg-(--md-info-bg) text-(--md-info-fg) border-(--md-info-border)'
+                  : 'bg-(--md-warning-bg) text-(--md-warning-fg) border-(--md-warning-border)'
               "
             >
               {{ block.match === "all" ? "AND" : "OR" }}
@@ -156,8 +156,8 @@
               class="text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0"
               :class="
                 block.passing
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-gray-100 text-gray-400'
+                  ? 'bg-(--md-success-bg) text-(--md-success-fg)'
+                  : 'bg-(--md-surface-muted) text-(--md-text-subtle)'
               "
             >
               {{ block.passing ? "✓ pass" : "✗ fail" }}
@@ -179,7 +179,7 @@
               </div>
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span
-                  class="bg-purple-50 text-purple-700 ring-1 ring-purple-200 rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold"
+                  class="bg-(--md-accent-soft) text-(--md-accent) ring-1 ring-(--md-accent-border) rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold"
                 >
                   {{ rule.tag || "?" }}
                 </span>
@@ -191,7 +191,7 @@
                 </span>
                 <span
                   v-if="!isValueless(rule.operator)"
-                  class="bg-gray-100 text-gray-700 ring-1 ring-gray-200 rounded px-1.5 py-0.5 text-[10px] font-mono max-w-25 truncate"
+                  class="bg-(--md-surface-muted) text-(--md-text-muted) ring-1 ring-(--md-border) rounded px-1.5 py-0.5 text-[10px] font-mono max-w-25 truncate"
                   :title="rule.value"
                 >
                   {{ rule.value || "?" }}
@@ -200,7 +200,7 @@
                   v-if="rule.tag"
                   class="flex items-center gap-0.5 text-[9px] font-medium ml-auto shrink-0"
                   :class="
-                    isRuleMatched(rule) ? 'text-emerald-600' : 'text-gray-300'
+                    isRuleMatched(rule) ? 'text-(--md-success-fg)' : 'text-(--md-text-subtle)'
                   "
                 >
                   <Icon
@@ -251,7 +251,7 @@
                   </div>
                   <div class="flex items-center gap-1.5 flex-wrap">
                     <span
-                      class="bg-purple-50 text-purple-700 ring-1 ring-purple-200 rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold"
+                      class="bg-(--md-accent-soft) text-(--md-accent) ring-1 ring-(--md-accent-border) rounded px-1.5 py-0.5 text-[10px] font-mono font-semibold"
                     >
                       {{ rule.tag || "?" }}
                     </span>
@@ -263,7 +263,7 @@
                     </span>
                     <span
                       v-if="!isValueless(rule.operator)"
-                      class="bg-gray-100 text-gray-700 ring-1 ring-gray-200 rounded px-1.5 py-0.5 text-[10px] font-mono max-w-25 truncate"
+                      class="bg-(--md-surface-muted) text-(--md-text-muted) ring-1 ring-(--md-border) rounded px-1.5 py-0.5 text-[10px] font-mono max-w-25 truncate"
                       :class="isDate(rule.operator) ? 'text-rose-600' : ''"
                       :title="rule.value"
                     >
@@ -274,8 +274,8 @@
                       class="flex items-center gap-0.5 text-[9px] font-medium ml-auto shrink-0"
                       :class="
                         isRuleMatched(rule)
-                          ? 'text-emerald-600'
-                          : 'text-gray-300'
+                          ? 'text-(--md-success-fg)'
+                          : 'text-(--md-text-subtle)'
                       "
                     >
                       <Icon
@@ -368,16 +368,16 @@ const operatorSymbol = (op: string): string =>
   })[op] ?? op;
 
 const operatorColorClass = (op: string): string => {
-  if (op === "==" || op === "in") return "text-emerald-600";
-  if (op === "!=" || op === "not_in") return "text-red-500";
+  if (op === "==" || op === "in") return "text-(--md-success-fg)";
+  if (op === "!=" || op === "not_in") return "text-(--md-danger)";
   if (["contains", "starts_with", "ends_with"].includes(op))
-    return "text-amber-600";
-  if (op === "not_contains") return "text-orange-500";
-  if ([">", "<", ">=", "<="].includes(op)) return "text-blue-600";
-  if (op === "is_empty" || op === "is_not_empty") return "text-purple-600";
+    return "text-(--md-warning-fg)";
+  if (op === "not_contains") return "text-(--md-warning)";
+  if ([">", "<", ">=", "<="].includes(op)) return "text-(--md-info-fg)";
+  if (op === "is_empty" || op === "is_not_empty") return "text-(--md-accent)";
   if (["date_before", "date_after", "date_on"].includes(op))
     return "text-rose-500";
-  return "text-gray-500";
+  return "text-(--md-text-subtle)";
 };
 
 const isRuleMatched = (rule: {

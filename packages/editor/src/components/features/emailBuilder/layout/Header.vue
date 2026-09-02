@@ -540,7 +540,7 @@ onUnmounted(() => {
         class="relative group flex items-center justify-center rounded-md text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-muted) p-1 transition-colors"
         :class="
           previewOverlayOpen
-            ? 'bg-violet-50 text-[#42389E] hover:bg-violet-100 hover:text-[#42389E]'
+            ? 'bg-(--md-accent-soft) text-(--md-accent) hover:bg-(--md-accent-soft) hover:text-(--md-accent)'
             : ''
         "
       >
@@ -701,7 +701,7 @@ onUnmounted(() => {
           class="relative group flex items-center justify-center rounded-md text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-muted) p-1 transition-colors"
           :class="
             props.savedTemplatesOpen
-              ? 'bg-violet-50 text-[#42389E] hover:bg-violet-100 hover:text-[#42389E]'
+              ? 'bg-(--md-accent-soft) text-(--md-accent) hover:bg-(--md-accent-soft) hover:text-(--md-accent)'
               : ''
           "
         >
@@ -1113,10 +1113,10 @@ onUnmounted(() => {
               class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) transition-colors text-left"
             >
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-amber-50 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-warning-bg) shrink-0"
               >
                 <svg
-                  class="size-4 text-amber-600"
+                  class="size-4 text-(--md-warning-fg)"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1142,7 +1142,7 @@ onUnmounted(() => {
               class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) transition-colors text-left"
             >
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-sky-50 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-info-bg) shrink-0"
               >
                 <div class="size-4.25">
                   <svg
@@ -1178,7 +1178,7 @@ onUnmounted(() => {
               class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) transition-colors text-left"
             >
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-red-50 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-danger-bg) shrink-0"
               >
                 <div class="size-4.25">
                   <svg
@@ -1243,10 +1243,10 @@ onUnmounted(() => {
               class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) transition-colors text-left"
             >
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-amber-50 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-warning-bg) shrink-0"
               >
                 <svg
-                  class="size-4 text-amber-600"
+                  class="size-4 text-(--md-warning-fg)"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1272,7 +1272,7 @@ onUnmounted(() => {
               class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) transition-colors text-left"
             >
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-sky-50 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-info-bg) shrink-0"
               >
                 <div class="size-4.25">
                   <svg
@@ -1309,7 +1309,7 @@ onUnmounted(() => {
               class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) transition-colors text-left"
             >
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-red-50 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-danger-bg) shrink-0"
               >
                 <div class="size-4.25">
                   <svg
@@ -1375,10 +1375,10 @@ onUnmounted(() => {
               class="w-full flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) transition-colors text-left"
             >
               <span
-                class="flex items-center justify-center w-7 h-7 rounded-md bg-violet-50 shrink-0"
+                class="flex items-center justify-center w-7 h-7 rounded-md bg-(--md-accent-soft) shrink-0"
               >
                 <svg
-                  class="w-3.5 h-3.5 text-violet-600"
+                  class="w-3.5 h-3.5 text-(--md-accent)"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"

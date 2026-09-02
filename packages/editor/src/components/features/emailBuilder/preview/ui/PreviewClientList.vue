@@ -3,10 +3,10 @@
     <!-- Header bar -->
     <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
       <div class="flex items-baseline gap-2 min-w-0">
-        <h2 class="text-[13px] font-semibold text-gray-900">
+        <h2 class="text-[13px] font-semibold text-(--md-text)">
           Preflight clients
         </h2>
-        <span class="text-[12px] text-gray-400">
+        <span class="text-[12px] text-(--md-text-subtle)">
           <template v-if="isHydrated">
             {{ selectedClients.length }}
             {{ selectedClients.length === 1 ? "selected" : "selected" }}
@@ -19,14 +19,14 @@
         <button
           v-if="canReset"
           type="button"
-          class="px-2.5 py-1.5 text-[12px] font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition"
+          class="px-2.5 py-1.5 text-[12px] font-medium rounded-md text-(--md-text-muted) hover:text-(--md-text) hover:bg-(--md-surface-muted) transition"
           @click="$emit('reset')"
         >
           Reset
         </button>
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12.5px] font-medium rounded-md bg-gray-900 text-white hover:bg-gray-800 transition shadow-sm"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12.5px] font-medium rounded-md bg-(--md-inverse-surface) text-(--md-on-inverse) hover:bg-(--md-inverse-surface) transition shadow-sm"
           @click="$emit('open-picker')"
         >
           <svg class="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
@@ -49,7 +49,7 @@
         <button
           type="button"
           aria-label="Close preview"
-          class="ml-1 inline-flex items-center justify-center w-8 h-8 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+          class="ml-1 inline-flex items-center justify-center w-8 h-8 rounded-md text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-muted) transition-colors"
           @click="$emit('close')"
         >
           <!-- Lucide: x -->
@@ -90,13 +90,13 @@
     <!-- Empty state -->
     <div
       v-else
-      class="flex flex-col items-center justify-center gap-4 py-24 text-center bg-white rounded-xl border border-dashed border-gray-200"
+      class="flex flex-col items-center justify-center gap-4 py-24 text-center bg-(--md-surface) rounded-xl border border-dashed border-(--md-border)"
     >
       <div
-        class="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center"
+        class="w-14 h-14 rounded-2xl bg-(--md-surface-hover) border border-(--md-border) flex items-center justify-center"
       >
         <svg
-          class="w-7 h-7 text-gray-300"
+          class="w-7 h-7 text-(--md-text-subtle)"
           fill="none"
           stroke="currentColor"
           stroke-width="1.5"
@@ -110,15 +110,15 @@
         </svg>
       </div>
       <div>
-        <p class="text-base font-medium text-gray-700">No clients yet</p>
-        <p class="text-sm text-gray-400 mt-1 max-w-xs">
+        <p class="text-base font-medium text-(--md-text-muted)">No clients yet</p>
+        <p class="text-sm text-(--md-text-subtle) mt-1 max-w-xs">
           Add an email client to preview how your email will render across
           inboxes.
         </p>
       </div>
       <button
         type="button"
-        class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-[#42389E] text-white hover:bg-[#3a3187] transition shadow-sm"
+        class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-(--md-accent) text-(--md-on-accent) hover:bg-(--md-accent-hover) transition shadow-sm"
         @click="$emit('open-picker')"
       >
         <svg class="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">

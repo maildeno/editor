@@ -33,13 +33,13 @@
       />
       <p
         v-if="isNumeric(rule.operator)"
-        class="absolute -bottom-3.5 text-[9px] text-blue-500 leading-snug"
+        class="absolute -bottom-3.5 text-[9px] text-(--md-info) leading-snug"
       >
         numeric comparison
       </p>
       <p
         v-else-if="isList(rule.operator)"
-        class="absolute -bottom-5.5 text-[9px] text-purple-500 leading-snug"
+        class="absolute -bottom-5.5 text-[9px] text-(--md-accent) leading-snug"
       >
         comma, semicolon, or newline separated
       </p>

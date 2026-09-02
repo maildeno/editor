@@ -1,10 +1,10 @@
 <template>
   <div
-    class="flex flex-col h-full bg-white rounded-xl border border-gray-200 overflow-hidden"
+    class="flex flex-col h-full bg-(--md-surface) rounded-xl border border-(--md-border) overflow-hidden"
   >
     <!-- ── Header (window chrome) ────────────────────────────────────────── -->
     <div
-      class="flex items-center gap-3 px-3 py-2.5 border-b border-gray-200 bg-gray-50/70 shrink-0"
+      class="flex items-center gap-3 px-3 py-2.5 border-b border-(--md-border) bg-(--md-surface-hover)/70 shrink-0"
     >
       <!-- Traffic-light dots — decorative window indicator. -->
       <div class="flex items-center gap-1.5 shrink-0">
@@ -24,16 +24,16 @@
 
       <!-- "Address bar" style label -->
       <div
-        class="flex-1 min-w-0 flex items-center gap-2 rounded-md px-2.5 py-1.5 border bg-white border-gray-200"
+        class="flex-1 min-w-0 flex items-center gap-2 rounded-md px-2.5 py-1.5 border bg-(--md-surface) border-(--md-border)"
       >
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-        <span class="text-[12px] font-medium text-gray-800 truncate">
+        <span class="w-1.5 h-1.5 rounded-full bg-(--md-success) shrink-0" />
+        <span class="text-[12px] font-medium text-(--md-text) truncate">
           Source
         </span>
-        <span class="text-[10.5px] text-gray-400 truncate">
+        <span class="text-[10.5px] text-(--md-text-subtle) truncate">
           · Live canvas data
         </span>
-        <span class="ml-auto text-[10.5px] text-gray-400 font-mono shrink-0">
+        <span class="ml-auto text-[10.5px] text-(--md-text-subtle) font-mono shrink-0">
           {{ effectiveWidth }}px
         </span>
       </div>
@@ -43,8 +43,8 @@
         class="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider px-1.5 py-1 rounded shrink-0"
         :class="
           forceMobile
-            ? 'bg-amber-50 text-amber-700'
-            : 'bg-emerald-50 text-emerald-700'
+            ? 'bg-(--md-warning-bg) text-(--md-warning-fg)'
+            : 'bg-(--md-success-bg) text-(--md-success-fg)'
         "
       >
         {{ forceMobile ? "Mobile" : "Desktop" }}
@@ -63,10 +63,10 @@
           class="flex flex-col items-center justify-center h-[60vh] text-center gap-3"
         >
           <div
-            class="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center"
+            class="w-12 h-12 rounded-xl bg-(--md-surface) border border-(--md-border) flex items-center justify-center"
           >
             <svg
-              class="w-6 h-6 text-gray-300"
+              class="w-6 h-6 text-(--md-text-subtle)"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -80,8 +80,8 @@
             </svg>
           </div>
           <div>
-            <p class="text-sm font-medium text-gray-700">No content yet</p>
-            <p class="text-[12px] text-gray-400 mt-1">
+            <p class="text-sm font-medium text-(--md-text-muted)">No content yet</p>
+            <p class="text-[12px] text-(--md-text-subtle) mt-1">
               Add components in the builder to see them here.
             </p>
           </div>

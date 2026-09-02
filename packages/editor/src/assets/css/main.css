@@ -99,9 +99,13 @@
   --md-selection-bg: #f0fdf4;
   --md-selection-fg: #16a34a;
 
-  --md-row-selection: #4ade80;
-  --md-row-selection-bg: #f0fdf4;
-  --md-row-selection-fg: #16a34a;
+  /* Teal, not the same green as --md-selection above. These two were
+     byte-identical, which made the "components and rows can be told apart at
+     a glance" promise in ThemeTokens false in light mode — a row outline and
+     a component outline rendered the same colour. */
+  --md-row-selection: #16919b;
+  --md-row-selection-bg: #e2f2f3;
+  --md-row-selection-fg: #0f6e75;
 
   /* Small dark icon-button tooltips. Deliberately not derived from
      `overlay` — see the ThemeTokens comment on `tooltipBg`. */
@@ -133,64 +137,180 @@
   --md-danger-bg: #fef2f2;
   --md-danger-fg: #991b1b;
   --md-danger-border: #fecaca;
+
+  /* ── Extended set ─────────────────────────────────────────────────────
+     Added so this package and the dashboard speak one token vocabulary: a
+     component moved between the two keeps working, and a host can hand the
+     same object to both. Each has a dark counterpart below.
+
+     --md-inverse-surface is the one worth reading twice. It is the dark pill
+     (primary CTA, active tab) and it FLIPS to near-white in dark mode. Use it
+     rather than --md-text for a dark fill: a text token cannot invert that way
+     without making body copy invisible, and reusing one for a button is how a
+     themed UI ends up with an unreadable control. */
+  --md-border-subtle: #f0f3ee;
+  --md-surface-sunken: #f0f3ee;
+
+  --md-inverse-surface: #111111;
+  --md-inverse-surface-hover: #26302a;
+  --md-on-inverse: #fafaf7;
+  --md-on-inverse-muted: #a8b3ab;
+
+  --md-primary-soft: #e4eee3;
+  --md-primary-soft-hover: #c8dcc9;
+  --md-on-primary-soft: #3f6b4c;
+  --md-primary-border: color-mix(in srgb, var(--md-primary) 30%, transparent);
+
+  /* Secondary signal — AI surfaces and the row-selection family. */
+  --md-accent: #0f6e75;
+  --md-accent-hover: #0a555b;
+  --md-on-accent: #ffffff;
+  --md-accent-soft: #e2f2f3;
+  --md-on-accent-soft: #0f6e75;
+  --md-accent-border: color-mix(in srgb, #0f6e75 24%, transparent);
+
+  --md-shadow-sm: 0 1px 2px rgb(28 38 32 / 0.06);
+  --md-shadow-lg: 0 24px 56px -12px rgb(28 38 32 / 0.2);
+
+  /* Code panels are terminals: dark in BOTH themes, which is why they are
+     their own tokens and not --md-inverse-surface. */
+  --md-code-bg: #16211a;
+  --md-code-border: #2b3d30;
+  --md-code-chip: #243329;
+  --md-code-text: #d6e4da;
+  --md-code-keyword: #8fd9a8;
+  --md-code-string: #e8c98a;
+  --md-code-number: #e8c98a;
+  --md-code-function: #7fd7e0;
+  --md-code-property: #b9cfe0;
+  --md-code-tag: #8fd9a8;
+  --md-code-attr: #7fd7e0;
+  --md-code-punct: #8a9c90;
+  --md-code-comment: #7a9082;
+
+  --md-skeleton: #e1e4db;
+  --md-skeleton-shine: #f0f3ee;
 }
 
-/* Dark defaults. A host setting only `dark: { primary }` still gets a
-   coherent dark UI, because everything else here already holds. */
+/* ─── Dark defaults ──────────────────────────────────────────────────────────
+   A host setting only `dark: { primary }` still gets a coherent dark UI,
+   because everything else here already holds.
+
+   These are sage, not slate. The set this replaces sat at hue ~222° (a blue
+   slate) with an indigo primary (#818cf8) — a palette with no relationship to
+   the green brand, so any host using the brand colour got green controls
+   floating on a blue-grey chassis. Every surface below is hue 142–150° at
+   12–17% saturation, the same family as the darkest brand value (#1c2620),
+   which itself reappears here as --md-surface-muted.
+
+   Contrast against --md-surface (#161e19):
+     text 14.3:1 · text-muted 8.2:1 · text-subtle 5.0:1 · primary 7.9:1
+     border-strong 3.3:1 (passes SC 1.4.11 for control boundaries)
+   ──────────────────────────────────────────────────────────────────────── */
 :where(.dark, :host(.dark)) {
-  --md-primary: #818cf8;
-  --md-primary-hover: #a5b4fc;
-  --md-on-primary: #1e1b4b;
+  /* Primary borrows a lighter step than the brand green: sage at its own
+     lightness (L48) scores 1.8:1 on a dark ground and reads as mud. */
+  --md-primary: #7cc08d;
+  --md-primary-hover: #9ad3a8;
+  --md-on-primary: #0f1512;
 
-  --md-background: #0b0f19;
-  --md-surface: #151b28;
-  --md-surface-muted: #1f2635;
-  --md-surface-hover: #1c2333;
+  --md-background: #0f1512;
+  --md-surface: #161e19;
+  --md-surface-muted: #1c2620;
+  --md-surface-hover: #243029;
 
-  --md-text: #e5e7eb;
-  --md-text-muted: #9ca3af;
-  --md-text-subtle: #6b7280;
+  --md-text: #e6ede8;
+  --md-text-muted: #a9b8af;
+  --md-text-subtle: #7e8f84;
 
-  --md-border: #2a3345;
-  --md-border-strong: #3b465c;
+  --md-border: #2c3a32;
+  --md-border-strong: #5a7262;
 
   --md-danger: #f87171;
-  --md-on-danger: #450a0a;
-  --md-success: #4ade80;
-  --md-warning: #fbbf24;
-  --md-info: #60a5fa;
+  --md-on-danger: #0f1512;
+  --md-success: #7ee0a1;
+  --md-warning: #f2c572;
+  --md-info: #8fc2f5;
 
-  --md-shadow: 0 8px 30px rgb(0 0 0 / 0.5);
-  --md-scrim: rgb(0 0 0 / 0.6);
+  --md-shadow: 0 8px 30px rgb(0 0 0 / 0.55);
+  --md-scrim: rgb(0 0 0 / 0.65);
 
-  --md-selection: #4ade80;
-  --md-selection-bg: #0f2a1a;
-  --md-selection-fg: #86efac;
+  /* The workspace behind the email goes deeper than the page, so the email —
+     which stays a light document, because that is what it will be in an
+     inbox — reads as a sheet lit against a dark room rather than a bright
+     rectangle punched out of the UI. */
+  --md-canvas-bg: #0b100d;
 
-  --md-row-selection: #c084fc;
-  --md-row-selection-bg: #2e1065;
-  --md-row-selection-fg: #d8b4fe;
+  /* Sunken, not raised: in dark mode a field DARKER than its panel reads as
+     an input, while a lighter one reads as a button. */
+  --md-input-bg: #0f1512;
+  --md-input-border: #3b4c42;
+
+  /* Component selection stays in the brand green. */
+  --md-selection: #7cc08d;
+  --md-selection-bg: #1f3327;
+  --md-selection-fg: #9ad3a8;
+
+  /* Row selection is teal (hue 184°), 48° from the sage above — far enough
+     that a row outline and a component outline are never confused at a
+     glance, still cool enough to belong to the palette. This replaces a
+     purple (#c084fc) that was the only warm-cool break in the editor. */
+  --md-row-selection: #5fcbd4;
+  --md-row-selection-bg: #0e2c2f;
+  --md-row-selection-fg: #7fd7e0;
 
   /* Flipped light-on-dark in dark mode — a near-black tooltip would sit
      almost flush against an already-dark canvas. */
-  --md-tooltip-bg: #f3f4f6;
-  --md-tooltip-text: #111827;
+  --md-tooltip-bg: #e6ede8;
+  --md-tooltip-text: #0f1512;
 
-  --md-success-bg: #0f2a1a;
-  --md-success-fg: #86efac;
-  --md-success-border: #166534;
-  --md-info-bg: #101f38;
-  --md-info-fg: #93c5fd;
-  --md-info-border: #1e40af;
-  --md-warning-bg: #2a1f08;
-  --md-warning-fg: #fcd34d;
-  --md-warning-border: #92400e;
-  --md-danger-bg: #2b1114;
-  --md-danger-fg: #fca5a5;
-  --md-danger-border: #991b1b;
+  /* Tints stay dark and desaturated so a toast reads as a surface in the UI
+     rather than a bright rectangle punched through it. */
+  --md-success-bg: #12281b;
+  --md-success-fg: #7ee0a1;
+  --md-success-border: #235c39;
+  --md-info-bg: #0e2133;
+  --md-info-fg: #8fc2f5;
+  --md-info-border: #1e4a72;
+  --md-warning-bg: #2a2010;
+  --md-warning-fg: #f2c572;
+  --md-warning-border: #6b5220;
+  --md-danger-bg: #2e1618;
+  --md-danger-fg: #f59b9b;
+  --md-danger-border: #7a2f31;
+
+  /* ── Extended set, mirroring the host app's tokens ───────────────────── */
+  --md-border-subtle: #212c25;
+  --md-surface-sunken: #0f1512;
+
+  --md-inverse-surface: #e6ede8;
+  --md-inverse-surface-hover: #ffffff;
+  --md-on-inverse: #0f1512;
+  --md-on-inverse-muted: #38423b;
+
+  --md-primary-soft: #1f3327;
+  --md-primary-soft-hover: #24402f;
+  --md-on-primary-soft: #9ad3a8;
+  --md-primary-border: color-mix(in srgb, #7cc08d 30%, transparent);
+
+  --md-accent: #5fcbd4;
+  --md-accent-hover: #7fd7e0;
+  --md-on-accent: #0f1512;
+  --md-accent-soft: #0e2c2f;
+  --md-on-accent-soft: #7fd7e0;
+  --md-accent-border: color-mix(in srgb, #5fcbd4 30%, transparent);
+
+  --md-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --md-shadow-lg:
+    0 24px 56px -12px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(230 237 232 / 0.06);
+
+  --md-code-bg: #0b100d;
+  --md-code-border: #33443a;
+  --md-code-chip: #1a241d;
+
+  --md-skeleton: #212c25;
+  --md-skeleton-shine: #2c3a32;
 }
-
-
 
 /* ── Restore default list styles ── */
 @layer base {
@@ -207,10 +327,13 @@
     font-family: "Satoshi", sans-serif;
   }
 
-  ul { list-style: disc; }
-  ol { list-style: decimal; }
+  ul {
+    list-style: disc;
+  }
+  ol {
+    list-style: decimal;
+  }
 }
-
 
 /* ─────────────────────────────────────────
    Native number input — hide spinners
@@ -240,9 +363,11 @@ input[type="range"]::-webkit-slider-thumb {
   border: 1.5px solid var(--md-border-strong);
   border-radius: 50%;
   margin-top: -4.5px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: border-color 0.1s, transform 0.1s;
+  transition:
+    border-color 0.1s,
+    transform 0.1s;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -264,7 +389,7 @@ input[type="range"]::-moz-range-thumb {
   background: var(--md-on-primary);
   border: 1.5px solid var(--md-border-strong);
   border-radius: 50%;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 
@@ -286,7 +411,6 @@ select:focus {
   outline: none !important;
   box-shadow: none !important;
 }
-
 
 /* ─── Themed surfaces ────────────────────────────────────────────────────────
    Applied as classes on the structural elements (header, sidebars, overlays)

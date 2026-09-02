@@ -44,7 +44,7 @@
         class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
       >
         <span
-          class="text-xs text-white bg-(--md-row-selection-fg) px-1.5 py-px rounded shadow-sm"
+          class="text-xs text-(--md-on-inverse) bg-(--md-row-selection-fg) px-1.5 py-px rounded shadow-sm"
         >
           {{ spacer.height }}px
         </span>
@@ -60,7 +60,7 @@
       >
         <!-- Pill trigger -->
         <div
-          class="flex items-center gap-1 bg-gradient-to-r from-(--md-row-selection) to-(--md-row-selection-fg) text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
+          class="flex items-center gap-1 bg-gradient-to-r from-(--md-row-selection) to-(--md-row-selection-fg) text-(--md-on-inverse) text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md cursor-default select-none tracking-wide"
         >
           <svg
             class="w-2.5 h-2.5 shrink-0"
@@ -89,7 +89,7 @@
         >
           <VisibilityPopover :visibility="spacer.visibility" />
           <div
-            class="absolute -top-1.5 left-4 w-3 h-3 bg-gray-950 border-l border-t border-white/10 rotate-45"
+            class="absolute -top-1.5 left-4 w-3 h-3 bg-(--md-inverse-surface) border-l border-t border-(--md-border)/10 rotate-45"
           />
         </div>
       </div>

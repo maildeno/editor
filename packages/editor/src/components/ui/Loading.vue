@@ -12,12 +12,12 @@ const teleportTarget = useTeleportTarget();
 <template>
   <Teleport v-if="teleportTarget" :to="teleportTarget">
     <div
-      class="fixed inset-0 flex items-center justify-center bg-black/70"
+      class="fixed inset-0 flex items-center justify-center bg-(--md-inverse-surface)/70"
       style="z-index: 100"
     >
       <div class="text-center px-4">
         <div class="spinner"></div>
-        <!-- <div class="mt-4 text-xl font-semibold text-green-400">
+        <!-- <div class="mt-4 text-xl font-semibold text-(--md-success)">
         {{ message }}
       </div> -->
       </div>

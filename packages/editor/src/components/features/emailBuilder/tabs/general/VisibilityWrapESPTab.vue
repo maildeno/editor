@@ -225,11 +225,11 @@
           class="block text-[10px] text-(--md-text-subtle) uppercase tracking-wide"
           >Tag Preview</label
         >
-        <div class="bg-gray-950 rounded-md p-2.5 space-y-1 overflow-x-auto">
-          <p class="font-mono text-[10px] text-emerald-400 whitespace-pre">
+        <div class="bg-(--md-inverse-surface) rounded-md p-2.5 space-y-1 overflow-x-auto">
+          <p class="font-mono text-[10px] text-(--md-success) whitespace-pre">
             {{ firstBlockPreview.openTag }}
           </p>
-          <p class="font-mono text-[10px] text-gray-500 pl-2">
+          <p class="font-mono text-[10px] text-(--md-text-subtle) pl-2">
             &lt;!-- row / component html --&gt;
           </p>
           <p class="font-mono text-[10px] text-rose-400 whitespace-pre">
@@ -356,18 +356,18 @@
           class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-(--md-text-subtle)"
         >
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-emerald-500">✓</span> Native
+            <span class="font-mono font-bold text-(--md-success)">✓</span> Native
           </span>
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-amber-500">~</span> Requires
+            <span class="font-mono font-bold text-(--md-warning)">~</span> Requires
             helper
           </span>
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-orange-400">⚠</span> Degraded
+            <span class="font-mono font-bold text-(--md-warning)">⚠</span> Degraded
             fallback
           </span>
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-gray-300">–</span> Not
+            <span class="font-mono font-bold text-(--md-text-subtle)">–</span> Not
             supported
           </span>
           <span
@@ -424,14 +424,14 @@ const currentMeta = computed(() =>
 
 const syntaxBadgeClass = computed(() => {
   const map: Record<string, string> = {
-    handlebars: "bg-yellow-50 text-yellow-700 border-yellow-200",
-    liquid: "bg-blue-50 text-blue-700 border-blue-200",
-    ampscript: "bg-purple-50 text-purple-700 border-purple-200",
-    custom: "bg-gray-100 text-gray-600 border-gray-200",
-    mso: "bg-slate-100 text-slate-600 border-slate-200",
+    handlebars: "bg-(--md-warning-bg) text-(--md-warning-fg) border-(--md-warning-border)",
+    liquid: "bg-(--md-info-bg) text-(--md-info-fg) border-(--md-info-border)",
+    ampscript: "bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)",
+    custom: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
+    mso: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
   };
   return (
-    map[currentMeta.value.group] ?? "bg-gray-100 text-gray-600 border-gray-200"
+    map[currentMeta.value.group] ?? "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)"
   );
 });
 

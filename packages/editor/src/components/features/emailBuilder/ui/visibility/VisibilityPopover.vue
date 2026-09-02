@@ -1,29 +1,23 @@
 <template>
   <div
-    class="bg-gray-950 rounded-xl shadow-2xl border border-white/10 overflow-hidden"
+    class="bg-(--md-inverse-surface) rounded-xl shadow-2xl border border-(--md-border)/10 overflow-hidden"
   >
-    <!-- Header -->
-    <div
-      class="flex items-center justify-between px-3 py-2 border-b border-white/10"
-    >
+   <!-- Header -->
+    <div class="flex items-center justify-between px-3 py-2 border-b border-white/10">
       <span class="text-[11px] font-semibold text-white">Visibility Rules</span>
       <span
         class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-        :class="
-          visibility.match === 'all'
-            ? 'bg-blue-500/20 text-blue-300 ring-1 ring-blue-500/30'
-            : 'bg-orange-500/20 text-orange-300 ring-1 ring-orange-500/30'
-        "
+        :class="visibility.match === 'all'
+          ? 'bg-blue-500/20 text-blue-300 ring-1 ring-blue-500/30'
+          : 'bg-orange-500/20 text-orange-300 ring-1 ring-orange-500/30'"
       >
         Match {{ visibility.match?.toUpperCase() }}
       </span>
     </div>
 
     <!-- ── Scrollable body ───────────────────────────────────────────────── -->
-    <div
-      class="px-3 py-2.5 flex flex-col gap-2.5 overflow-y-auto"
-      style="max-height: 260px"
-    >
+    <div class="px-3 py-2.5 flex flex-col gap-2.5 overflow-y-auto" style="max-height: 260px">
+
       <!-- Flat rules -->
       <template v-if="visibility.rules?.length">
         <div
@@ -32,24 +26,16 @@
           class="flex flex-col gap-1"
         >
           <!-- AND / OR connector -->
-          <div
-            v-if="i > 0"
-            class="text-[8px] font-bold text-gray-500 uppercase tracking-widest pl-0.5"
-          >
-            {{ visibility.match === "all" ? "AND" : "OR" }}
+          <div v-if="i > 0" class="text-[8px] font-bold text-gray-500 uppercase tracking-widest pl-0.5">
+            {{ visibility.match === 'all' ? 'AND' : 'OR' }}
           </div>
 
           <!-- Rule chips -->
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span
-              class="bg-purple-500/20 text-purple-300 ring-1 ring-purple-500/30 rounded-md px-1.5 py-0.5 text-[10px] font-mono font-semibold"
-            >
-              {{ rule.tag || "?" }}
+            <span class="bg-[#0f6e75] text-gray-100 ring-1 ring-[#0f6e75] rounded-md px-1.5 py-0.5 text-[10px] font-mono font-semibold">
+              {{ rule.tag || '?' }}
             </span>
-            <span
-              class="text-[10px] font-bold font-mono"
-              :class="operatorColorClass(rule.operator)"
-            >
+            <span class="text-[10px] font-bold font-mono" :class="operatorColorClass(rule.operator)">
               {{ operatorSymbol(rule.operator) }}
             </span>
             <span
@@ -57,7 +43,7 @@
               class="bg-gray-800 text-gray-100 ring-1 ring-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono max-w-22.5 truncate"
               :title="rule.value"
             >
-              {{ rule.value || "?" }}
+              {{ rule.value || '?' }}
             </span>
           </div>
         </div>
@@ -65,11 +51,12 @@
 
       <!-- ── Groups ─────────────────────────────────────────────────────── -->
       <template v-if="visibility.groups?.length">
+
         <!-- Connector from flat rules to groups -->
         <div v-if="visibility.rules?.length" class="flex items-center gap-1">
           <div class="h-px flex-1 bg-white/10" />
           <span class="text-[8px] text-gray-500 uppercase font-bold px-1">
-            {{ visibility.match === "all" ? "AND" : "OR" }}
+            {{ visibility.match === 'all' ? 'AND' : 'OR' }}
           </span>
           <div class="h-px flex-1 bg-white/10" />
         </div>
@@ -81,19 +68,14 @@
         >
           <!-- Group header -->
           <div class="flex items-center gap-1.5 mb-1.5">
-            <span
-              class="text-[9px] text-blue-400 font-bold uppercase tracking-wide"
-              >Group {{ gi + 1 }}</span
-            >
+            <span class="text-[9px] text-blue-400 font-bold uppercase tracking-wide">Group {{ gi + 1 }}</span>
             <span
               class="text-[8px] font-bold px-1.5 py-0.5 rounded-full"
-              :class="
-                group.match === 'all'
-                  ? 'bg-blue-500/20 text-blue-300 ring-1 ring-blue-500/30'
-                  : 'bg-orange-500/20 text-orange-300 ring-1 ring-orange-500/30'
-              "
+              :class="group.match === 'all'
+                ? 'bg-blue-500/20 text-blue-300 ring-1 ring-blue-500/30'
+                : 'bg-orange-500/20 text-orange-300 ring-1 ring-orange-500/30'"
             >
-              {{ group.match === "all" ? "AND" : "OR" }}
+              {{ group.match === 'all' ? 'AND' : 'OR' }}
             </span>
           </div>
 
@@ -104,22 +86,14 @@
               :key="ri"
               class="flex flex-col gap-0.5"
             >
-              <div
-                v-if="ri > 0"
-                class="text-[8px] font-bold text-blue-400/50 uppercase tracking-widest pl-0.5"
-              >
-                {{ group.match === "all" ? "AND" : "OR" }}
+              <div v-if="ri > 0" class="text-[8px] font-bold text-blue-400/50 uppercase tracking-widest pl-0.5">
+                {{ group.match === 'all' ? 'AND' : 'OR' }}
               </div>
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span
-                  class="bg-purple-500/20 text-purple-300 ring-1 ring-purple-500/30 rounded-md px-1.5 py-0.5 text-[10px] font-mono font-semibold"
-                >
-                  {{ rule.tag || "?" }}
+                <span class="bg-[#0f6e75] text-gray-100 ring-1 ring-[#0f6e75] rounded-md px-1.5 py-0.5 text-[10px] font-mono font-semibold">
+                  {{ rule.tag || '?' }}
                 </span>
-                <span
-                  class="text-[10px] font-bold font-mono"
-                  :class="operatorColorClass(rule.operator)"
-                >
+                <span class="text-[10px] font-bold font-mono" :class="operatorColorClass(rule.operator)">
                   {{ operatorSymbol(rule.operator) }}
                 </span>
                 <span
@@ -127,7 +101,7 @@
                   class="bg-gray-800 text-gray-100 ring-1 ring-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono max-w-20 truncate"
                   :title="rule.value"
                 >
-                  {{ rule.value || "?" }}
+                  {{ rule.value || '?' }}
                 </span>
               </div>
             </div>
@@ -140,15 +114,9 @@
     <div class="px-3 py-1.5 bg-white/3 border-t border-white/10">
       <p class="text-[10px] text-gray-500">
         Shown when
-        <span class="font-semibold text-gray-400">{{
-          visibility.match === "all" ? "all" : "any"
-        }}</span>
-        condition{{ totalRuleCount !== 1 ? "s are" : " is" }} met
-        <span class="ml-1 text-gray-600"
-          >· {{ totalRuleCount }} rule{{
-            totalRuleCount !== 1 ? "s" : ""
-          }}</span
-        >
+        <span class="font-semibold text-gray-400">{{ visibility.match === 'all' ? 'all' : 'any' }}</span>
+        condition{{ totalRuleCount !== 1 ? 's are' : ' is' }} met
+        <span class="ml-1 text-gray-600">· {{ totalRuleCount }} rule{{ totalRuleCount !== 1 ? 's' : '' }}</span>
       </p>
     </div>
   </div>
@@ -212,16 +180,14 @@ const operatorSymbol = (op: string): string =>
   })[op] ?? op;
 
 const operatorColorClass = (op: string): string => {
-  if (op === "==" || op === "in") return "text-emerald-400";
-  if (op === "!=" || op === "not_in") return "text-red-400";
-  if (["contains", "starts_with", "ends_with"].includes(op))
-    return "text-amber-400";
-  if (op === "not_contains") return "text-orange-400";
-  if ([">", "<", ">=", "<="].includes(op)) return "text-sky-400";
-  if (op === "is_empty" || op === "is_not_empty") return "text-purple-400";
+  if (op === "==" || op === "in")                               return "text-emerald-400";
+  if (op === "!=" || op === "not_in")                          return "text-red-400";
+  if (["contains", "starts_with", "ends_with"].includes(op))  return "text-amber-400";
+  if (op === "not_contains")                                   return "text-orange-400";
+  if ([">", "<", ">=", "<="].includes(op))                    return "text-sky-400";
+  if (op === "is_empty" || op === "is_not_empty")              return "text-[#0f6e75]";
   // ✅ NEW
-  if (["date_before", "date_after", "date_on"].includes(op))
-    return "text-rose-400";
+  if (["date_before", "date_after", "date_on"].includes(op))  return "text-rose-400";
   return "text-gray-400";
 };
 </script>

@@ -10,10 +10,10 @@ const props = defineProps<{
 }>();
 
 const map: Record<SupportLevel, { text: string; cls: string }> = {
-  native: { text: "✓", cls: "text-emerald-500" },
-  helper: { text: "~", cls: "text-amber-500" },
-  fallback: { text: "⚠", cls: "text-orange-400" },
-  none: { text: "–", cls: "text-gray-300" },
+  native: { text: "✓", cls: "text-(--md-success)" },
+  helper: { text: "~", cls: "text-(--md-warning)" },
+  fallback: { text: "⚠", cls: "text-(--md-warning)" },
+  none: { text: "–", cls: "text-(--md-text-subtle)" },
 };
 
 const badge = computed(() => map[props.level]);

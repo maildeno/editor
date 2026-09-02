@@ -132,6 +132,50 @@ export interface ThemeTokens {
   dangerBg?: string;
   dangerFg?: string;
   dangerBorder?: string;
+
+  // ── Extended set ──────────────────────────────────────────────────────
+  // Shared vocabulary with the Maildeno dashboard, so a host can hand the
+  // same object to both and a component can move between them unchanged.
+
+  /** The dark pill — primary CTA, active tab. FLIPS to a light fill in dark
+   *  mode. Use this, not `text`, for any dark-filled control: a text token
+   *  cannot invert that way without making body copy invisible. */
+  inverseSurface?: string;
+  inverseSurfaceHover?: string;
+  onInverse?: string;
+  onInverseMuted?: string;
+
+  /** Pale brand pill. Always pair `primarySoft` with `onPrimarySoft` — the
+   *  two are tuned against each other. */
+  primarySoft?: string;
+  primarySoftHover?: string;
+  onPrimarySoft?: string;
+  primaryBorder?: string;
+
+  /** Secondary signal, distinct from `primary`. Used for AI surfaces and the
+   *  row-selection family. */
+  accent?: string;
+  accentHover?: string;
+  onAccent?: string;
+  accentSoft?: string;
+  onAccentSoft?: string;
+  accentBorder?: string;
+
+  borderSubtle?: string;
+  surfaceSunken?: string;
+  shadowSm?: string;
+  shadowLg?: string;
+
+  /** Code panels are terminals: dark in BOTH themes. Not `inverseSurface`,
+   *  which inverts — a code block that turns white in dark mode is the most
+   *  common casualty of reusing the inverse token here. */
+  codeBg?: string;
+  codeBorder?: string;
+  codeChip?: string;
+  codeText?: string;
+
+  skeleton?: string;
+  skeletonShine?: string;
 }
 
 export interface ThemeOptions extends ThemeTokens {
@@ -219,47 +263,93 @@ const VAR_NAMES: Record<keyof ThemeTokens, string> = {
   dangerBg: "--md-danger-bg",
   dangerFg: "--md-danger-fg",
   dangerBorder: "--md-danger-border",
+  inverseSurface: "--md-inverse-surface",
+  inverseSurfaceHover: "--md-inverse-surface-hover",
+  onInverse: "--md-on-inverse",
+  onInverseMuted: "--md-on-inverse-muted",
+  primarySoft: "--md-primary-soft",
+  primarySoftHover: "--md-primary-soft-hover",
+  onPrimarySoft: "--md-on-primary-soft",
+  primaryBorder: "--md-primary-border",
+  accent: "--md-accent",
+  accentHover: "--md-accent-hover",
+  onAccent: "--md-on-accent",
+  accentSoft: "--md-accent-soft",
+  onAccentSoft: "--md-on-accent-soft",
+  accentBorder: "--md-accent-border",
+  borderSubtle: "--md-border-subtle",
+  surfaceSunken: "--md-surface-sunken",
+  shadowSm: "--md-shadow-sm",
+  shadowLg: "--md-shadow-lg",
+  codeBg: "--md-code-bg",
+  codeBorder: "--md-code-border",
+  codeChip: "--md-code-chip",
+  codeText: "--md-code-text",
+  skeleton: "--md-skeleton",
+  skeletonShine: "--md-skeleton-shine",
 };
 
 /**
- * Dark-mode tokens are written to a second, more specific rule rather than
- * onto the element itself, because an inline style would win over the `.dark`
- * class and leak dark values into light mode. One <style> element per target
- * is reused so repeated calls replace rather than accumulate.
+ * Both light and dark tokens are written as stylesheet rules into one <style>
+ * element per target, rather than light going inline and dark going to a rule.
+ *
+ * That split was the bug. Custom properties set with `style.setProperty` are
+ * element-attached declarations, and CSS Cascade L5 §6.4 sorts those above all
+ * style rules *before* it ever looks at specificity. So for any token named in
+ * both `base` and `dark`, the inline light value won on the dark element and
+ * the dark value never applied — including for the example in this file's own
+ * docblock, which sets `primary` in both.
+ *
+ * Emitting both as rules puts them back on the same footing, where the
+ * intended specificity ordering decides:
+ *
+ *   [data-md-theme-scope="1"]        (0,1,0)   light
+ *   [data-md-theme-scope="1"].dark   (0,2,0)   dark  <- wins, as intended
+ *
+ * Both also beat the package's bundled defaults: the light rule ties `:root`
+ * on specificity and wins on order (this sheet is appended at runtime, after
+ * the bundle), and the dark rule beats `:where(.dark, :host(.dark))`, which
+ * `:where()` deliberately holds at specificity zero.
+ *
+ * One <style> per target is reused, so repeated calls replace rather than
+ * accumulate.
  */
-const darkSheets = new WeakMap<HTMLElement, HTMLStyleElement>();
-let darkScopeCounter = 0;
+const themeSheets = new WeakMap<HTMLElement, HTMLStyleElement>();
+let themeScopeCounter = 0;
 
-function applyTokens(target: HTMLElement, tokens: ThemeTokens): void {
-  for (const [key, value] of Object.entries(tokens)) {
-    if (typeof value !== "string" || !value) continue;
-    const varName = VAR_NAMES[key as keyof ThemeTokens];
-    if (varName) target.style.setProperty(varName, value);
-  }
-}
-
-function applyDarkTokens(target: HTMLElement, tokens: ThemeTokens): void {
-  const declarations = Object.entries(tokens)
+function declarationsFor(tokens: ThemeTokens): string {
+  return Object.entries(tokens)
     .filter(
       ([k, v]) =>
         typeof v === "string" && v && VAR_NAMES[k as keyof ThemeTokens],
     )
     .map(([k, v]) => `  ${VAR_NAMES[k as keyof ThemeTokens]}: ${v};`)
     .join("\n");
+}
 
-  let sheet = darkSheets.get(target);
-  if (!declarations) {
+function applyThemeTokens(
+  target: HTMLElement,
+  light: ThemeTokens,
+  dark: ThemeTokens,
+): void {
+  const lightDecls = declarationsFor(light);
+  const darkDecls = declarationsFor(dark);
+
+  let sheet = themeSheets.get(target);
+
+  if (!lightDecls && !darkDecls) {
     sheet?.remove();
-    darkSheets.delete(target);
+    themeSheets.delete(target);
+    target.removeAttribute("data-md-theme-scope");
     return;
   }
 
   if (!sheet) {
     sheet = document.createElement("style");
-    darkSheets.set(target, sheet);
+    themeSheets.set(target, sheet);
     // A per-target attribute keeps two editors on one page from theming
     // each other.
-    target.setAttribute("data-md-theme-scope", String(++darkScopeCounter));
+    target.setAttribute("data-md-theme-scope", String(++themeScopeCounter));
     // Inside a shadow root the sheet goes there so it can see the host;
     // in the light DOM it must go to <head>, since a <style> cannot be
     // appended to the document node itself.
@@ -270,9 +360,35 @@ function applyDarkTokens(target: HTMLElement, tokens: ThemeTokens): void {
   }
 
   const scope = target.getAttribute("data-md-theme-scope");
-  sheet.textContent =
-    `[data-md-theme-scope="${scope}"].dark,\n` +
-    `[data-md-theme-scope="${scope}"] .dark {\n${declarations}\n}`;
+  const sel = `[data-md-theme-scope="${scope}"]`;
+
+  // No descendant `*` on either rule: custom properties inherit, so setting
+  // them on the scope root reaches the whole subtree, and a `.dark` descendant
+  // overriding them re-inherits down from itself. Matching every element would
+  // be pure selector cost for the same result.
+  const blocks: string[] = [];
+  if (lightDecls) blocks.push(`${sel} {\n${lightDecls}\n}`);
+  // Three selectors because `.dark` can sit in three places relative to the
+  // scope element, and which one applies depends on the build:
+  //
+  //   ${sel}.dark    both on the same element — the plain Vue build, where the
+  //                  target defaults to <html> and the host toggles .dark there
+  //   ${sel} .dark   .dark inside the editor — a host theming one subtree
+  //   .dark ${sel}   .dark on an ANCESTOR — the custom-element build, where the
+  //                  target is <maildeno-editor> but the host still toggles
+  //                  .dark on <html>
+  //
+  // Only the first was covered before. The bundled defaults already handle the
+  // ancestor case via `.dark *` in their :where(), so a custom-element host
+  // toggling <html class="dark"> got the package's dark palette but silently
+  // lost every token it had passed in `dark` — the one combination where a
+  // theme half-applies.
+  if (darkDecls)
+    blocks.push(
+      `${sel}.dark,\n${sel} .dark,\n.dark ${sel} {\n${darkDecls}\n}`,
+    );
+
+  sheet.textContent = blocks.join("\n\n");
 }
 
 /**
@@ -297,15 +413,17 @@ export function setEditorTheme(
 ): void {
   const { light, dark, primaryColor, surfaceColor, ...base } = options;
 
-  applyTokens(target, {
-    // Legacy names first, so the current ones win if both are given.
-    ...(primaryColor ? { primary: primaryColor } : {}),
-    ...(surfaceColor ? { surface: surfaceColor } : {}),
-    ...base,
-    ...(light ?? {}),
-  });
-
-  if (dark) applyDarkTokens(target, dark);
+  applyThemeTokens(
+    target,
+    {
+      // Legacy names first, so the current ones win if both are given.
+      ...(primaryColor ? { primary: primaryColor } : {}),
+      ...(surfaceColor ? { surface: surfaceColor } : {}),
+      ...base,
+      ...(light ?? {}),
+    },
+    dark ?? {},
+  );
 }
 
 /**

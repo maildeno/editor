@@ -19,7 +19,7 @@
     teleport host in Header.vue, so it fills the viewport above the builder.
   -->
   <div
-    class="absolute inset-0 bg-gray-50 flex flex-col"
+    class="absolute inset-0 bg-(--md-surface-hover) flex flex-col"
     role="dialog"
     aria-modal="true"
     aria-label="Email preview"

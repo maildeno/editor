@@ -25,7 +25,7 @@
 
     <!-- ── Floating Toolbar ──────────────────────────────────────────────────
          Hidden while previewing (no edits allowed). Visual treatment:
-         • Soft glass-morphism (bg-white/95 + backdrop-blur)
+         • Soft glass-morphism (bg-(--md-surface)/95 + backdrop-blur)
          • Multi-layer shadow + ring border (Canva / Postcards-by-Designmodo)
          • Rounded-xl pill shape with tight 1.5/1 padding
          • Refined Lucide-style icons throughout
@@ -144,7 +144,7 @@
             @panel-close="colorPickerOpen = false"
           />
           <div
-            class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white shadow-sm pointer-events-none"
+            class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-(--md-border) shadow-sm pointer-events-none"
             :style="{
               backgroundColor:
                 editor.getAttributes('textStyle').color || '#000',
@@ -162,7 +162,7 @@
             @panel-close="colorPickerOpen = false"
           />
           <div
-            class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white shadow-sm pointer-events-none"
+            class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-(--md-border) shadow-sm pointer-events-none"
             :style="{
               backgroundColor:
                 editor.getAttributes('textStyle').backgroundColor || '#fff',

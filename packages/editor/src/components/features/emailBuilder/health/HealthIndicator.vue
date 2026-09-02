@@ -1,12 +1,10 @@
 <template>
   <div v-if="!metrics.isEmpty" class="relative" ref="rootRef">
+
     <!-- ── Pulsating orb trigger ──────────────────────────────────────────── -->
     <button
       class="health-orb"
-      :class="[
-        `health-orb--${overallStatus}`,
-        { 'health-orb--active': isOpen },
-      ]"
+      :class="[`health-orb--${overallStatus}`, { 'health-orb--active': isOpen }]"
       @click="toggle"
       aria-label="Email health indicator"
       :aria-expanded="isOpen"
@@ -32,10 +30,7 @@
         <div class="panel-header">
           <span class="panel-title">Email Health</span>
           <div class="panel-header-right">
-            <span
-              class="panel-status-badge"
-              :class="`status-badge--${overallStatus}`"
-            >
+            <span class="panel-status-badge" :class="`status-badge--${overallStatus}`">
               {{ overallStatusLabel }}
             </span>
             <button
@@ -43,29 +38,13 @@
               class="panel-expand-btn"
               :class="{ 'panel-expand-btn--active': isPanelExpanded }"
               @click.stop="isPanelExpanded = !isPanelExpanded"
-              :aria-label="
-                isPanelExpanded
-                  ? 'Collapse panel'
-                  : 'Expand panel for more detail'
-              "
+              :aria-label="isPanelExpanded ? 'Collapse panel' : 'Expand panel for more detail'"
               :aria-pressed="isPanelExpanded"
               title="Toggle wide view"
             >
               <!-- Double-arrow icon -->
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1 6h10M8.5 3.5L11 6l-2.5 2.5M3.5 3.5L1 6l2.5 2.5"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 6h10M8.5 3.5L11 6l-2.5 2.5M3.5 3.5L1 6l2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </div>
@@ -74,10 +53,7 @@
         <!-- ── Text : Image ratio card ─────────────────────────────────── -->
         <div
           class="metric-card"
-          :class="[
-            `metric-card--${metrics.ratioStatus}`,
-            { 'metric-card--expanded': expandedCard === 'ratio' },
-          ]"
+          :class="[`metric-card--${metrics.ratioStatus}`, { 'metric-card--expanded': expandedCard === 'ratio' }]"
           @click="toggleCard('ratio')"
           tabindex="0"
           @keydown.enter="toggleCard('ratio')"
@@ -90,24 +66,8 @@
             <div class="metric-left">
               <span class="metric-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="4"
-                    height="11"
-                    rx="1"
-                    :fill="statusColor(metrics.ratioStatus)"
-                    opacity="0.9"
-                  />
-                  <rect
-                    x="6.5"
-                    y="3.5"
-                    width="5"
-                    height="8"
-                    rx="1"
-                    :fill="statusColor(metrics.ratioStatus)"
-                    opacity="0.4"
-                  />
+                  <rect x="0.5" y="0.5" width="4" height="11" rx="1" :fill="statusColor(metrics.ratioStatus)" opacity="0.9"/>
+                  <rect x="6.5" y="3.5" width="5" height="8" rx="1" :fill="statusColor(metrics.ratioStatus)" opacity="0.4"/>
                 </svg>
               </span>
               <span class="metric-label">Text : Image</span>
@@ -121,27 +81,15 @@
                   :style="{ width: `${metrics.textRatio}%` }"
                 />
               </div>
-              <span
-                class="metric-value"
-                :class="`metric-value--${metrics.ratioStatus}`"
-              >
+              <span class="metric-value" :class="`metric-value--${metrics.ratioStatus}`">
                 {{ metrics.textRatio }}%
               </span>
               <svg
                 class="chevron"
                 :class="{ 'chevron--open': expandedCard === 'ratio' }"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
+                width="12" height="12" viewBox="0 0 12 12" fill="none"
               >
-                <path
-                  d="M3 4.5L6 7.5L9 4.5"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
           </div>
@@ -153,9 +101,7 @@
               <div class="detail-stats">
                 <div class="stat-item">
                   <span class="stat-label">Text chars</span>
-                  <span class="stat-value">{{
-                    metrics.textChars.toLocaleString()
-                  }}</span>
+                  <span class="stat-value">{{ metrics.textChars.toLocaleString() }}</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-label">Text weight</span>
@@ -181,9 +127,7 @@
               <div class="detail-thresholds">
                 <span class="threshold threshold--good">≥60% text = good</span>
                 <span class="threshold threshold--warn">40–59% = caution</span>
-                <span class="threshold threshold--bad"
-                  >&lt;40% = spam risk</span
-                >
+                <span class="threshold threshold--bad">&lt;40% = spam risk</span>
               </div>
             </div>
           </Transition>
@@ -192,10 +136,7 @@
         <!-- ── HTML size estimate card ────────────────────────────────────── -->
         <div
           class="metric-card"
-          :class="[
-            `metric-card--${metrics.kbStatus}`,
-            { 'metric-card--expanded': expandedCard === 'kb' },
-          ]"
+          :class="[`metric-card--${metrics.kbStatus}`, { 'metric-card--expanded': expandedCard === 'kb' }]"
           @click="toggleCard('kb')"
           tabindex="0"
           @keydown.enter="toggleCard('kb')"
@@ -208,13 +149,7 @@
             <div class="metric-left">
               <span class="metric-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path
-                    d="M2 10V2l3 2.5L8 1l2 3v6H2z"
-                    :stroke="statusColor(metrics.kbStatus)"
-                    stroke-width="1.2"
-                    stroke-linejoin="round"
-                    fill="none"
-                  />
+                  <path d="M2 10V2l3 2.5L8 1l2 3v6H2z" :stroke="statusColor(metrics.kbStatus)" stroke-width="1.2" stroke-linejoin="round" fill="none"/>
                 </svg>
               </span>
               <span class="metric-label">HTML Size</span>
@@ -224,32 +159,16 @@
                 v-if="metrics.kbStatus === 'bad'"
                 class="pulse-dot pulse-dot--bad"
               />
-              <span
-                v-else
-                class="status-dot"
-                :class="`status-dot--${metrics.kbStatus}`"
-              />
-              <span
-                class="metric-value"
-                :class="`metric-value--${metrics.kbStatus}`"
-              >
+              <span v-else class="status-dot" :class="`status-dot--${metrics.kbStatus}`" />
+              <span class="metric-value" :class="`metric-value--${metrics.kbStatus}`">
                 ~{{ metrics.estimatedLow }}–{{ metrics.estimatedHigh }} KB
               </span>
               <svg
                 class="chevron"
                 :class="{ 'chevron--open': expandedCard === 'kb' }"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
+                width="12" height="12" viewBox="0 0 12 12" fill="none"
               >
-                <path
-                  d="M3 4.5L6 7.5L9 4.5"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
           </div>
@@ -264,38 +183,25 @@
                 <div class="format-row format-row--html">
                   <span class="format-badge">HTML</span>
                   <div class="format-info">
-                    <span class="format-range"
-                      >{{ metrics.estimatedLow }}–{{ metrics.estimatedHigh }} KB
-                      estimated</span
-                    >
+                    <span class="format-range">{{ metrics.estimatedLow }}–{{ metrics.estimatedHigh }} KB estimated</span>
                     <span class="format-caveat">
-                      Prettier formatting adds ~20–30% on export (no minify
-                      option). Actual exported file may be larger.
+                      Prettier formatting adds ~20–30% on export (no minify option).
+                      Actual exported file may be larger.
                     </span>
                   </div>
                 </div>
                 <div class="format-row format-row--other">
                   <span class="format-badge format-badge--muted">JSX</span>
                   <div class="format-info">
-                    <span class="format-range format-range--muted"
-                      >Size unpredictable</span
-                    >
-                    <span class="format-caveat"
-                      >React Email renders its own HTML — final size depends on
-                      its transformer output.</span
-                    >
+                    <span class="format-range format-range--muted">Size unpredictable</span>
+                    <span class="format-caveat">React Email renders its own HTML — final size depends on its transformer output.</span>
                   </div>
                 </div>
                 <div class="format-row format-row--other">
                   <span class="format-badge format-badge--muted">MJML</span>
                   <div class="format-info">
-                    <span class="format-range format-range--muted"
-                      >Size unpredictable</span
-                    >
-                    <span class="format-caveat"
-                      >MJML compiles to HTML with its own markup; final size
-                      varies.</span
-                    >
+                    <span class="format-range format-range--muted">Size unpredictable</span>
+                    <span class="format-caveat">MJML compiles to HTML with its own markup; final size varies.</span>
                   </div>
                 </div>
               </div>
@@ -303,9 +209,7 @@
               <div class="detail-thresholds">
                 <span class="threshold threshold--good">&lt;60 KB safe</span>
                 <span class="threshold threshold--warn">60–80 KB caution</span>
-                <span class="threshold threshold--bad"
-                  >102+ KB Gmail clips</span
-                >
+                <span class="threshold threshold--bad">102+ KB Gmail clips</span>
               </div>
             </div>
           </Transition>
@@ -314,10 +218,7 @@
         <!-- ── Accessibility card ─────────────────────────────────────────── -->
         <div
           class="metric-card"
-          :class="[
-            `metric-card--${a11ySummary.status}`,
-            { 'metric-card--expanded': expandedCard === 'a11y' },
-          ]"
+          :class="[`metric-card--${a11ySummary.status}`, { 'metric-card--expanded': expandedCard === 'a11y' }]"
           @click="toggleCard('a11y')"
           tabindex="0"
           @keydown.enter="toggleCard('a11y')"
@@ -330,20 +231,8 @@
             <div class="metric-left">
               <span class="metric-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <circle
-                    cx="6"
-                    cy="3"
-                    r="1.4"
-                    :fill="statusColor(a11ySummary.status)"
-                  />
-                  <path
-                    d="M3 6h6M6 6v4M4.2 10l1.8-2.5L7.8 10"
-                    :stroke="statusColor(a11ySummary.status)"
-                    stroke-width="1.2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    fill="none"
-                  />
+                  <circle cx="6" cy="3" r="1.4" :fill="statusColor(a11ySummary.status)"/>
+                  <path d="M3 6h6M6 6v4M4.2 10l1.8-2.5L7.8 10" :stroke="statusColor(a11ySummary.status)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                 </svg>
               </span>
               <span class="metric-label">Accessibility</span>
@@ -353,32 +242,16 @@
                 v-if="a11ySummary.status === 'bad'"
                 class="pulse-dot pulse-dot--bad"
               />
-              <span
-                v-else
-                class="status-dot"
-                :class="`status-dot--${a11ySummary.status}`"
-              />
-              <span
-                class="metric-value"
-                :class="`metric-value--${a11ySummary.status}`"
-              >
+              <span v-else class="status-dot" :class="`status-dot--${a11ySummary.status}`" />
+              <span class="metric-value" :class="`metric-value--${a11ySummary.status}`">
                 {{ a11ySummary.summaryMessage }}
               </span>
               <svg
                 class="chevron"
                 :class="{ 'chevron--open': expandedCard === 'a11y' }"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
+                width="12" height="12" viewBox="0 0 12 12" fill="none"
               >
-                <path
-                  d="M3 4.5L6 7.5L9 4.5"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
           </div>
@@ -391,11 +264,7 @@
               @click.stop
             >
               <!-- Tabs -->
-              <div
-                class="a11y-tabs"
-                role="tablist"
-                aria-label="Accessibility issue status"
-              >
+              <div class="a11y-tabs" role="tablist" aria-label="Accessibility issue status">
                 <button
                   type="button"
                   class="a11y-tab a11y-tab--failed"
@@ -438,11 +307,7 @@
               </div>
 
               <!-- Failed list -->
-              <div
-                v-if="a11yTab === 'failed'"
-                class="a11y-list"
-                role="tabpanel"
-              >
+              <div v-if="a11yTab === 'failed'" class="a11y-list" role="tabpanel">
                 <p v-if="a11ySummary.failed.length === 0" class="a11y-empty">
                   No failing checks. Your email looks accessible.
                 </p>
@@ -475,14 +340,9 @@
               </div>
 
               <!-- Passed list -->
-              <div
-                v-if="a11yTab === 'passed'"
-                class="a11y-list"
-                role="tabpanel"
-              >
+              <div v-if="a11yTab === 'passed'" class="a11y-list" role="tabpanel">
                 <p v-if="a11ySummary.passed.length === 0" class="a11y-empty">
-                  No checks have passed yet — start adding content to see
-                  results.
+                  No checks have passed yet — start adding content to see results.
                 </p>
                 <div
                   v-for="issue in a11ySummary.passed"
@@ -490,9 +350,7 @@
                   class="a11y-item a11y-item--passed"
                 >
                   <div class="a11y-item-header">
-                    <span class="a11y-severity a11y-severity--passed"
-                      >passed</span
-                    >
+                    <span class="a11y-severity a11y-severity--passed">passed</span>
                     <span class="a11y-rule">{{ issue.rule }}</span>
                   </div>
                   <p class="a11y-message">{{ issue.message }}</p>
@@ -500,14 +358,9 @@
               </div>
 
               <!-- Ignored list -->
-              <div
-                v-if="a11yTab === 'ignored'"
-                class="a11y-list"
-                role="tabpanel"
-              >
+              <div v-if="a11yTab === 'ignored'" class="a11y-list" role="tabpanel">
                 <p v-if="a11ySummary.ignored.length === 0" class="a11y-empty">
-                  Nothing ignored. Use "Ignore" on a failing check to suppress
-                  it here.
+                  Nothing ignored. Use "Ignore" on a failing check to suppress it here.
                 </p>
                 <div
                   v-for="issue in a11ySummary.ignored"
@@ -515,9 +368,7 @@
                   class="a11y-item a11y-item--ignored"
                 >
                   <div class="a11y-item-header">
-                    <span class="a11y-severity a11y-severity--ignored"
-                      >ignored</span
-                    >
+                    <span class="a11y-severity a11y-severity--ignored">ignored</span>
                     <span class="a11y-rule">{{ issue.rule }}</span>
                     <button
                       type="button"
@@ -585,17 +436,16 @@ const emailMeta = computed(() => ({
   preheader: canvasStyles?.value?.preheaderText,
 }));
 
-const {
-  summary: a11ySummary,
-  ignoreIssue,
-  restoreIssue,
-} = accessibilityChecker(rows, {
-  bodyBg: computed(() => canvasStyles?.value?.bodyBackgroundColor ?? "#ffffff"),
-  emailMeta,
-  mergeTagContext: mergeTagPreviewContext,
-  linkTagContext: linkTagPreviewContext,
-  previewActive,
-});
+const { summary: a11ySummary, ignoreIssue, restoreIssue } = accessibilityChecker(
+  rows,
+  {
+    bodyBg: computed(() => canvasStyles?.value?.bodyBackgroundColor ?? "#ffffff"),
+    emailMeta,
+    mergeTagContext: mergeTagPreviewContext,
+    linkTagContext: linkTagPreviewContext,
+    previewActive,
+  },
+);
 
 const isOpen = ref(false);
 const isPanelExpanded = ref(false);
@@ -709,9 +559,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   z-index: 1;
 }
 
@@ -727,9 +575,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 }
 .health-orb--good .orb-core {
   background: #22c55e;
-  box-shadow:
-    0 0 0 2px rgba(34, 197, 94, 0.2),
-    0 0 8px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2), 0 0 8px rgba(34, 197, 94, 0.4);
 }
 
 .health-orb--warn .orb-ring {
@@ -737,9 +583,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 }
 .health-orb--warn .orb-core {
   background: #f59e0b;
-  box-shadow:
-    0 0 0 2px rgba(245, 158, 11, 0.2),
-    0 0 8px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2), 0 0 8px rgba(245, 158, 11, 0.4);
 }
 
 .health-orb--bad .orb-ring {
@@ -747,24 +591,13 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 }
 .health-orb--bad .orb-core {
   background: #ef4444;
-  box-shadow:
-    0 0 0 2px rgba(239, 68, 68, 0.2),
-    0 0 8px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2), 0 0 8px rgba(239, 68, 68, 0.4);
 }
 
 @keyframes orb-pulse {
-  0% {
-    transform: scale(0.6);
-    opacity: 0.7;
-  }
-  60% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
+  0%   { transform: scale(0.6); opacity: 0.7; }
+  60%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
 
 /* ── Panel ────────────────────────────────────────────────────────────────── */
@@ -779,9 +612,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 12px;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -845,10 +676,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   background: rgba(255, 255, 255, 0.04);
   color: rgba(255, 255, 255, 0.35);
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   flex-shrink: 0;
   padding: 0;
 }
@@ -885,18 +713,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   border-radius: 99px;
 }
 
-.status-badge--good {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-}
-.status-badge--warn {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-}
-.status-badge--bad {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-}
+.status-badge--good { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+.status-badge--warn { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.status-badge--bad  { background: rgba(239, 68, 68, 0.15);  color: #f87171; }
 
 /* ── Metric cards ─────────────────────────────────────────────────────────── */
 
@@ -905,9 +724,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
   overflow: hidden;
   user-select: none;
 }
@@ -922,25 +739,13 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   outline-offset: 2px;
 }
 
-.metric-card--good {
-  border-color: rgba(34, 197, 94, 0.15);
-}
-.metric-card--warn {
-  border-color: rgba(245, 158, 11, 0.15);
-}
-.metric-card--bad {
-  border-color: rgba(239, 68, 68, 0.2);
-}
+.metric-card--good { border-color: rgba(34, 197, 94, 0.15); }
+.metric-card--warn { border-color: rgba(245, 158, 11, 0.15); }
+.metric-card--bad  { border-color: rgba(239, 68, 68, 0.2);  }
 
-.metric-card--good.metric-card--expanded {
-  background: rgba(34, 197, 94, 0.05);
-}
-.metric-card--warn.metric-card--expanded {
-  background: rgba(245, 158, 11, 0.05);
-}
-.metric-card--bad.metric-card--expanded {
-  background: rgba(239, 68, 68, 0.06);
-}
+.metric-card--good.metric-card--expanded { background: rgba(34, 197, 94, 0.05); }
+.metric-card--warn.metric-card--expanded { background: rgba(245, 158, 11, 0.05); }
+.metric-card--bad.metric-card--expanded  { background: rgba(239, 68, 68, 0.06); }
 
 /* ── Summary row ──────────────────────────────────────────────────────────── */
 
@@ -995,15 +800,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   transition: width 0.5s ease;
 }
 
-.mini-bar-fill--good {
-  background: #22c55e;
-}
-.mini-bar-fill--warn {
-  background: #f59e0b;
-}
-.mini-bar-fill--bad {
-  background: #ef4444;
-}
+.mini-bar-fill--good { background: #22c55e; }
+.mini-bar-fill--warn { background: #f59e0b; }
+.mini-bar-fill--bad  { background: #ef4444; }
 
 /* Status dot */
 .status-dot {
@@ -1012,15 +811,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   border-radius: 50%;
   flex-shrink: 0;
 }
-.status-dot--good {
-  background: #22c55e;
-}
-.status-dot--warn {
-  background: #f59e0b;
-}
-.status-dot--bad {
-  background: #ef4444;
-}
+.status-dot--good { background: #22c55e; }
+.status-dot--warn { background: #f59e0b; }
+.status-dot--bad  { background: #ef4444; }
 
 /* Pulsing dot for bad status */
 .pulse-dot {
@@ -1031,29 +824,17 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 }
 .pulse-dot::before,
 .pulse-dot::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 50%;
 }
-.pulse-dot--bad::before {
-  background: #ef4444;
-  z-index: 1;
-}
-.pulse-dot--bad::after {
-  background: #ef4444;
-  animation: dot-ping 1.5s ease-out infinite;
-}
+.pulse-dot--bad::before  { background: #ef4444; z-index: 1; }
+.pulse-dot--bad::after   { background: #ef4444; animation: dot-ping 1.5s ease-out infinite; }
 
 @keyframes dot-ping {
-  0% {
-    transform: scale(1);
-    opacity: 0.75;
-  }
-  100% {
-    transform: scale(2.5);
-    opacity: 0;
-  }
+  0%   { transform: scale(1); opacity: 0.75; }
+  100% { transform: scale(2.5); opacity: 0; }
 }
 
 .metric-value {
@@ -1062,31 +843,18 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   font-variant-numeric: tabular-nums;
 }
 
-.metric-value--good {
-  color: #4ade80;
-}
-.metric-value--warn {
-  color: #fbbf24;
-}
-.metric-value--bad {
-  color: #f87171;
-}
+.metric-value--good { color: #4ade80; }
+.metric-value--warn { color: #fbbf24; }
+.metric-value--bad  { color: #f87171; }
 
 /* Chevron */
 .chevron {
   color: rgba(255, 255, 255, 0.3);
-  transition:
-    transform 0.2s ease,
-    color 0.15s ease;
+  transition: transform 0.2s ease, color 0.15s ease;
   flex-shrink: 0;
 }
-.chevron--open {
-  transform: rotate(180deg);
-  color: rgba(255, 255, 255, 0.6);
-}
-.metric-card:hover .chevron {
-  color: rgba(255, 255, 255, 0.5);
-}
+.chevron--open { transform: rotate(180deg); color: rgba(255, 255, 255, 0.6); }
+.metric-card:hover .chevron { color: rgba(255, 255, 255, 0.5); }
 
 /* ── Expanded detail ──────────────────────────────────────────────────────── */
 
@@ -1148,18 +916,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   border-radius: 99px;
 }
 
-.threshold--good {
-  background: rgba(34, 197, 94, 0.12);
-  color: #4ade80;
-}
-.threshold--warn {
-  background: rgba(245, 158, 11, 0.12);
-  color: #fbbf24;
-}
-.threshold--bad {
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-}
+.threshold--good { background: rgba(34, 197, 94, 0.12);  color: #4ade80; }
+.threshold--warn { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+.threshold--bad  { background: rgba(239, 68, 68, 0.12);  color: #f87171; }
 
 /* ── Format note (KB card) ────────────────────────────────────────────────── */
 
@@ -1252,9 +1011,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   font-weight: 600;
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.45);
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .a11y-tab:hover {
@@ -1290,18 +1047,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   line-height: 1;
 }
 
-.a11y-tab-count--failed {
-  background: rgba(239, 68, 68, 0.18);
-  color: #f87171;
-}
-.a11y-tab-count--passed {
-  background: rgba(34, 197, 94, 0.18);
-  color: #4ade80;
-}
-.a11y-tab-count--ignored {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.5);
-}
+.a11y-tab-count--failed  { background: rgba(239, 68, 68, 0.18);  color: #f87171; }
+.a11y-tab-count--passed  { background: rgba(34, 197, 94, 0.18);  color: #4ade80; }
+.a11y-tab-count--ignored { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.5); }
 
 /* List */
 .a11y-list {
@@ -1344,19 +1092,10 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   border-left: 2px solid transparent;
 }
 
-.a11y-item--critical {
-  border-left-color: #ef4444;
-}
-.a11y-item--serious {
-  border-left-color: #f59e0b;
-}
-.a11y-item--passed {
-  border-left-color: rgba(34, 197, 94, 0.5);
-}
-.a11y-item--ignored {
-  border-left-color: rgba(255, 255, 255, 0.18);
-  opacity: 0.75;
-}
+.a11y-item--critical { border-left-color: #ef4444; }
+.a11y-item--serious  { border-left-color: #f59e0b; }
+.a11y-item--passed   { border-left-color: rgba(34, 197, 94, 0.5); }
+.a11y-item--ignored  { border-left-color: rgba(255, 255, 255, 0.18); opacity: 0.75; }
 
 .a11y-item-header {
   display: flex;
@@ -1376,22 +1115,10 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   flex-shrink: 0;
 }
 
-.a11y-severity--critical {
-  background: rgba(239, 68, 68, 0.18);
-  color: #f87171;
-}
-.a11y-severity--serious {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fbbf24;
-}
-.a11y-severity--passed {
-  background: rgba(34, 197, 94, 0.18);
-  color: #4ade80;
-}
-.a11y-severity--ignored {
-  background: rgba(255, 255, 255, 0.07);
-  color: rgba(255, 255, 255, 0.5);
-}
+.a11y-severity--critical { background: rgba(239, 68, 68, 0.18);  color: #f87171; }
+.a11y-severity--serious  { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+.a11y-severity--passed   { background: rgba(34, 197, 94, 0.18);  color: #4ade80; }
+.a11y-severity--ignored  { background: rgba(255, 255, 255, 0.07); color: rgba(255, 255, 255, 0.5); }
 
 .a11y-rule {
   font-size: 11px;
@@ -1414,10 +1141,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   font-weight: 600;
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   flex-shrink: 0;
 }
 
@@ -1480,14 +1204,10 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 /* ── Transitions ──────────────────────────────────────────────────────────── */
 
 .popover-enter-active {
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .popover-leave-active {
-  transition:
-    opacity 0.12s ease,
-    transform 0.12s ease;
+  transition: opacity 0.12s ease, transform 0.12s ease;
 }
 .popover-enter-from {
   opacity: 0;
@@ -1499,16 +1219,12 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 }
 
 .expand-enter-active {
-  transition:
-    opacity 0.18s ease,
-    max-height 0.22s ease;
+  transition: opacity 0.18s ease, max-height 0.22s ease;
   max-height: 300px;
   overflow: hidden;
 }
 .expand-leave-active {
-  transition:
-    opacity 0.12s ease,
-    max-height 0.18s ease;
+  transition: opacity 0.12s ease, max-height 0.18s ease;
   overflow: hidden;
 }
 .expand-enter-from {

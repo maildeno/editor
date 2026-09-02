@@ -74,7 +74,7 @@
                 "
               >
                 <span
-                  class="absolute top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-all"
+                  class="absolute top-0.5 h-3 w-3 rounded-full bg-(--md-surface) shadow-sm transition-all"
                   :class="platform.enabled ? 'left-3.5' : 'left-0.5'"
                 />
               </button>

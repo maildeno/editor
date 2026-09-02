@@ -167,25 +167,25 @@ const { isDesktop } = useDeviceDetection();
  * as before, and a host calling setEditorTheme() re-themes this notice too,
  * without editing this file again. */
 .desktop-gate {
-  --brand-primary: var(--md-primary, #4a7c59);
-  --brand-primary-dark: var(--md-primary-hover, #3a5a40);
-  --brand-primary-light: var(--md-primary-hover, #3a5a40);
-  --brand-gradient-start: var(--md-primary, #4a7c59);
-  --brand-gradient-end: var(--md-primary-hover, #3a5a40);
-  --gate-surface: var(--md-surface, #ffffff);
-  --gate-backdrop: var(--md-background, #f9fafb);
-  --gate-on-primary: var(--md-on-primary, #ffffff);
-  --gate-warning: var(--md-warning, #f59e0b);
-  --gray-50: var(--md-background, #f9fafb);
-  --gray-100: var(--md-surface-muted, #f3f4f6);
-  --gray-200: var(--md-border, #e5e7eb);
-  --gray-300: var(--md-border-strong, #d1d5db);
-  --gray-400: var(--md-text-subtle, #9ca3af);
-  --gray-500: var(--md-text-subtle, #6b7280);
-  --gray-600: var(--md-text-muted, #4b5563);
-  --gray-700: var(--md-text-muted, #374151);
-  --gray-800: var(--md-text, #1f2937);
-  --gray-900: var(--md-text, #111827);
+  --brand-primary: var(--md-primary, var(--md-primary));
+  --brand-primary-dark: var(--md-primary-hover, var(--md-primary-hover));
+  --brand-primary-light: var(--md-primary-hover, var(--md-primary-hover));
+  --brand-gradient-start: var(--md-primary, var(--md-primary));
+  --brand-gradient-end: var(--md-primary-hover, var(--md-primary-hover));
+  --gate-surface: var(--md-surface, var(--md-surface));
+  --gate-backdrop: var(--md-background, var(--md-surface-hover));
+  --gate-on-primary: var(--md-on-primary, var(--md-surface));
+  --gate-warning: var(--md-warning, var(--md-warning));
+  --gray-50: var(--md-background, var(--md-surface-hover));
+  --gray-100: var(--md-surface-muted, var(--md-surface-muted));
+  --gray-200: var(--md-border, var(--md-border));
+  --gray-300: var(--md-border-strong, var(--md-border-strong));
+  --gray-400: var(--md-text-subtle, var(--md-text-subtle));
+  --gray-500: var(--md-text-subtle, var(--md-text-muted));
+  --gray-600: var(--md-text-muted, var(--md-text-muted));
+  --gray-700: var(--md-text-muted, var(--md-text-muted));
+  --gray-800: var(--md-text, var(--md-text));
+  --gray-900: var(--md-text, var(--md-text));
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg:

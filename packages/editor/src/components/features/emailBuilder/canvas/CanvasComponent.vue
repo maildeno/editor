@@ -40,7 +40,7 @@
         :style="{ top: badgePos.top + 'px', left: badgePos.left + 'px' }"
       >
         <div
-          class="flex items-center gap-1 bg-linear-to-br from-[var(--md-selection)] to-[var(--md-selection-fg)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-lg cursor-default select-none ring-2 ring-[var(--md-surface)]"
+          class="flex items-center gap-1 bg-linear-to-br from-[var(--md-selection)] to-[var(--md-selection-fg)] text-(--md-on-inverse) text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-lg cursor-default select-none ring-2 ring-[var(--md-surface)]"
         >
           <svg
             class="w-2 h-2 shrink-0"
@@ -67,7 +67,7 @@
         >
           <VisibilityPopover :visibility="component.props.visibility" />
           <div
-            class="absolute -top-1.5 right-4 w-3 h-3 bg-gray-950 border-r border-t border-white/10 rotate-45"
+            class="absolute -top-1.5 right-4 w-3 h-3 bg-(--md-inverse-surface) border-r border-t border-(--md-border)/10 rotate-45"
           />
         </div>
       </div>

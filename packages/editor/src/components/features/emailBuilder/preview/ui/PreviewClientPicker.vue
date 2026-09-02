@@ -13,7 +13,7 @@
            the modal. -->
       <Transition name="picker-overlay" appear>
         <div
-          class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          class="absolute inset-0 bg-(--md-inverse-surface)/40 backdrop-blur-sm"
           @click="$emit('update:open', false)"
         />
       </Transition>
@@ -21,20 +21,20 @@
       <!-- Drawer: positioned ABOVE overlay via z-index inside the wrapper. -->
       <Transition name="picker-drawer" appear>
         <div
-          class="absolute top-0 right-0 bottom-0 w-full max-w-md bg-white shadow-2xl flex flex-col"
+          class="absolute top-0 right-0 bottom-0 w-full max-w-md bg-(--md-surface) shadow-2xl flex flex-col"
           @click.stop
         >
           <!-- Header -->
           <div
-            class="flex items-center justify-between px-4 py-3 border-b border-gray-200"
+            class="flex items-center justify-between px-4 py-3 border-b border-(--md-border)"
           >
             <div class="flex items-center gap-2.5">
               <div
-                class="w-8 h-8 rounded-md bg-gray-900 flex items-center justify-center"
+                class="w-8 h-8 rounded-md bg-(--md-inverse-surface) flex items-center justify-center"
                 aria-hidden="true"
               >
                 <svg
-                  class="w-3.5 h-3.5 text-white"
+                  class="w-3.5 h-3.5 text-(--md-on-inverse)"
                   viewBox="0 0 14 14"
                   fill="none"
                 >
@@ -48,18 +48,18 @@
               </div>
               <div>
                 <h3
-                  class="text-[14px] font-semibold text-gray-900 leading-tight"
+                  class="text-[14px] font-semibold text-(--md-text) leading-tight"
                 >
                   Add email client
                 </h3>
-                <p class="text-[11px] text-gray-500 leading-tight mt-0.5">
+                <p class="text-[11px] text-(--md-text-subtle) leading-tight mt-0.5">
                   {{ availableClients.length }} available
                 </p>
               </div>
             </div>
             <button
               type="button"
-              class="w-8 h-8 rounded-md hover:bg-gray-100 text-gray-500 flex items-center justify-center transition"
+              class="w-8 h-8 rounded-md hover:bg-(--md-surface-muted) text-(--md-text-subtle) flex items-center justify-center transition"
               aria-label="Close"
               @click="$emit('update:open', false)"
             >
@@ -75,10 +75,10 @@
           </div>
 
           <!-- Search -->
-          <div class="px-4 py-3 border-b border-gray-100">
+          <div class="px-4 py-3 border-b border-(--md-border)">
             <div class="relative">
               <svg
-                class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-(--md-text-subtle) pointer-events-none"
                 viewBox="0 0 14 14"
                 fill="none"
               >
@@ -101,7 +101,7 @@
                 v-model="search"
                 type="text"
                 placeholder="Search clients…"
-                class="w-full pl-9 pr-3 py-2 text-[13px] rounded-md bg-gray-50 border border-transparent focus:bg-white focus:border-[#42389E] focus:ring-2 focus:ring-[#42389E]/15 outline-none transition placeholder:text-gray-400"
+                class="w-full pl-9 pr-3 py-2 text-[13px] rounded-md bg-(--md-surface-hover) border border-transparent focus:bg-(--md-surface) focus:border-(--md-accent) focus:ring-2 focus:ring-(--md-accent)/15 outline-none transition placeholder:text-(--md-text-subtle)"
               />
             </div>
           </div>
@@ -109,7 +109,7 @@
           <!-- List -->
           <div class="flex-1 overflow-y-auto px-2 py-2">
             <div v-if="filtered.length === 0" class="py-16 text-center">
-              <p class="text-[13px] text-gray-500">
+              <p class="text-[13px] text-(--md-text-subtle)">
                 {{
                   availableClients.length === 0
                     ? "All available clients are already added."
@@ -122,11 +122,11 @@
               <li v-for="c in filtered" :key="c.id">
                 <button
                   type="button"
-                  class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-gray-50 focus:bg-gray-50 transition text-left group"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-(--md-surface-hover) focus:bg-(--md-surface-hover) transition text-left group"
                   @click="handleAdd(c.id)"
                 >
                   <div
-                    class="w-8 h-8 rounded-md flex items-center justify-center text-white font-semibold text-[13px] shrink-0 shadow-sm"
+                    class="w-8 h-8 rounded-md flex items-center justify-center text-(--md-on-inverse) font-semibold text-[13px] shrink-0 shadow-sm"
                     :style="{ backgroundColor: c.accentColor }"
                     aria-hidden="true"
                   >
@@ -134,23 +134,23 @@
                   </div>
                   <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-1.5">
-                      <p class="text-[13px] font-medium text-gray-900 truncate">
+                      <p class="text-[13px] font-medium text-(--md-text) truncate">
                         {{ c.name }}
                       </p>
                       <span
                         v-if="c.forcesMobile"
-                        class="inline-flex items-center text-[9px] font-semibold uppercase tracking-wider px-1 py-px rounded bg-amber-50 text-amber-700 ring-1 ring-amber-100 shrink-0"
+                        class="inline-flex items-center text-[9px] font-semibold uppercase tracking-wider px-1 py-px rounded bg-(--md-warning-bg) text-(--md-warning-fg) ring-1 ring-(--md-warning-border) shrink-0"
                       >
                         Mobile
                       </span>
                     </div>
-                    <p class="text-[11px] text-gray-500 truncate">
+                    <p class="text-[11px] text-(--md-text-subtle) truncate">
                       {{ c.vendor }} · {{ platformLabelOf(c.platform) }} ·
                       {{ c.engine }}
                     </p>
                   </div>
                   <div
-                    class="w-6 h-6 rounded-md bg-gray-100 group-hover:bg-gray-900 group-hover:text-white text-gray-500 flex items-center justify-center transition-colors shrink-0"
+                    class="w-6 h-6 rounded-md bg-(--md-surface-muted) group-hover:bg-(--md-inverse-surface) group-hover:text-(--md-on-inverse) text-(--md-text-subtle) flex items-center justify-center transition-colors shrink-0"
                   >
                     <svg class="w-3 h-3" viewBox="0 0 14 14" fill="none">
                       <path
@@ -168,18 +168,18 @@
 
           <!-- Footer -->
           <div
-            class="px-4 py-3 border-t border-gray-200 flex items-center justify-between bg-gray-50/50"
+            class="px-4 py-3 border-t border-(--md-border) flex items-center justify-between bg-(--md-surface-hover)/50"
           >
             <button
               type="button"
-              class="text-[11.5px] font-medium text-gray-500 hover:text-gray-900 transition"
+              class="text-[11.5px] font-medium text-(--md-text-subtle) hover:text-(--md-text) transition"
               @click="$emit('reset')"
             >
               Reset to defaults
             </button>
             <button
               type="button"
-              class="px-3.5 py-1.5 text-[12.5px] font-medium rounded-md bg-gray-900 text-white hover:bg-gray-800 transition shadow-sm"
+              class="px-3.5 py-1.5 text-[12.5px] font-medium rounded-md bg-(--md-inverse-surface) text-(--md-on-inverse) hover:bg-(--md-inverse-surface) transition shadow-sm"
               @click="$emit('update:open', false)"
             >
               Done

@@ -2,7 +2,7 @@
   <div
     class="flex flex-col h-full rounded-xl border overflow-hidden transition-colors"
     :class="
-      isDark ? 'bg-[#0b0b0c] border-gray-800' : 'bg-white border-gray-200'
+      isDark ? 'bg-[#0b0b0c] border-(--md-border)' : 'bg-(--md-surface) border-(--md-border)'
     "
   >
     <!-- ── Header (window chrome) ────────────────────────────────────────── -->
@@ -10,8 +10,8 @@
       class="flex items-center gap-3 px-3 py-2.5 border-b shrink-0 transition-colors"
       :class="
         isDark
-          ? 'border-gray-800 bg-[#101012]'
-          : 'border-gray-200 bg-gray-50/70'
+          ? 'border-(--md-border) bg-[#101012]'
+          : 'border-(--md-border) bg-(--md-surface-hover)/70'
       "
     >
       <!-- Traffic-light dots — decorative window indicator. -->
@@ -34,7 +34,7 @@
       <div
         class="flex-1 min-w-0 flex items-center gap-2 rounded-md px-2.5 py-1.5 border transition-colors"
         :class="
-          isDark ? 'bg-[#1a1a1d] border-gray-800' : 'bg-white border-gray-200'
+          isDark ? 'bg-[#1a1a1d] border-(--md-border)' : 'bg-(--md-surface) border-(--md-border)'
         "
       >
         <span
@@ -43,13 +43,13 @@
         />
         <span
           class="text-[12px] font-medium truncate"
-          :class="isDark ? 'text-gray-200' : 'text-gray-800'"
+          :class="isDark ? 'text-(--md-text-subtle)' : 'text-(--md-text)'"
         >
           {{ client.name }}
         </span>
         <span
           class="text-[10.5px] truncate"
-          :class="isDark ? 'text-gray-500' : 'text-gray-400'"
+          :class="isDark ? 'text-(--md-text-subtle)' : 'text-(--md-text-subtle)'"
         >
           · {{ client.engine }} · {{ client.viewportWidth }}px
         </span>
@@ -59,7 +59,7 @@
           :class="
             isDark
               ? 'bg-amber-500/15 text-amber-300'
-              : 'bg-amber-50 text-amber-700'
+              : 'bg-(--md-warning-bg) text-(--md-warning-fg)'
           "
         >
           <svg class="w-2 h-2.5" viewBox="0 0 8 10" fill="none">
@@ -82,7 +82,7 @@
       <div
         class="inline-flex items-center rounded-md p-0.5 shrink-0 border transition-colors"
         :class="
-          isDark ? 'bg-[#1a1a1d] border-gray-800' : 'bg-white border-gray-200'
+          isDark ? 'bg-[#1a1a1d] border-(--md-border)' : 'bg-(--md-surface) border-(--md-border)'
         "
         role="radiogroup"
         aria-label="Color mode"
@@ -92,8 +92,8 @@
           class="flex items-center gap-1 px-2 py-1 text-[11px] font-medium rounded transition-all"
           :class="
             !isDark
-              ? 'bg-gray-900 text-white'
-              : 'text-gray-400 hover:text-gray-200'
+              ? 'bg-(--md-inverse-surface) text-(--md-on-inverse)'
+              : 'text-(--md-text-subtle) hover:text-(--md-on-inverse-muted)'
           "
           role="radio"
           :aria-checked="!isDark"
@@ -115,8 +115,8 @@
           class="flex items-center gap-1 px-2 py-1 text-[11px] font-medium rounded transition-all"
           :class="
             isDark
-              ? 'bg-gray-100 text-gray-900'
-              : 'text-gray-500 hover:text-gray-700'
+              ? 'bg-(--md-surface-muted) text-(--md-text)'
+              : 'text-(--md-text-subtle) hover:text-(--md-text-muted)'
           "
           role="radio"
           :aria-checked="isDark"
@@ -141,11 +141,11 @@
         :class="
           darkNoteSeverity === 'info'
             ? isDark
-              ? 'bg-blue-500/10 text-blue-200 border-gray-800'
-              : 'bg-blue-50 text-blue-800 border-gray-200'
+              ? 'bg-blue-500/10 text-blue-200 border-(--md-border)'
+              : 'bg-(--md-info-bg) text-(--md-info-fg) border-(--md-border)'
             : isDark
-              ? 'bg-amber-500/10 text-amber-200 border-gray-800'
-              : 'bg-amber-50/80 text-amber-800 border-gray-200'
+              ? 'bg-amber-500/10 text-(--md-warning-fg) border-(--md-border)'
+              : 'bg-(--md-warning-bg)/80 text-(--md-warning-fg) border-(--md-border)'
         "
       >
         <svg
@@ -214,7 +214,7 @@
       >
         <div
           class="rounded-lg shadow-md overflow-hidden transition-colors"
-          :class="isDark ? 'ring-1 ring-white/5' : ''"
+          :class="isDark ? 'ring-1 ring-(--md-surface)/5' : ''"
           :style="{
             width: client.viewportWidth + 'px',
             maxWidth: 'none',
@@ -244,8 +244,8 @@
       class="px-4 py-2.5 border-t transition-colors"
       :class="
         isDark
-          ? 'bg-[#101012] border-gray-800'
-          : 'bg-gray-50/70 border-gray-200'
+          ? 'bg-[#101012] border-(--md-border)'
+          : 'bg-(--md-surface-hover)/70 border-(--md-border)'
       "
     >
       <PreviewCapabilityBadges :capabilities="client.capabilities" expanded />
@@ -304,7 +304,7 @@ function setMode(dark: boolean) {
 const chromeBg = computed(() => darkChromeBg(isDark.value));
 
 // Background color for the iframe + its wrapper. This used to be a
-// hardcoded `bg-white`, which was correct for opaque emails but lied
+// hardcoded `bg-(--md-surface)`, which was correct for opaque emails but lied
 // when the email body had a transparent background — the white surface
 // would show through. We now match the simulated body color so that, in
 // dark mode, a transparent-bodied email sees the dark surface that the

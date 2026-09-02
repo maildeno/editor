@@ -9,8 +9,8 @@
       class="relative group/badge inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10.5px] font-medium border transition-colors cursor-default"
       :class="
         cap.supported
-          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-          : 'bg-red-50 text-red-700 border-red-200'
+          ? 'bg-(--md-success-bg) text-(--md-success-fg) border-(--md-success-border)'
+          : 'bg-(--md-danger-bg) text-(--md-danger-fg) border-(--md-danger-border)'
       "
     >
       <svg
@@ -42,12 +42,12 @@
         class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 opacity-0 pointer-events-none group-hover/badge:opacity-100 transition-opacity duration-150 z-50 max-w-[240px]"
       >
         <span
-          class="block bg-gray-950 text-white text-[10.5px] font-normal leading-snug px-2 py-1.5 rounded shadow-lg whitespace-normal text-center"
+          class="block bg-(--md-inverse-surface) text-(--md-on-inverse) text-[10.5px] font-normal leading-snug px-2 py-1.5 rounded shadow-lg whitespace-normal text-center"
         >
           {{ cap.title }}
         </span>
         <span
-          class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-950 rotate-45"
+          class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-(--md-inverse-surface) rotate-45"
         />
       </span>
     </span>

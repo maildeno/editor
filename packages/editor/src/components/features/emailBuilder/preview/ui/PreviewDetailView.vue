@@ -2,20 +2,20 @@
   <div class="flex flex-col h-full min-h-0">
     <!-- ── Top nav bar ────────────────────────────────────────────────────── -->
     <div
-      class="flex items-center justify-between gap-3 py-3 mb-3 shrink-0 flex-wrap bg-white/95 backdrop-blur border-b border-gray-200 z-30 px-5"
+      class="flex items-center justify-between gap-3 py-3 mb-3 shrink-0 flex-wrap bg-(--md-surface)/95 backdrop-blur border-b border-(--md-border) z-30 px-5"
     >
       <!-- Back to grid -->
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-2 min-w-0">
           <button
             type="button"
-            class="flex items-center justify-center w-10 h-10 shrink-0 rounded-full hover:bg-gray-100 transition-colors"
+            class="flex items-center justify-center w-10 h-10 shrink-0 rounded-full hover:bg-(--md-surface-muted) transition-colors"
             aria-label="Back"
             @click="goBack"
           >
             <slot name="back-icon">
               <svg
-                class="w-5 h-5 text-gray-600"
+                class="w-5 h-5 text-(--md-text-muted)"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -28,10 +28,10 @@
             </slot>
           </button>
           <div class="min-w-0">
-            <h1 class="text-[13.5px] font-semibold text-gray-900 leading-tight">
+            <h1 class="text-[13.5px] font-semibold text-(--md-text) leading-tight">
               Inbox preview
             </h1>
-            <p class="text-[11px] text-gray-500 truncate leading-tight">
+            <p class="text-[11px] text-(--md-text-subtle) truncate leading-tight">
               <template v-if="isHydrated">
                 Across {{ selectedClients.length }}
                 {{ selectedClients.length === 1 ? "client" : "clients" }} ·
@@ -48,7 +48,7 @@
         <div class="relative group/prev shrink-0">
           <button
             type="button"
-            class="w-9 h-9 rounded-md flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            class="w-9 h-9 rounded-md flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-muted) transition disabled:opacity-30 disabled:cursor-not-allowed"
             :disabled="!hasPrev"
             :aria-label="
               prevName ? `Previous: ${prevName}` : 'No previous client'
@@ -71,29 +71,29 @@
             class="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 opacity-0 pointer-events-none group-hover/prev:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap"
           >
             <div
-              class="bg-gray-950 text-white text-[11px] font-medium px-2 py-1 rounded shadow-lg flex items-center gap-1"
+              class="bg-(--md-inverse-surface) text-(--md-on-inverse) text-[11px] font-medium px-2 py-1 rounded shadow-lg flex items-center gap-1"
             >
               <span class="opacity-50">←</span> {{ prevName }}
             </div>
             <div
-              class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-950 rotate-45"
+              class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-(--md-inverse-surface) rotate-45"
             />
           </div>
         </div>
 
         <div class="flex items-center gap-2.5 min-w-0">
           <div
-            class="w-9 h-9 rounded-lg flex items-center justify-center text-white font-semibold text-sm shrink-0"
+            class="w-9 h-9 rounded-lg flex items-center justify-center text-(--md-on-inverse) font-semibold text-sm shrink-0"
             :style="{ backgroundColor: client.accentColor }"
             aria-hidden="true"
           >
             {{ client.logoText }}
           </div>
           <div class="min-w-0 text-center">
-            <p class="text-sm font-semibold text-gray-900 truncate">
+            <p class="text-sm font-semibold text-(--md-text) truncate">
               {{ client.name }}
             </p>
-            <p class="text-[11px] text-gray-500 truncate">
+            <p class="text-[11px] text-(--md-text-subtle) truncate">
               {{ position }} · {{ client.vendor }}
             </p>
           </div>
@@ -102,7 +102,7 @@
         <div class="relative group/next shrink-0">
           <button
             type="button"
-            class="w-9 h-9 rounded-md flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            class="w-9 h-9 rounded-md flex items-center justify-center text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-muted) transition disabled:opacity-30 disabled:cursor-not-allowed"
             :disabled="!hasNext"
             :aria-label="nextName ? `Next: ${nextName}` : 'No next client'"
             @click="$emit('next')"
@@ -122,12 +122,12 @@
             class="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 opacity-0 pointer-events-none group-hover/next:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap"
           >
             <div
-              class="bg-gray-950 text-white text-[11px] font-medium px-2 py-1 rounded shadow-lg flex items-center gap-1"
+              class="bg-(--md-inverse-surface) text-(--md-on-inverse) text-[11px] font-medium px-2 py-1 rounded shadow-lg flex items-center gap-1"
             >
               {{ nextName }} <span class="opacity-50">→</span>
             </div>
             <div
-              class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-950 rotate-45"
+              class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-(--md-inverse-surface) rotate-45"
             />
           </div>
         </div>
@@ -136,35 +136,35 @@
       <div class="flex items-center gap-2">
         <div
           v-if="hasContent"
-          class="hidden md:inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-medium ring-1 ring-emerald-100"
+          class="hidden md:inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-(--md-success-bg) text-(--md-success-fg) text-[11px] font-medium ring-1 ring-(--md-success-border)"
         >
           <span class="relative flex w-1.5 h-1.5">
             <span
-              class="animate-ping absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75"
+              class="animate-ping absolute inline-flex w-full h-full rounded-full bg-(--md-success) opacity-75"
             />
             <span
-              class="relative inline-flex w-1.5 h-1.5 rounded-full bg-emerald-500"
+              class="relative inline-flex w-1.5 h-1.5 rounded-full bg-(--md-success)"
             />
           </span>
           Live
         </div>
 
         <button
-          class="flex items-center gap-1.5 text-xs border border-gray-100 px-2 py-1.25 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
+          class="flex items-center gap-1.5 text-xs border border-(--md-border) px-2 py-1.25 rounded-lg hover:bg-(--md-surface-hover) text-(--md-text-muted) transition-colors"
           @click="$emit('back-to-grid')"
         >
-          <Icon name="plus" class="text-gray-500" style="font-size: 10px" />
+          <Icon name="plus" class="text-(--md-text-subtle)" style="font-size: 10px" />
           Email clients
         </button>
 
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-md text-red-600 hover:bg-red-50 transition"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-md text-(--md-danger) hover:bg-(--md-danger-bg) transition"
           :aria-label="`Remove ${client.name}`"
           @click="$emit('remove', client.id)"
         >
           <svg
-            class="w-3.5 h-3.5 text-red-600"
+            class="w-3.5 h-3.5 text-(--md-danger)"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

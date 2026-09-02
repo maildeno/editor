@@ -31,7 +31,7 @@
     />
     <!-- Thumb -->
     <div
-      class="absolute top-1/2 w-3.5 h-3.5 bg-white rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 z-10"
+      class="absolute top-1/2 w-3.5 h-3.5 bg-(--md-surface) rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 z-10"
       :style="{
         left: `${modelValue * 100}%`,
         boxShadow: '0 0 0 1.5px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2)',

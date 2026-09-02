@@ -254,7 +254,7 @@
               >
               <span class="text-(--md-text-subtle) shrink-0">→</span>
               <span
-                class="font-mono bg-sky-50 text-sky-700 px-1.5 py-0.5 rounded border border-sky-100 truncate"
+                class="font-mono bg-(--md-info-bg) text-(--md-info-fg) px-1.5 py-0.5 rounded border border-(--md-info-border) truncate"
               >
                 {{ previewValueFor(entry) }}
               </span>
@@ -275,7 +275,7 @@
               >
               <span class="text-(--md-text-subtle) shrink-0">→</span>
               <span
-                class="font-mono text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 truncate"
+                class="font-mono text-(--md-info-fg) bg-(--md-info-bg) px-1.5 py-0.5 rounded border border-(--md-info-border) truncate"
               >
                 {{ espTokenFor(entry.tag) }}
               </span>
@@ -333,11 +333,11 @@ const currentSyntaxLabel = computed(
 
 const syntaxBadgeClass = computed(() => {
   const groupMap: Record<string, string> = {
-    handlebars: "bg-yellow-50 text-yellow-700 border-yellow-200",
-    liquid: "bg-blue-50 text-blue-700 border-blue-200",
-    ampscript: "bg-purple-50 text-purple-700 border-purple-200",
-    custom: "bg-gray-100 text-gray-600 border-gray-200",
-    mso: "bg-slate-100 text-slate-600 border-slate-200",
+    handlebars: "bg-(--md-warning-bg) text-(--md-warning-fg) border-(--md-warning-border)",
+    liquid: "bg-(--md-info-bg) text-(--md-info-fg) border-(--md-info-border)",
+    ampscript: "bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)",
+    custom: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
+    mso: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
   };
   const group = getESPMetaSafe(espConfig.value.syntax, ESP_SYNTAX_META).group;
   return groupMap[group] ?? groupMap.custom;

@@ -12,15 +12,15 @@ const props = defineProps<{
 
 const { previewMode } = useEmailBuilder();
 
-// Spacer uses its own distinct hide-indicator (bg-black/35 overlay), not the
+// Spacer uses its own distinct hide-indicator (bg-(--md-scrim) overlay), not the
 // shared opacity-30 hideClass every other block uses — preserved exactly as
 // CanvasComponent.vue originally had it, not assumed to match the pattern.
 const hideClass = computed(() => [
   previewMode.value === "mobile" && props.component.props.mobileHide
-    ? "bg-black/35"
+    ? "bg-(--md-inverse-surface)/35"
     : "",
   previewMode.value === "desktop" && props.component.props.desktopHide
-    ? "bg-black/35"
+    ? "bg-(--md-inverse-surface)/35"
     : "",
 ]);
 
