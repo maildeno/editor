@@ -15,11 +15,16 @@
  * supported — anything omitted falls back to a coherent default — but this
  * file doubles as the playground's reference sheet, so leaving gaps would mean
  * the demo silently exercises package defaults for the tokens nobody wrote
- * down. That is exactly how a broken dark palette went unnoticed: the
- * playground had no dark mode at all, so nothing here was ever evaluated
- * against `.dark`.
+ * down.
  *
  * ── Reading the dark half ───────────────────────────────────────────────────
+ * The dark neutrals (background/surface/border/sidebar/etc.) are true grays —
+ * zero hue, R=G=B — not the navy-tinted slate the light half's grays lean on.
+ * That's deliberate: at low luminance, even a small blue channel bias reads
+ * as "everything is midnight blue" and competes with the indigo/violet brand
+ * colors instead of setting them off. Brand, selection, and semantic tokens
+ * keep their hue in the dark half; only the chrome went neutral.
+ *
  * Three pairs behave in ways that are easy to get wrong:
  *
  *   inverseSurface   INVERTS. Near-black in light, near-white in dark. It is
@@ -32,7 +37,14 @@
  *   canvasBg         Goes DEEPER than `background`, not lighter. The email
  *                    itself stays a light document because that is what it
  *                    will be in an inbox, so the workspace has to read as a
- *                    dark room the sheet is lit against.
+ *                    dark room the sheet is lit against. In dark mode this
+ *                    bottoms out at true black.
+ *
+ * One consistency fix from the previous pass: `buttonPrimaryBg` had drifted
+ * to the light-mode indigo (#6366f1) while `primary`/`primaryHover` used the
+ * dark-adjusted indigo (#818cf8) — two different "primary" shades on screen
+ * at once. Both now use the same dark-adjusted indigo, with dark ink text
+ * instead of white, since #818cf8 is too light to carry white text.
  */
 import type { ThemeOptions } from "@maildeno/editor";
 
@@ -169,18 +181,20 @@ export const theme: ThemeOptions = {
     // carry white text.
     onPrimary: "#1e1b4b",
 
-    // Core
-    background: "#0b1120",
-    surface: "#111827",
-    surfaceMuted: "#1f2937",
-    surfaceHover: "#374151",
+    // Core — true neutral gray (R=G=B), not navy-tinted slate. This is the
+    // fix: the previous dark half built background/surface/border off blue
+    // hex values, so the whole UI read as tinted midnight-blue.
+    background: "#0a0a0a",
+    surface: "#171717",
+    surfaceMuted: "#212121",
+    surfaceHover: "#2b2b2b",
 
-    text: "#f9fafb",
-    textMuted: "#9ca3af",
-    textSubtle: "#6b7280",
+    text: "#fafafa",
+    textMuted: "#a3a3a3",
+    textSubtle: "#6b6b6b",
 
-    border: "#1f2937",
-    borderStrong: "#374151",
+    border: "#262626",
+    borderStrong: "#3a3a3a",
 
     danger: "#f87171",
     onDanger: "#450a0a",
@@ -194,33 +208,37 @@ export const theme: ThemeOptions = {
     scrim: "rgba(0, 0, 0, 0.65)",
 
     // Header
-    headerBg: "#111827",
-    headerText: "#f9fafb",
-    headerBorder: "#1f2937",
+    headerBg: "#171717",
+    headerText: "#fafafa",
+    headerBorder: "#262626",
 
-    // Sidebar
-    sidebarBg: "#0f172a",
-    sidebarText: "#f9fafb",
-    sidebarBorder: "#1f2937",
+    // Sidebar — a touch darker than the header so the two chrome bands stay
+    // legible against each other without reaching for a hue.
+    sidebarBg: "#111111",
+    sidebarText: "#fafafa",
+    sidebarBorder: "#262626",
 
-    // Selected tabs / controls
-    accentBg: "rgba(99, 102, 241, 0.16)",
-    accentText: "#a5b4fc",
+    // Selected tabs / controls — brand-tinted on purpose, unlike the neutral
+    // chrome around it.
+    accentBg: "#222d47",
+    accentText: "#fefefe",
 
-    // Deeper than `background`, deliberately.
-    canvasBg: "#020617",
+    // Deeper than `background`, deliberately: true black, so the light email
+    // document reads as lit from within a dark room rather than just another
+    // gray panel.
+    canvasBg: "#000000",
 
     // Overlays
-    overlayBg: "#111827",
-    overlayText: "#f9fafb",
-    overlayBorder: "#1f2937",
+    overlayBg: "#171717",
+    overlayText: "#fafafa",
+    overlayBorder: "#262626",
     overlayShadow:
       "0 24px 48px -12px rgba(0, 0, 0, 0.55), 0 10px 24px -8px rgba(0, 0, 0, 0.40)",
 
     // Toolbar
-    toolbarBg: "#111827",
-    toolbarText: "#d1d5db",
-    toolbarBorder: "#1f2937",
+    toolbarBg: "#171717",
+    toolbarText: "#d1d1d1",
+    toolbarBorder: "#262626",
 
     // Canvas selection — same two families, lifted for a dark ground.
     selection: "#60a5fa",
@@ -232,17 +250,19 @@ export const theme: ThemeOptions = {
     rowSelectionFg: "#ddd6fe",
 
     // Inverts — a near-black tooltip has nothing to sit against here.
-    tooltipBg: "#f9fafb",
-    tooltipText: "#111827",
+    tooltipBg: "#fafafa",
+    tooltipText: "#171717",
 
-    // Buttons
-    buttonPrimaryBg: "#6366f1",
-    buttonPrimaryText: "#ffffff",
-    buttonPrimaryHoverBg: "#818cf8",
+    // Buttons — now consistent with `primary`/`primaryHover` above instead
+    // of quietly using the light-mode indigo. Text switches to dark ink to
+    // stay readable on the lighter fill (see onPrimary note).
+    buttonPrimaryBg: brandDark,
+    buttonPrimaryText: "#1e1b4b",
+    buttonPrimaryHoverBg: brandDarkHover,
 
-    buttonSecondaryBg: "#1f2937",
-    buttonSecondaryText: "#f9fafb",
-    buttonSecondaryHoverBg: "#374151",
+    buttonSecondaryBg: "#262626",
+    buttonSecondaryText: "#fafafa",
+    buttonSecondaryHoverBg: "#3a3a3a",
 
     // Severity tints — kept dark and desaturated so a toast reads as a
     // surface in the UI rather than a bright rectangle punched through it.
@@ -262,10 +282,10 @@ export const theme: ThemeOptions = {
     dangerFg: "#fca5a5",
     dangerBorder: "rgba(248, 113, 113, 0.30)",
 
-    // Flipped, as promised on the light side.
-    inverseSurface: "#f9fafb",
-    onInverse: "#111827",
-    onInverseMuted: "#4b5563",
+    // Not Flipped
+    inverseSurface: "#111827",
+    onInverse: "#f9fafb",
+    onInverseMuted: "#6b6b6b",
 
     // Accent
     accent: "#a78bfa",
