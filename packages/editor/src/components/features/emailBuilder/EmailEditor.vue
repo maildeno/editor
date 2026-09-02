@@ -89,7 +89,13 @@
           leave-active-class="transition-opacity duration-200 ease-out"
           leave-to-class="opacity-0"
         >
-          <Loader v-if="!isReady" />
+          <!-- brandName is forwarded, not defaulted here: this component
+               declares the prop with no default on purpose, so `undefined`
+               reaches Loader and DesktopOnlyNotice alike and each resolves it
+               from the one shared constant in brand.ts. Defaulting it at this
+               level would silently make the empty-string case ("render no
+               wordmark") unreachable. -->
+          <Loader v-if="!isReady" :brand-name="brandName" />
         </Transition>
         <SidebarLeft />
         <!--
@@ -248,17 +254,21 @@ const props = withDefaults(
        * everyone because no adapter method backs writing to it. */
       savedRows?: { create?: boolean; rename?: boolean; delete?: boolean };
     };
-    /** Name shown in the desktop-only notice's "Powered by" line.
+    /** Name shown in the loading overlay and in the desktop-only notice's
+     * "Powered by" line.
      *
      * Deliberately a prop rather than a theme token: `theme` carries
      * colours, and this is text, so it has no sensible home in the token
      * map. It is also the one piece of chrome a host cannot restyle away,
      * since the notice replaces the entire editor on small screens.
      *
-     * No default is declared here on purpose — DesktopOnlyNotice.vue owns
-     * it, so there is one place to change it rather than two that can
-     * drift. Omit for the package default; pass an empty string to drop
-     * the attribution line entirely. */
+     * No default is declared here on purpose. Both consumers resolve an
+     * undefined value from DEFAULT_BRAND_NAME in brand.ts, so there is one
+     * place to change it rather than three that can drift — and declaring a
+     * default here would also make the empty-string case unreachable, since
+     * the prop would never arrive undefined. Omit for the package default;
+     * pass an empty string to render no wordmark and drop the attribution
+     * line entirely. */
     brandName?: string;
     /** Replaces the saved-templates panel (and its header button) with
      * version history.

@@ -134,22 +134,26 @@
 
 <script setup lang="ts">
 import { useDeviceDetection } from "@/composables/system/useDeviceDetection";
+import { DEFAULT_BRAND_NAME } from "@/brand";
 
 interface Props {
   /**
    * Name shown in the "Powered by" line at the bottom of the notice.
    *
-   * This default is the single source of truth for it. EmailEditor.vue
-   * forwards the prop through without redeclaring a default of its own, so
-   * an undefined value arriving from any of the three mount paths (Vue
-   * component, custom element, light DOM) lands here and resolves the same
-   * way. Pass an empty string to hide the line entirely.
+   * EmailEditor.vue forwards the prop through without redeclaring a default
+   * of its own, so an undefined value arriving from any of the three mount
+   * paths (Vue component, custom element, light DOM) lands here and resolves
+   * the same way. Pass an empty string to hide the line entirely.
+   *
+   * The default itself now lives in brand.ts — Loader.vue renders the same
+   * name, and two inline copies of the string would be two things to keep in
+   * step. Behaviour here is unchanged.
    */
   brandName?: string;
 }
 
 withDefaults(defineProps<Props>(), {
-  brandName: "Maildeno",
+  brandName: DEFAULT_BRAND_NAME,
 });
 
 const { isDesktop } = useDeviceDetection();
