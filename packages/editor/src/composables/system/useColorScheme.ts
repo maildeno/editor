@@ -78,7 +78,10 @@ export function useColorScheme(
     return m === "auto" ? pageIsDark.value : m === "dark";
   });
 
-  if (typeof document !== "undefined" && typeof MutationObserver !== "undefined") {
+  if (
+    typeof document !== "undefined" &&
+    typeof MutationObserver !== "undefined"
+  ) {
     const sync = () => {
       pageIsDark.value = readPageDark();
     };
@@ -97,7 +100,8 @@ export function useColorScheme(
     // scripts most SSR apps inline in <head> run before Vue, but a client-only
     // switcher may not. One re-read on the next frame costs nothing and closes
     // that window.
-    if (typeof requestAnimationFrame === "function") requestAnimationFrame(sync);
+    if (typeof requestAnimationFrame === "function")
+      requestAnimationFrame(sync);
 
     onUnmounted(() => observer.disconnect());
   }
@@ -106,11 +110,9 @@ export function useColorScheme(
   // applied during the same patch as first render, so there is no frame where
   // the editor is light inside a dark page. The custom-element host is outside
   // this component's template, so it is toggled here instead.
-  watch(
-    isDark,
-    (dark) => host?.classList.toggle(DARK_CLASS, dark),
-    { immediate: true },
-  );
+  watch(isDark, (dark) => host?.classList.toggle(DARK_CLASS, dark), {
+    immediate: true,
+  });
 
   onUnmounted(() => host?.classList.remove(DARK_CLASS));
 

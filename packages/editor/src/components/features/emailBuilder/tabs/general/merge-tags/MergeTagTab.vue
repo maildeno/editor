@@ -379,10 +379,13 @@ const currentSyntaxLabel = computed(
 
 const syntaxBadgeClass = computed(() => {
   const groupMap: Record<string, string> = {
-    handlebars: "bg-(--md-warning-bg) text-(--md-warning-fg) border-(--md-warning-border)",
+    handlebars:
+      "bg-(--md-warning-bg) text-(--md-warning-fg) border-(--md-warning-border)",
     liquid: "bg-(--md-info-bg) text-(--md-info-fg) border-(--md-info-border)",
-    ampscript: "bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)",
-    custom: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
+    ampscript:
+      "bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)",
+    custom:
+      "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
     mso: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
   };
   const group = getESPMetaSafe(espConfig.value.syntax, ESP_SYNTAX_META).group;

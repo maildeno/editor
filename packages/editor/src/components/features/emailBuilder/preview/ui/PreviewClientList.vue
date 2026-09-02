@@ -110,7 +110,9 @@
         </svg>
       </div>
       <div>
-        <p class="text-base font-medium text-(--md-text-muted)">No clients yet</p>
+        <p class="text-base font-medium text-(--md-text-muted)">
+          No clients yet
+        </p>
         <p class="text-sm text-(--md-text-subtle) mt-1 max-w-xs">
           Add an email client to preview how your email will render across
           inboxes.

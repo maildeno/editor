@@ -33,7 +33,9 @@
         <span class="text-[10.5px] text-(--md-text-subtle) truncate">
           · Live canvas data
         </span>
-        <span class="ml-auto text-[10.5px] text-(--md-text-subtle) font-mono shrink-0">
+        <span
+          class="ml-auto text-[10.5px] text-(--md-text-subtle) font-mono shrink-0"
+        >
           {{ effectiveWidth }}px
         </span>
       </div>
@@ -80,7 +82,9 @@
             </svg>
           </div>
           <div>
-            <p class="text-sm font-medium text-(--md-text-muted)">No content yet</p>
+            <p class="text-sm font-medium text-(--md-text-muted)">
+              No content yet
+            </p>
             <p class="text-[12px] text-(--md-text-subtle) mt-1">
               Add components in the builder to see them here.
             </p>

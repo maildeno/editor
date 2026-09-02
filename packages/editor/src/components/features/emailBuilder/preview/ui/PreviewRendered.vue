@@ -2,7 +2,9 @@
   <div
     class="flex flex-col h-full rounded-xl border overflow-hidden transition-colors"
     :class="
-      isDark ? 'bg-[#0b0b0c] border-(--md-border)' : 'bg-(--md-surface) border-(--md-border)'
+      isDark
+        ? 'bg-[#0b0b0c] border-(--md-border)'
+        : 'bg-(--md-surface) border-(--md-border)'
     "
   >
     <!-- ── Header (window chrome) ────────────────────────────────────────── -->
@@ -34,7 +36,9 @@
       <div
         class="flex-1 min-w-0 flex items-center gap-2 rounded-md px-2.5 py-1.5 border transition-colors"
         :class="
-          isDark ? 'bg-[#1a1a1d] border-(--md-border)' : 'bg-(--md-surface) border-(--md-border)'
+          isDark
+            ? 'bg-[#1a1a1d] border-(--md-border)'
+            : 'bg-(--md-surface) border-(--md-border)'
         "
       >
         <span
@@ -49,7 +53,9 @@
         </span>
         <span
           class="text-[10.5px] truncate"
-          :class="isDark ? 'text-(--md-text-subtle)' : 'text-(--md-text-subtle)'"
+          :class="
+            isDark ? 'text-(--md-text-subtle)' : 'text-(--md-text-subtle)'
+          "
         >
           · {{ client.engine }} · {{ client.viewportWidth }}px
         </span>
@@ -82,7 +88,9 @@
       <div
         class="inline-flex items-center rounded-md p-0.5 shrink-0 border transition-colors"
         :class="
-          isDark ? 'bg-[#1a1a1d] border-(--md-border)' : 'bg-(--md-surface) border-(--md-border)'
+          isDark
+            ? 'bg-[#1a1a1d] border-(--md-border)'
+            : 'bg-(--md-surface) border-(--md-border)'
         "
         role="radiogroup"
         aria-label="Color mode"

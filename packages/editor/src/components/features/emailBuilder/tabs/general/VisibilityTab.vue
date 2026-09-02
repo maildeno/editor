@@ -200,7 +200,9 @@
                   v-if="rule.tag"
                   class="flex items-center gap-0.5 text-[9px] font-medium ml-auto shrink-0"
                   :class="
-                    isRuleMatched(rule) ? 'text-(--md-success-fg)' : 'text-(--md-text-subtle)'
+                    isRuleMatched(rule)
+                      ? 'text-(--md-success-fg)'
+                      : 'text-(--md-text-subtle)'
                   "
                 >
                   <Icon

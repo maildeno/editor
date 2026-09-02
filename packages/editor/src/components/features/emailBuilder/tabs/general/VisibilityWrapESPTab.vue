@@ -225,7 +225,9 @@
           class="block text-[10px] text-(--md-text-subtle) uppercase tracking-wide"
           >Tag Preview</label
         >
-        <div class="bg-(--md-inverse-surface) rounded-md p-2.5 space-y-1 overflow-x-auto">
+        <div
+          class="bg-(--md-inverse-surface) rounded-md p-2.5 space-y-1 overflow-x-auto"
+        >
           <p class="font-mono text-[10px] text-(--md-success) whitespace-pre">
             {{ firstBlockPreview.openTag }}
           </p>
@@ -356,19 +358,20 @@
           class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-(--md-text-subtle)"
         >
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-(--md-success)">✓</span> Native
+            <span class="font-mono font-bold text-(--md-success)">✓</span>
+            Native
           </span>
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-(--md-warning)">~</span> Requires
-            helper
+            <span class="font-mono font-bold text-(--md-warning)">~</span>
+            Requires helper
           </span>
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-(--md-warning)">⚠</span> Degraded
-            fallback
+            <span class="font-mono font-bold text-(--md-warning)">⚠</span>
+            Degraded fallback
           </span>
           <span class="flex items-center gap-1">
-            <span class="font-mono font-bold text-(--md-text-subtle)">–</span> Not
-            supported
+            <span class="font-mono font-bold text-(--md-text-subtle)">–</span>
+            Not supported
           </span>
           <span
             class="flex items-center gap-1 text-(--md-text-subtle) border-t border-(--md-border) pt-1 w-full mt-0.5"
@@ -424,14 +427,18 @@ const currentMeta = computed(() =>
 
 const syntaxBadgeClass = computed(() => {
   const map: Record<string, string> = {
-    handlebars: "bg-(--md-warning-bg) text-(--md-warning-fg) border-(--md-warning-border)",
+    handlebars:
+      "bg-(--md-warning-bg) text-(--md-warning-fg) border-(--md-warning-border)",
     liquid: "bg-(--md-info-bg) text-(--md-info-fg) border-(--md-info-border)",
-    ampscript: "bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)",
-    custom: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
+    ampscript:
+      "bg-(--md-accent-soft) text-(--md-accent) border-(--md-accent-border)",
+    custom:
+      "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
     mso: "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)",
   };
   return (
-    map[currentMeta.value.group] ?? "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)"
+    map[currentMeta.value.group] ??
+    "bg-(--md-surface-muted) text-(--md-text-muted) border-(--md-border)"
   );
 });
 

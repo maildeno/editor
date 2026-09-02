@@ -28,10 +28,14 @@
             </slot>
           </button>
           <div class="min-w-0">
-            <h1 class="text-[13.5px] font-semibold text-(--md-text) leading-tight">
+            <h1
+              class="text-[13.5px] font-semibold text-(--md-text) leading-tight"
+            >
               Inbox preview
             </h1>
-            <p class="text-[11px] text-(--md-text-subtle) truncate leading-tight">
+            <p
+              class="text-[11px] text-(--md-text-subtle) truncate leading-tight"
+            >
               <template v-if="isHydrated">
                 Across {{ selectedClients.length }}
                 {{ selectedClients.length === 1 ? "client" : "clients" }} ·
@@ -153,7 +157,11 @@
           class="flex items-center gap-1.5 text-xs border border-(--md-border) px-2 py-1.25 rounded-lg hover:bg-(--md-surface-hover) text-(--md-text-muted) transition-colors"
           @click="$emit('back-to-grid')"
         >
-          <Icon name="plus" class="text-(--md-text-subtle)" style="font-size: 10px" />
+          <Icon
+            name="plus"
+            class="text-(--md-text-subtle)"
+            style="font-size: 10px"
+          />
           Email clients
         </button>
 

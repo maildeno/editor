@@ -353,9 +353,7 @@ function applyThemeTokens(
   //   .dark ${sel}   .dark on an ANCESTOR — covers the frame before the
   //                  mirror lands, and any host that targets <html> manually
   if (darkDecls)
-    blocks.push(
-      `${sel}.dark,\n${sel} .dark,\n.dark ${sel} {\n${darkDecls}\n}`,
-    );
+    blocks.push(`${sel}.dark,\n${sel} .dark,\n.dark ${sel} {\n${darkDecls}\n}`);
 
   sheet.textContent = blocks.join("\n\n");
 }

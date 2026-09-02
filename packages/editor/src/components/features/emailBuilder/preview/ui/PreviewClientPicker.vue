@@ -52,7 +52,9 @@
                 >
                   Add email client
                 </h3>
-                <p class="text-[11px] text-(--md-text-subtle) leading-tight mt-0.5">
+                <p
+                  class="text-[11px] text-(--md-text-subtle) leading-tight mt-0.5"
+                >
                   {{ availableClients.length }} available
                 </p>
               </div>
@@ -134,7 +136,9 @@
                   </div>
                   <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-1.5">
-                      <p class="text-[13px] font-medium text-(--md-text) truncate">
+                      <p
+                        class="text-[13px] font-medium text-(--md-text) truncate"
+                      >
                         {{ c.name }}
                       </p>
                       <span
