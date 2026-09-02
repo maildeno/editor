@@ -11,6 +11,7 @@ import {
 } from "vue";
 import { useToast } from "@/composables/ui/useToast";
 import { useStorageAdapter, useHasTemplateLibrary } from "@/adapters";
+import { isHandled } from "@/adapters/errors";
 import { useTeleportTarget } from "@/composables/ui/useTeleportTarget";
 
 interface ExportCapabilities {
@@ -256,18 +257,19 @@ async function handleSave() {
 
   isSaving.value = true;
 
+  // Captured before saveTemplate() runs — it transitions builderMode from
+  // "create" to "edit" as a side effect, so checking builderMode.value
+  // for the toast *after* the call would always read "edit", even on the
+  // very first save. Declared outside the try so the catch below can word
+  // its own message the same way.
+  const wasCreating = builderMode.value === "create";
+
   try {
     // Deep-clone before optimizing so the live canvas state is never mutated.
     const optimizedCanvas = optimizeCanvas(
       JSON.parse(JSON.stringify(canvasStyles.value)),
     );
     const optimizedRows = optimizeRows(JSON.parse(JSON.stringify(rows.value)));
-
-    // Captured before saveTemplate() runs — it transitions builderMode from
-    // "create" to "edit" as a side effect, so checking builderMode.value
-    // for the toast *after* the call would always read "edit", even on the
-    // very first save.
-    const wasCreating = builderMode.value === "create";
 
     await saveTemplate({
       // templateName is a computed alias for savedTemplateName, so both are
@@ -288,6 +290,25 @@ async function handleSave() {
       summary: wasCreating ? "Template saved" : "Template updated",
       life: 3000,
     });
+  } catch (err) {
+    // Previously a bare try/finally: a rejecting adapter left isSaving reset
+    // and nothing else — no toast, no emit, an unhandled rejection in the
+    // console, and a user who has every reason to think the save worked. The
+    // most common cause is the least visible one: a host whose backend
+    // refuses the write (a read-only role, a plan limit, an expired session).
+    //
+    // Deliberately does NOT clearLocal() or set isSaved — the autosaved draft
+    // is now the only copy of this work, and the header must keep offering
+    // Save rather than settling into its saved state.
+    console.error("[maildeno-editor] failed to save template:", err);
+    if (!isHandled(err)) {
+      toast.add({
+        severity: "error",
+        summary: wasCreating ? "Save failed" : "Update failed",
+        detail: "Your work is still here. Please try again.",
+        life: 5000,
+      });
+    }
   } finally {
     isSaving.value = false;
   }

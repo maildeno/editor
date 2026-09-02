@@ -18,6 +18,7 @@
 import { ref, computed, watch } from "vue";
 import { useStorageAdapter } from "@/adapters";
 import type { TemplateVersionSummary } from "@/adapters/types";
+import { isHandled } from "@/adapters/errors";
 import { useConfirm } from "@/composables/ui/useConfirm";
 import { useToast } from "@/composables/ui/useToast";
 import Icon from "@/components/ui/Icon.vue";
@@ -114,12 +115,17 @@ async function toggleKept(v: TemplateVersionSummary, event: Event) {
     );
   } catch (e) {
     console.error("[maildeno-editor] failed to update kept state:", e);
-    toast.add({
-      severity: "error",
-      summary: "Couldn't update",
-      detail: "That version's kept state didn't change.",
-      life: 4000,
-    });
+    // isHandled: the host's adapter may already have explained this one —
+    // keeping is plan-limited server-side, so a 403 here is expected and the
+    // host's message ("you've hit your kept-version limit") beats ours.
+    if (!isHandled(e)) {
+      toast.add({
+        severity: "error",
+        summary: "Couldn't update",
+        detail: "That version's kept state didn't change.",
+        life: 4000,
+      });
+    }
   } finally {
     const s = new Set(busy.value);
     s.delete(v.versionId);
@@ -145,12 +151,14 @@ function removeOne(v: TemplateVersionSummary, event: Event) {
         );
       } catch (e) {
         console.error("[maildeno-editor] failed to delete version:", e);
-        toast.add({
-          severity: "error",
-          summary: "Delete failed",
-          detail: "That version couldn't be deleted.",
-          life: 4000,
-        });
+        if (!isHandled(e)) {
+          toast.add({
+            severity: "error",
+            summary: "Delete failed",
+            detail: "That version couldn't be deleted.",
+            life: 4000,
+          });
+        }
       }
     },
   });
@@ -177,12 +185,14 @@ function removeAll() {
         versions.value = versions.value.filter((v) => v.kept);
       } catch (e) {
         console.error("[maildeno-editor] failed to delete versions:", e);
-        toast.add({
-          severity: "error",
-          summary: "Delete failed",
-          detail: "Those versions couldn't be deleted.",
-          life: 4000,
-        });
+        if (!isHandled(e)) {
+          toast.add({
+            severity: "error",
+            summary: "Delete failed",
+            detail: "Those versions couldn't be deleted.",
+            life: 4000,
+          });
+        }
       }
     },
   });

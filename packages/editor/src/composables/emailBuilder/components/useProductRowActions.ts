@@ -11,6 +11,7 @@
  * start), and the system-template concept is Maildeno product content, not
  * editor functionality, so that branch is removed rather than stubbed.
  */
+import { isHandled } from "@/adapters/errors";
 import { useToast } from "@/composables/ui/useToast";
 import { useProductRows } from "@/composables/emailBuilder/components/useProductRows";
 
@@ -46,13 +47,19 @@ export function useProductRowActions() {
         life: 3000,
       });
       return true;
-    } catch {
-      toast.add({
-        severity: "error",
-        summary: "Failed to save row",
-        detail: "Please try again",
-        life: 5000,
-      });
+    } catch (err) {
+      console.error("[maildeno-editor] failed to save row:", err);
+      // A host adapter that already reported this (a read-only role, a plan
+      // cap) has said something specific; "Please try again" on top of it is
+      // both redundant and wrong — trying again will fail the same way.
+      if (!isHandled(err)) {
+        toast.add({
+          severity: "error",
+          summary: "Failed to save row",
+          detail: "Please try again",
+          life: 5000,
+        });
+      }
       return false;
     }
   }

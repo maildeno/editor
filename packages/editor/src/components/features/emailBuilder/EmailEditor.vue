@@ -64,14 +64,33 @@
         class="flex flex-1 relative 2xl:container 2xl:mx-auto"
       >
         <!-- ─── Builder Loading Overlay ────────────────────────────────────────
-        Sits above the entire workspace (z-50). Fades out via <Transition>
-        once isReady flips to true (after nextTick inside
-        initForCreate / loadTemplate / initFromStorage).
-        opacity-0 + pointer-events-none ensures the canvas below is
-        completely invisible and non-interactive during hydration, preventing
-        any flash of stale/empty content.
+        Covers the whole viewport (fixed inset-0, z-9000 — see Loader.vue),
+        including the header, so nothing of a half-hydrated canvas is visible
+        or clickable while loadTemplate resolves and the rows paint. Unmounts
+        when isReady flips true, after the nextTick inside initForCreate /
+        loadTemplate / initFromStorage.
+
+        z-9000 matches the header's own dropdown scrim and the preview
+        picker — the top layer of this package, below only toasts and the
+        colour picker. It was z-110 (just above the z-100 header), which was
+        enough inside the editor and not enough outside it: a host that
+        overlays its own loading placeholder at any higher z-index hides this
+        one completely, and because the two cover the same window the host
+        never sees it fail. If you are integrating and your placeholder
+        outranks this, drop the placeholder — this is the same overlay,
+        already themed with your tokens.
+
+        The fade is leave-only: entering is the first paint, and a loader
+        that fades IN is a blank screen with extra steps. On the create path
+        the whole mount-to-ready cycle resolves in one microtask, so this
+        never paints at all — correct, since there is nothing to wait for.
         ──────────────────────────────────────────────────────────────────── -->
-        <Loader v-if="!isReady" />
+        <Transition
+          leave-active-class="transition-opacity duration-200 ease-out"
+          leave-to-class="opacity-0"
+        >
+          <Loader v-if="!isReady" />
+        </Transition>
         <SidebarLeft />
         <!--
         Saved Rows panel — sits between the left sidebar and the canvas.
@@ -155,7 +174,7 @@ import VersionHistoryPanel from "@/components/features/emailBuilder/product/Vers
 import ShadowSafeToast from "@/components/ui/ShadowSafeToast.vue";
 import ConfirmDialog from "@/components/ui/ConfirmDialog.vue";
 import Header from "./layout/Header.vue";
-import { provideStorageAdapter } from "@/adapters";
+import { provideStorageAdapter, provideSavedRowCapabilities } from "@/adapters";
 import type { PartialStorageAdapter } from "@/adapters/types";
 import { setEditorTheme, type ThemeOptions } from "@/theme";
 import { provideCanSave } from "@/adapters";
@@ -220,6 +239,14 @@ const props = withDefaults(
     capabilities?: {
       /** Which formats appear in the Export dropdown. Omit for all four. */
       export?: Array<"html" | "mjml" | "react" | "json">;
+      /** Which saved-row controls this user gets: the canvas row's bookmark
+       * button, and the panel's per-row rename and delete. Omit a key for
+       * "allowed", the same as omitting the object. For a host with roles,
+       * this is what stops a viewer being shown three buttons that can only
+       * 403 — the toast their adapter raises afterwards is the backstop, not
+       * the design. Does not touch the Shared tab, which is read-only for
+       * everyone because no adapter method backs writing to it. */
+      savedRows?: { create?: boolean; rename?: boolean; delete?: boolean };
     };
     /** Name shown in the desktop-only notice's "Powered by" line.
      *
@@ -371,6 +398,15 @@ if (host && !hasExtractedScopedCss()) {
 }
 
 const storageAdapter = provideStorageAdapter(props.storageAdapter);
+// A computed, not a plain read: a host whose role model resolves after mount
+// (an async /me call, an org switch mid-session) needs the buttons to appear
+// or disappear when it settles, not to be frozen at whatever was known during
+// setup. SavedRowsPanel and CanvasRow inject this ref rather than receiving a
+// prop, because the two sit at opposite ends of the tree and every component
+// between them would otherwise forward a prop it has no use for.
+provideSavedRowCapabilities(
+  computed(() => props.capabilities?.savedRows ?? {}),
+);
 const infoDialog = provideInfoDialog();
 // A dedicated element (see the template) rather than the shadow root
 // itself directly — a concrete, predictable Element to target, and a
@@ -489,6 +525,7 @@ provideTeleportTarget(teleportTargetEl);
 const {
   rows,
   templateId,
+  builderMode,
   canvasStyles,
   isBuilderReady,
   initForCreate,
@@ -506,6 +543,35 @@ const {
 } = provideEmailBuilder(storageAdapter, infoDialog);
 provideSavedRowsPanel();
 provideProductRows(storageAdapter);
+
+/**
+ * Set here, in setup, and not in onMounted — the timing is the whole point.
+ *
+ * Header.vue's onMounted calls initFromStorage() to restore a create-page
+ * draft, guarded by `builderMode.value !== "create"`. That guard assumed
+ * builderMode was assigned synchronously by the host page, which was true
+ * before the adapter migration and is not true now: loadTemplateById sets it
+ * to "edit" only AFTER awaiting the adapter's fetch.
+ *
+ * Vue runs a child's onMounted BEFORE its parent's, so on an edit route the
+ * order was:
+ *
+ *   1. first render          isBuilderReady false, Loader up          ✓
+ *   2. Header.onMounted      builderMode still "create" → guard passes,
+ *                            initFromStorage() runs, finds no create-draft,
+ *                            and sets isBuilderReady = true             ✗
+ *                            → Loader unmounts onto an EMPTY canvas
+ *   3. EmailEditor.onMounted awaits the fetch, blank canvas on screen   ✗
+ *   4. loadTemplate()        isBuilderReady = false → Loader returns
+ *   5. nextTick              isBuilderReady = true → rows appear
+ *
+ * which is exactly the reported "blank canvas, then the loader, then the
+ * template". Assigning before any child mounts restores the invariant the
+ * guard was written against, so step 2 bails and the Loader stays up
+ * continuously from first paint until the rows are painted.
+ */
+if (props.templateId) builderMode.value = "edit";
+
 // One shared instance, same reasoning as provideProductRows — the panel and
 // any future consumer read one fetched list rather than each fetching again.
 provideSystemRows(storageAdapter);
@@ -570,10 +636,43 @@ watch(
 );
 
 onMounted(async () => {
-  if (props.templateId) {
-    await loadTemplateById(props.templateId);
-  } else {
+  if (!props.templateId) {
     initForCreate();
+    return;
+  }
+
+  // Both failure paths below matter because isBuilderReady is only ever set
+  // true from inside loadTemplate() — if the fetch rejects or resolves null,
+  // nothing flips it, the Loader has no exit condition, and the user watches
+  // a spinner forever. A deleted template or a dropped connection is an
+  // ordinary thing to hit; an editor that never finishes opening is not an
+  // acceptable response to it.
+  //
+  // Falling back to a blank create session rather than an error screen: the
+  // canvas is usable, and because loadTemplateById never assigned
+  // templateId.value, the next save creates a new template instead of
+  // overwriting the one that couldn't be read.
+  try {
+    const loaded = await loadTemplateById(props.templateId);
+    if (!loaded) {
+      console.warn(
+        `[maildeno-editor] template ${props.templateId} was not found — starting a blank canvas.`,
+      );
+      builderMode.value = "create";
+      initForCreate();
+      infoDialog.open(
+        "That template couldn't be found. It may have been deleted. You've been given a blank canvas.",
+        "Template unavailable",
+      );
+    }
+  } catch (e) {
+    console.error("[maildeno-editor] failed to load template:", e);
+    builderMode.value = "create";
+    initForCreate();
+    infoDialog.open(
+      "That template couldn't be loaded. Check your connection and reload the page.",
+      "Couldn't open template",
+    );
   }
 });
 

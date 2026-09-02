@@ -337,6 +337,8 @@ import {
   onBeforeUnmount,
   watch,
 } from "vue";
+import { isHandled } from "@/adapters/errors";
+import { useSavedRowCapabilities } from "@/adapters";
 import { useConfirm } from "@/composables/ui/useConfirm";
 import { useToast } from "@/composables/ui/useToast";
 import { useProductRows } from "@/composables/emailBuilder/components/useProductRows";
@@ -370,6 +372,7 @@ const systemRowsApi = useSystemRows();
 
 const confirm = useConfirm();
 const toast = useToast();
+const savedRowCaps = useSavedRowCapabilities();
 const { rows, saveToHistoryImmediate } = useEmailBuilder();
 const { startLayoutDrag, endLayoutDrag } = useLayoutDrag();
 
@@ -459,8 +462,17 @@ const isReadOnlyTab = computed(() => activeTab.value === "system");
 // the other computeds above so they sit next to the state they read — a
 // computed referencing a const declared 70 lines later happens to work
 // (computeds are lazy) but is the kind of thing a later refactor breaks.
-const canEdit = computed(() => !isReadOnlyTab.value);
-const canDeleteEntry = computed(() => !isReadOnlyTab.value);
+// Two independent reasons a control can be absent, ANDed rather than
+// collapsed: the Shared tab is read-only because no adapter method backs
+// writing to it (a fact about the data, true for every user), while
+// savedRowCaps is the host saying this particular person may not write (a
+// fact about the role). Either one alone is enough to hide the button.
+const canEdit = computed(
+  () => !isReadOnlyTab.value && savedRowCaps.value.rename !== false,
+);
+const canDeleteEntry = computed(
+  () => !isReadOnlyTab.value && savedRowCaps.value.delete !== false,
+);
 
 // ─── First-fetch trigger ──────────────────────────────────────────────────────
 //
@@ -587,7 +599,26 @@ function handleDelete(entryId: string) {
       "!bg-[var(--md-danger)] !hover:opacity-90 !border-[var(--md-danger)] !px-6 !py-2",
     rejectClass:
       "!bg-[var(--md-border)] !hover:bg-[var(--md-border-strong)] !text-[var(--md-text)] !border-[var(--md-border)] !px-6 !py-2",
-    accept: () => current.value.remove(entryId),
+    // Previously `accept: () => current.value.remove(entryId)` — the returned
+    // promise went nowhere, so a rejecting adapter produced an unhandled
+    // rejection and a dialog that closed as if the delete had worked. The row
+    // stays in the list on failure, which is correct: useProductRows only
+    // filters it out once the adapter resolves.
+    accept: async () => {
+      try {
+        await current.value.remove(entryId);
+      } catch (err) {
+        console.error("[maildeno-editor] failed to delete saved row:", err);
+        if (!isHandled(err)) {
+          toast.add({
+            severity: "error",
+            summary: "Delete failed",
+            detail: "That row couldn't be removed.",
+            life: 4000,
+          });
+        }
+      }
+    },
     reject: () => {},
   });
 }
@@ -624,14 +655,32 @@ async function commitRename(entryId: string) {
       .replace(/\s+/g, "_")
       .replace(/[^a-z0-9_]/g, "");
 
-    const res = await current.value.rename(entryId, formattedName);
-    editingId.value = null;
-    toast.add({
-      severity: res ? "success" : "error",
-      summary: res ? "Rename successful" : "Save failed",
-      detail: res ? saveMsg : "Please try again",
-      life: 3000,
-    });
+    // The rename call sits inside a try because it can reject, not just
+    // resolve falsy: the previous version awaited it bare, so a rejecting
+    // adapter skipped the toast entirely, left editingId set, and surfaced
+    // only as an unhandled rejection. On failure the field stays open with
+    // the typed name intact, which is the recoverable state — closing it
+    // would discard what the user wrote for a rename that didn't happen.
+    try {
+      const res = await current.value.rename(entryId, formattedName);
+      editingId.value = null;
+      toast.add({
+        severity: res ? "success" : "error",
+        summary: res ? "Rename successful" : "Save failed",
+        detail: res ? saveMsg : "Please try again",
+        life: 3000,
+      });
+    } catch (err) {
+      console.error("[maildeno-editor] failed to rename saved row:", err);
+      if (!isHandled(err)) {
+        toast.add({
+          severity: "error",
+          summary: "Rename failed",
+          detail: "Please try again",
+          life: 4000,
+        });
+      }
+    }
   }
 }
 

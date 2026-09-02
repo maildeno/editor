@@ -12,7 +12,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="fixed inset-0 z-110 flex flex-col items-center justify-center bg-(--md-surface) backdrop-blur-sm overflow-hidden"
+    class="fixed inset-0 z-9000 flex flex-col items-center justify-center bg-(--md-surface) backdrop-blur-sm overflow-hidden"
   >
     <!-- Animated Logo -->
     <div class="relative mb-6">

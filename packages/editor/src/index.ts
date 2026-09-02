@@ -20,6 +20,12 @@ export type {
   SavedRow,
 } from "./adapters/types";
 
+// For hosts whose adapter reports its own failures — a 403 the editor has no
+// vocabulary for, a plan limit, an expired session. Mark the error before
+// rethrowing and the editor skips its own generic toast rather than stacking a
+// vaguer message on top of yours. See adapters/errors.ts.
+export { markHandled, isHandled } from "./adapters/errors";
+
 // ── Block registry ─────────────────────────────────────────────────
 export { registerBlock, getBlock, getAllBlocks } from "./blocks/registry";
 export type { BlockDefinition, BlockRenderContext } from "./blocks/types";

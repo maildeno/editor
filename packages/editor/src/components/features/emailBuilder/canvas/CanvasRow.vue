@@ -232,86 +232,98 @@
               Row
             </span>
 
-            <!-- Save as product row (saved_row:create) -->
-            <template v-if="!showSaveInput">
-              <div class="w-px h-4 bg-(--md-border)/80 mx-0.5" />
+            <!-- Save as product row (saved_row:create).
 
-              <div class="relative group/btn">
+                 The capability gate wraps BOTH branches, and that nesting is
+                 the point: written as `v-if="!showSaveInput && canSaveRow"`
+                 on the first branch alone, a user without the capability
+                 does not fall out of the toolbar — they fall into the v-else,
+                 and get the name field, the confirm tick and the cancel
+                 button permanently open in every row. Exactly backwards.
+
+                 Read the two conditions as what they are: canSaveRow decides
+                 whether this control exists at all, showSaveInput decides
+                 which face it is wearing. Different questions, different
+                 levels. -->
+            <template v-if="canSaveRow">
+              <template v-if="!showSaveInput">
+                <div class="w-px h-4 bg-(--md-border)/80 mx-0.5" />
+
+                <div class="relative group/btn">
+                  <button
+                    @click.stop="openSaveInput"
+                    class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-row-selection-fg) hover:bg-(--md-row-selection-bg) transition-colors"
+                  >
+                    <!-- Lucide: bookmark -->
+                    <svg
+                      class="w-3.5 h-3.5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"
+                      />
+                    </svg>
+                  </button>
+                  <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)">
+                    Save as product row
+                  </div>
+                </div>
+              </template>
+
+              <template v-else>
+                <input
+                  v-model="saveName"
+                  @keyup.enter.stop="confirmSave"
+                  @keyup.escape.stop="cancelSave"
+                  @click.stop
+                  :placeholder="row.name ? displayName(row.name) : 'Name'"
+                  class="w-30 h-7 px-2 text-[11px] bg-(--md-surface-hover) rounded-md border-0 focus:outline-none focus:ring-1 focus:ring-(--md-row-selection) transition-colors"
+                  ref="saveInputRef"
+                />
                 <button
-                  @click.stop="openSaveInput"
-                  class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-row-selection-fg) hover:bg-(--md-row-selection-bg) transition-colors"
+                  @click.stop="confirmSave"
+                  class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-success) hover:text-(--md-success-fg) hover:bg-(--md-success-bg) transition-colors"
                 >
-                  <!-- Lucide: bookmark -->
+                  <!-- Lucide: check -->
                   <svg
                     class="w-3.5 h-3.5"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
+                    stroke-width="2.5"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     aria-hidden="true"
                   >
-                    <path
-                      d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"
-                    />
+                    <path d="M20 6 9 17l-5-5" />
                   </svg>
                 </button>
-                <div
-                  class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover/btn:opacity-100 translate-y-1 group-hover/btn:translate-y-0 transition-all duration-150 after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-(--md-tooltip-bg)"
+                <button
+                  @click.stop="cancelSave"
+                  class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover) transition-colors"
                 >
-                  Save as product row
-                </div>
-              </div>
-            </template>
-
-            <template v-else>
-              <input
-                v-model="saveName"
-                @keyup.enter.stop="confirmSave"
-                @keyup.escape.stop="cancelSave"
-                @click.stop
-                :placeholder="row.name ? displayName(row.name) : 'Name'"
-                class="w-30 h-7 px-2 text-[11px] bg-(--md-surface-hover) rounded-md border-0 focus:outline-none focus:ring-1 focus:ring-(--md-row-selection) transition-colors"
-                ref="saveInputRef"
-              />
-              <button
-                @click.stop="confirmSave"
-                class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-success) hover:text-(--md-success-fg) hover:bg-(--md-success-bg) transition-colors"
-              >
-                <!-- Lucide: check -->
-                <svg
-                  class="w-3.5 h-3.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-              </button>
-              <button
-                @click.stop="cancelSave"
-                class="w-7 h-7 flex items-center justify-center rounded-lg text-(--md-text-subtle) hover:text-(--md-text) hover:bg-(--md-surface-hover) transition-colors"
-              >
-                <!-- Lucide: x -->
-                <svg
-                  class="w-3.5 h-3.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </button>
+                  <!-- Lucide: x -->
+                  <svg
+                    class="w-3.5 h-3.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </template>
             </template>
 
             <div class="w-px h-4 bg-(--md-border)/80 mx-0.5" />
@@ -439,6 +451,7 @@ import { useConfirm } from "@/composables/ui/useConfirm";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 
 import { useProductRowActions } from "@/composables/emailBuilder/components/useProductRowActions";
+import { useSavedRowCapabilities } from "@/adapters";
 import { displayName } from "@/composables/emailBuilder/core/useEmailBuilderOperations";
 import CanvasColumn from "./CanvasColumn.vue";
 import DropZone from "../ui/canvas/DropZone.vue";
@@ -558,6 +571,11 @@ const handleDelete = () => {
 // ── Save as product row ──────────────────────────────────────────────────────
 
 const { saveProductRowWithToast } = useProductRowActions();
+// Hides the bookmark button for a host whose current user may not create
+// saved rows. Undefined (no host opinion) leaves it visible — see
+// SavedRowCapabilities.
+const savedRowCaps = useSavedRowCapabilities();
+const canSaveRow = computed(() => savedRowCaps.value.create !== false);
 
 const showSaveInput = ref(false);
 const saveName = ref("");
@@ -576,6 +594,15 @@ function cancelSave() {
   showSaveInput.value = false;
   saveName.value = "";
 }
+
+// Host role models resolve asynchronously — a /me call, an org switch — so
+// canSaveRow can flip to false while the name field is open. The template
+// stops rendering it either way, but showSaveInput would stay true underneath
+// and the field would be waiting, half-typed, if the capability ever came
+// back. Reset it instead of leaving that latent.
+watch(canSaveRow, (allowed) => {
+  if (!allowed) cancelSave();
+});
 
 async function confirmSave() {
   if (!saveName.value.trim()) {

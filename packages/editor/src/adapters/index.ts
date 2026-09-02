@@ -150,3 +150,46 @@ export const useStorageAdapter = (): EditorStorageAdapter => {
   }
   return instance;
 };
+
+/**
+ * Host-declared restrictions on the saved-row library.
+ *
+ * Same contract as EmailEditor's `capabilities` prop that carries it: this
+ * only ever takes affordances away. Omitting a key, or the whole object,
+ * leaves that control exactly as it is today, so no existing host changes
+ * behaviour by upgrading.
+ *
+ * Separate from the read-only Shared tab, which is a property of the data (no
+ * adapter method backs renaming an org's curated rows, so no host can grant
+ * it). This is a property of the *person* — a viewer in a host's role model
+ * who may look at their org's rows but not add to them. The editor still has
+ * no user model and isn't learning one: it takes three booleans and asks no
+ * questions about where they came from.
+ *
+ * A gate is not enforcement. The server is still the only thing standing
+ * between a viewer and a write; this just stops the editor offering a button
+ * whose only outcome is a 403.
+ */
+export interface SavedRowCapabilities {
+  create?: boolean;
+  rename?: boolean;
+  delete?: boolean;
+}
+
+const SavedRowCapsKey: InjectionKey<Ref<SavedRowCapabilities>> = Symbol(
+  "maildeno-editor:saved-row-capabilities",
+);
+
+export function provideSavedRowCapabilities(
+  caps: Ref<SavedRowCapabilities>,
+): void {
+  provide(SavedRowCapsKey, caps);
+}
+
+/** Defaults to fully permitted — see the "only ever restricts" note above. */
+export function useSavedRowCapabilities(): Ref<SavedRowCapabilities> {
+  return inject(
+    SavedRowCapsKey,
+    computed(() => ({}) as SavedRowCapabilities),
+  );
+}
