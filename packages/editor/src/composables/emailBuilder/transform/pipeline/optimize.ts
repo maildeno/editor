@@ -8,20 +8,20 @@
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface VisibilityConfig {
+export interface VisibilityConfig {
   enabled: boolean;
   match: "all" | "any";
   rules: unknown[];
 }
 
-interface BorderConfig {
+export interface BorderConfig {
   width: number;
   style: string;
   color: string;
   radius?: number;
 }
 
-interface GradientConfig {
+export interface GradientConfig {
   useGradient: boolean;
   solid: string;
   gradient: {
@@ -42,7 +42,7 @@ interface Component {
 
 type CanvasChild = Component | NestedRow | RowSpacer;
 
-interface Column {
+export interface Column {
   id: string;
   width: number;
   /** New shape */

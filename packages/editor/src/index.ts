@@ -50,8 +50,41 @@ export type { ThemeOptions, ThemeTokens } from "./theme";
 // module-load time (buildShadowStyles). A host who only wants the plain
 // EmailEditor Vue component shouldn't pay that cost for nothing, and
 // re-exporting it here would defeat vite.config.ts's whole reason for
-// having index/element as separate build entries. Custom-element usage —
-// including init() — lives at the "@maildeno/editor/element" entry
-// instead (see element.ts).
+// having index/element as separate build entries.
+//
+// They live at their own entries instead: init() at
+// "@maildeno/editor/init", and registerMaildenoEditorElement plus
+// MaildenoEditorElement at "@maildeno/editor/element".
 export type { InitOptions, EditorHandle } from "./init";
 export type { EditorWriteApi, AssistantMount } from "./types/assistant";
+
+// ── Document model and editor state ────────────────────────────────
+// These already appear in EmailEditor's props and slot props, so they
+// were part of the public surface whether or not they were exported —
+// just unnameable. A consumer destructuring the default slot got a
+// `rows` array it could read but could not write a signature for, and
+// `tsc --declaration` failed with TS2883 on anything that touched one.
+//
+// Column, VisibilityConfig, BorderConfig and GradientConfig were not
+// leaked themselves, but NestedRow and RowSpacer are useless without
+// them: naming a row you cannot name the type of its `columns` is only
+// half a fix.
+//
+// `Canvas` is the email body's own settings — width, padding,
+// background, preheader — not an HTML canvas. Alias it on import if
+// that reads badly in your codebase.
+export type {
+  Canvas,
+  NestedRow,
+  RowSpacer,
+  Column,
+  VisibilityConfig,
+  BorderConfig,
+  GradientConfig,
+} from "./composables/emailBuilder/transform/pipeline/optimize";
+
+// Slot prop on EmailEditor's default slot.
+export type { AutoSaveStatus } from "./composables/emailBuilder/persistence/useEmailBuilderPersistence";
+
+// The `colorMode` prop, and a slot prop.
+export type { ColorMode } from "./composables/system/useColorScheme";

@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.4.7
+
+Public API surface. No runtime change.
+
+### Added
+
+**The document model and editor state types are exported.** `Canvas`,
+`NestedRow`, `RowSpacer`, `Column`, `VisibilityConfig`, `BorderConfig`,
+`GradientConfig`, `AutoSaveStatus` and `ColorMode` now come from the
+package root.
+
+Five of these already appeared in `EmailEditor`'s props and slot props,
+so they were public whether or not they were exported — just unnameable.
+A consumer destructuring the default slot got a `rows` array it could
+read but could not write a signature for, and `tsc --declaration` failed
+with TS2883 on anything that touched one.
+
+`Column`, `VisibilityConfig`, `BorderConfig` and `GradientConfig` were
+not leaked themselves, but `NestedRow` and `RowSpacer` are not usable
+without them: being able to name a row but not the type of its `columns`
+is only half a fix. They were module-private in `optimize.ts` and are now
+exported.
+
+`Canvas` is the email body's own settings — width, padding, background,
+preheader — not an HTML canvas. Alias it on import if that reads badly.
+
+### Fixed
+
+**`index.ts` pointed at the wrong entry for `init()`.** The comment said
+custom-element usage "including init()" lives at
+`@maildeno/editor/element`. `init()` is at `@maildeno/editor/init`;
+`/element` has `registerMaildenoEditorElement` and
+`MaildenoEditorElement`.
+
+**Added `main` and `module` fallbacks.** With only an `exports` map, any
+tool predating it failed to resolve the package at all rather than
+falling back. Both point at `dist/index.js`, same as `exports["."]`.
+
+Verified with `tsc --strict`, `declaration: true` and
+`skipLibCheck: false` against every value export of all three entries:
+0 errors, down from 5.
+
 ## 0.4.6
 
 ### Changed

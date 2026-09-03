@@ -11,7 +11,7 @@ import {
   defineAsyncComponent,
 } from "vue";
 import { useToast } from "@/composables/ui/useToast";
-import { useStorageAdapter, useHasTemplateLibrary } from "@/adapters";
+import { useHasTemplateLibrary } from "@/adapters";
 import { isHandled } from "@/adapters/errors";
 import { useTeleportTarget } from "@/composables/ui/useTeleportTarget";
 
@@ -122,7 +122,7 @@ const { minifyOutput: minifyEnabled, toggleMinify } = useExportSettings();
 // plain boolean expression, and so the reason for the guard is stated once
 // here rather than inline.
 const slots = useSlots();
-const storageAdapter = useStorageAdapter();
+
 
 /**
  * Whether saving is possible at all.
