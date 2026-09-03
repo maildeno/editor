@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import RichTextEditor from "@/components/features/emailBuilder/ui/rich-text-editor/RichTextEditor.vue";
+import RichTextBlock from "@/components/features/emailBuilder/ui/rich-text-editor/RichTextBlock.vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import {
   resolveMobileProps,
@@ -35,5 +35,5 @@ const styles = computed(() => {
 </script>
 
 <template>
-  <RichTextEditor :component="component" :style="styles" :class="hideClass" />
+  <RichTextBlock :component="component" :style="styles" :class="hideClass" />
 </template>

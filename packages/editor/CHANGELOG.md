@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.4.6
+
+### Changed
+
+**Rich text, the date picker and three panels now load on demand.** First
+load drops from 440kB to 269kB gzipped, 38.8% smaller.
+
+TipTap and ProseMirror are ~745kB — a quarter of the bundle — and
+RichTextEditor is the only thing that pulls them. It is also how heading,
+paragraph and list blocks render, not just how they are edited, so it
+cannot simply be made async: the canvas would be blank until the chunk
+landed. Those blocks now mount RichTextBlock, which paints the text
+through RichTextStatic and swaps in the real editor when its chunk
+resolves. Same root element and content classes, so the swap is
+invisible. Merge tags render through a TipTap NodeView, so their markup
+shows raw for that one frame.
+
+This defers parsing, not downloading. The chunk is still fetched on
+mount, so a session transfers the same bytes; what improves is time to
+first paint and time to interactive.
+
+DatePicker, HealthIndicator, SavedRowsPanel and PreviewCanvas are plain
+async components — all four are already behind a v-if and none is visible
+until the user opens something. DatePicker alone was worth 128kB: it is
+used in exactly one place, an advanced ESP visibility rule, and pulled
+all of @internationalized/date plus reka-ui's calendar tree into every
+page load.
+
+**Unreachable type declarations are no longer published.** 216 .d.ts
+files down to 17, 200kB smaller. unplugin-dts emits a declaration for
+every module under src/, but `exports` exposes only ".", "./element" and
+"./init" and has no wildcard, so a consumer could never load the other
+201 — including three that still imported @tiptap/vue-3, which stopped
+being a dependency in 0.4.5. `scripts/prune-types.mjs` walks the import
+graph from each entry's `types` target and removes what it never visits.
+It fails the build if an entry is missing rather than pruning against an
+incomplete graph.
+
+Verified with `tsc --strict` and `skipLibCheck: false` against the whole
+public surface, before and after: identical results.
+
 ## 0.4.5
 
 Packaging only. No API change, no behaviour change.

@@ -115,6 +115,7 @@
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent } from "vue";
 import {
   OPERATOR_OPTIONS,
   VALUELESS_OPERATORS,
@@ -124,7 +125,10 @@ import {
   type VisibilityOperator,
 } from "@/composables/emailBuilder/core/useEmailBuilderVisibility";
 import Select from "@/components/ui/primitives/Select.vue";
-import DatePicker from "@/components/ui/primitives/DatePicker.vue";
+// Lazy: the only DatePicker in the app, and it pulls all of
+const DatePicker = defineAsyncComponent(
+  () => import("@/components/ui/primitives/DatePicker.vue"),
+);
 import Icon from "@/components/ui/Icon.vue";
 
 const props = defineProps({

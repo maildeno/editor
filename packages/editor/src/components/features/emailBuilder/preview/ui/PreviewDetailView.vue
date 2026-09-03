@@ -221,9 +221,10 @@ import Icon from "@/components/ui/Icon.vue";
 //   the perspective of the active client.
 // - Keyboard: ←/→ navigate, Esc closes.
 
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, defineAsyncComponent } from "vue";
 import type { EmailClient } from "@/composables/emailBuilder/preview/useClientPreview";
-import PreviewCanvas from "./PreviewCanvas.vue";
+// Lazy: only rendered inside the client-preview detail view.
+const PreviewCanvas = defineAsyncComponent(() => import("./PreviewCanvas.vue"));
 import PreviewRendered from "./PreviewRendered.vue";
 
 const props = defineProps<{

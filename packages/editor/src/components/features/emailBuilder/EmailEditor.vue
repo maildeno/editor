@@ -155,6 +155,7 @@ import {
   toRef,
   useSlots,
   nextTick,
+  defineAsyncComponent,
 } from "vue";
 import { useDeviceDetection } from "@/composables/system/useDeviceDetection";
 import {
@@ -176,7 +177,10 @@ import { registerBuiltInBlocks } from "@/blocks";
 import DesktopOnlyNotice from "@/components/DesktopOnlyNotice.vue";
 import Canvas from "./canvas/Canvas.vue";
 import SidebarLeft from "./layout/SidebarLeft.vue";
-import SavedRowsPanel from "./product/SavedRowsPanel.vue";
+// Lazy: only rendered once the saved-rows panel is opened.
+const SavedRowsPanel = defineAsyncComponent(
+  () => import("./product/SavedRowsPanel.vue"),
+);
 import SidebarRight from "./layout/SidebarRight.vue";
 import Loader from "./ui/canvas/Loader.vue";
 import InfoDialog from "@/components/ui/InfoDialog.vue";

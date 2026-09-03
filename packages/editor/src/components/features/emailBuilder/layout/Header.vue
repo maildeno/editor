@@ -8,6 +8,7 @@ import {
   onUnmounted,
   onBeforeUnmount,
   useSlots,
+  defineAsyncComponent,
 } from "vue";
 import { useToast } from "@/composables/ui/useToast";
 import { useStorageAdapter, useHasTemplateLibrary } from "@/adapters";
@@ -59,7 +60,10 @@ const exportFormats = computed(
 );
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useExportSettings } from "@/composables/emailBuilder/export/useExportSettings";
-import HealthIndicator from "@/components/features/emailBuilder/health/HealthIndicator.vue";
+// Lazy: opened from the header, and drags in the accessibility checker.
+const HealthIndicator = defineAsyncComponent(
+  () => import("@/components/features/emailBuilder/health/HealthIndicator.vue"),
+);
 import PreviewScreen from "@/components/features/emailBuilder/preview/PreviewScreen.vue";
 import SendEmail from "@/components/features/emailBuilder/layout/SendEmail.vue";
 import {
