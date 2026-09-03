@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.5
+
+Packaging only. No API change, no behaviour change.
+
+### Changed
+
+**The 15 runtime dependencies moved to devDependencies.** TipTap,
+ProseMirror, reka-ui, @vueuse/core, prettier and @internationalized/date
+are all bundled into `dist` at build time, so declaring them as runtime
+dependencies made npm install a second, unused copy of each into every
+consumer's node_modules.
+
+`dist` imports exactly one external module — `vue` — which is already the
+sole peerDependency. Verified across every emitted chunk, and by
+installing the package with nothing but Vue and building a consumer:
+32/32 scoped selectors present, no unresolved imports.
+
+Installing the package now pulls **25 MB across 15 packages instead of
+71 MB across 45**.
+
+If any of these is ever externalised rather than bundled, it has to move
+back. `dist` importing anything other than `vue` is the signal.
+
 ## 0.4.4
 
 Packaging only. No API change, no behaviour change in the editor itself.
