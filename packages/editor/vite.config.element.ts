@@ -69,6 +69,13 @@ function captureExtractedCssForShadowRoot() {
       // vite.config.ts's equivalent does: a missing substitution ships an
       // element with no component styling, and a warning in a build log
       // is not enough to catch that before publishing.
+      // Drop the extracted CSS asset. Its contents are now inside the
+      // chunk above, the shadow root reads them from there, and nothing
+      // in the package, the docs or the exports map ever loads the file.
+      // Vite emits it regardless because library mode always extracts CSS.
+      for (const fileName of Object.keys(bundle)) {
+        if (fileName.endsWith(".css")) delete bundle[fileName];
+      }
       if (!replaced) {
         this.error(
           "[maildeno] scoped-style placeholder not found — component " +
@@ -103,7 +110,8 @@ export default defineConfig({
     scopeInjectedCssPlugin(),vue(), tailwindcss(), captureExtractedCssForShadowRoot()],
   build: {
     // Kept in sync with vite.config.ts — see that file's comment.
-    minify: false,
+    minify: "esbuild",
+    cssMinify: true,
     emptyOutDir: false,
     lib: {
       entry: {

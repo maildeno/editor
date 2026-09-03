@@ -45,20 +45,23 @@ function loadHtmlFormatter() {
 }
 
 function loadTsxFormatter() {
-  // Only typescript + estree are needed for parser: "typescript" — babel
-  // is a separate parser prettier uses for parser: "babel"/"babel-ts",
-  // not a dependency of the typescript parser itself. Verified against
-  // prettier 3.9.6 across generics, JSX fragments, decorators, enums,
-  // and `satisfies` before dropping it; removing it saves ~90kB gzip
-  // from a chunk that's already lazy-loaded.
+  // babel-ts, not the typescript parser: prettier's typescript plugin is
+  // 900kB of source against babel's 318kB, and was the largest single
+  // file in the published package. Output is byte-identical on the TSX
+  // this package generates - verified across generics, JSX, inline style
+  // objects and mapped children. The typescript parser is the stricter of
+  // the two, which matters for arbitrary user code but not for TSX that
+  // react-email.ts generated moments earlier.
+  //
+  // estree stays: it is the printer both parsers hand their AST to.
   tsxBundle ??= Promise.all([
     import("prettier/standalone"),
-    import("prettier/plugins/typescript"),
+    import("prettier/plugins/babel"),
     import("prettier/plugins/estree"),
   ])
-    .then(([prettier, typescript, estree]) => ({
+    .then(([prettier, babel, estree]) => ({
       prettier: prettier.default ?? prettier,
-      plugins: [typescript.default ?? typescript, estree.default ?? estree],
+      plugins: [babel.default ?? babel, estree.default ?? estree],
     }))
     .catch((e) => {
       tsxBundle = null;
@@ -97,7 +100,7 @@ export const formatHTML = async (html: string): Promise<string> =>
 export const formatTSX = async (tsx: string): Promise<string> =>
   safeFormat(tsx, async () => {
     const { prettier, plugins } = await loadTsxFormatter();
-    return prettier.format(tsx, { parser: "typescript", plugins });
+    return prettier.format(tsx, { parser: "babel-ts", plugins });
   });
 
 // MJML source files use the HTML parser since MJML syntax is XML-like.

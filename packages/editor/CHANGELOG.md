@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.4.4
+
+Packaging only. No API change, no behaviour change in the editor itself.
+The published package drops from 8.13 MB unpacked to 5.48 MB, 32.6% smaller.
+
+### Changed
+
+**React Email export formats with prettier's babel-ts parser** instead of
+the typescript parser. `prettier/plugins/typescript` is 900kB of source
+against babel's 318kB and was the largest single file in the package.
+Output is byte-identical on the TSX this package generates, verified
+across generics, JSX, inline style objects and mapped children. The
+typescript parser is the stricter of the two, which matters for arbitrary
+user code but not for TSX `react-email.ts` generated moments earlier.
+Saves 600kB.
+
+**Both build passes are minified.** They have to agree: the two passes
+share chunks by content hash, so identical output collapses to one file
+and differing output ships two. Minifying only the element pass made the
+package *larger* — 8.68 MB — because every prettier chunk was then
+carried twice, once minified and once not. Saves 1.92MB with both on.
+
+**`element-scoped-styles.css` is no longer emitted.** Nothing referenced
+it: not `src/`, not the framework guides, not the README, not the exports
+map. The shadow root reads those rules from the substituted string inside
+the chunk, and Vite only extracted the file because library mode always
+does. `dist/editor.css` is unaffected and `./style.css` still resolves.
+Saves 72kB.
+
 ## 0.4.3
 
 ### Fixed

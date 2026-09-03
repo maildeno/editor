@@ -119,7 +119,8 @@ export default defineConfig({
     // across major versions) — unminified so consumers' own bundlers can
     // tree-shake and minify against their target, and so the injected
     // CSS string above stays readable for debugging.
-    minify: false,
+    minify: "esbuild",
+    cssMinify: true,
     lib: {
       entry: { index: "./src/index.ts" },
       formats: ["es"],
