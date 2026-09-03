@@ -123,7 +123,6 @@ const { minifyOutput: minifyEnabled, toggleMinify } = useExportSettings();
 // here rather than inline.
 const slots = useSlots();
 
-
 /**
  * Whether saving is possible at all.
  *
