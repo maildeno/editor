@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.4.3
+
+### Fixed
+
+**Every component `<style scoped>` block was missing when installing from
+npm and using the `EmailEditor` Vue component.** The editor rendered
+unstyled panels — `HealthIndicator`, `DesktopOnlyNotice`, the text panel,
+and 29 other scoped blocks — while Tailwind, the fonts and the icons all
+applied normally. `init()` and the custom element were unaffected, and
+building against a local `dist/` folder never reproduced it.
+
+0.4.2 delivered those styles by prepending a self-executing snippet to the
+entry chunk:
+
+```js
+(function(){ /* … document.head.appendChild(style) … */ })();
+import { a, c, g, … } from "./index-DhFg3uKs.js";
+export { a as EmailEditor, … };
+```
+
+`package.json` declares `sideEffects` as covering CSS files only, which
+tells a consumer's bundler that every `.js` in the package is pure. Rollup
+had emitted `dist/index.js` as a thin facade holding nothing but that
+snippet and a set of re-exports — and a pure module whose exports can be
+reached directly is one a bundler may delete outright. So consumer builds
+dropped the file, the snippet went with it, and the CSS never ran.
+Verified against the published 0.4.2 tarball: zero of 32 scoped selectors
+survived a consumer build.
+
+Whether Rollup emits that facade is a chunking decision, which is why the
+same source built correctly in this repo and shipped broken. The styles
+are now substituted into a value `baseStyles.ts` returns, so
+`EmailEditor.vue` injects them on mount alongside Tailwind and the fonts.
+Reachable from the component, they cannot be dropped without dropping the
+component — the mechanism `shadowStyles.ts` has always used for the shadow
+root. Confirmed surviving even under `sideEffects: false`.
+
+Nothing changed in the public API, and no CSS import is needed.
+
+### Changed
+
+**A missing style substitution now fails the build instead of warning.**
+Both build passes error out if the placeholder cannot be found in any
+chunk. A warning in a build log was not enough to catch this before
+publishing.
+
 ## 0.4.2
 
 Docs only — no code changes. 0.4.1's `onSave` fix is confirmed working on the

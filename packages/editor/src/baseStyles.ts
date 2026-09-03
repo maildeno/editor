@@ -19,13 +19,39 @@ import mainCss from "./assets/css/main.css?inline";
 // @ts-expect-error -- Vite's ?inline query suffix has no type declaration
 import fontsCss from "./assets/css/fonts.css?inline";
 
+/**
+ * Every Vue <style scoped> block across the component tree, substituted in
+ * at build time by vite.config.ts's plugin. Mirrors what
+ * shadowStyles.ts does for the custom-element path.
+ *
+ * It has to be a value this module *returns*, not a statement that runs
+ * for its effect. package.json's `sideEffects` list covers CSS files
+ * only, which declares every .js file in the package pure — a promise
+ * consumers'
+ * bundlers act on: a top-level statement whose result nothing reads is
+ * legal to delete. 0.4.2 delivered this CSS as exactly such a statement,
+ * prepended to the entry chunk, and Rollup emitted that entry as a thin
+ * facade holding nothing but the statement and some re-exports — so
+ * consumer builds dropped the whole file and every scoped style with it.
+ * Reachable from EmailEditor.vue through getBaseStyles(), it cannot be
+ * dropped without dropping the component.
+ *
+ * Left as the raw placeholder when the substitution never ran (running
+ * from source, as the playground does), and treated as empty then rather
+ * than emitted as junk CSS.
+ */
+function extractedScopedCss(): string {
+  const raw = "__MAILDENO_INDEX_SCOPED_CSS__";
+  return raw.startsWith("__MAILDENO_INDEX") ? "" : raw;
+}
+
 let cached: string[] | null = null;
 
 /** Tailwind, the editor's own CSS and the Satoshi font, as independent CSS
  *  strings — each becomes its own <style> tag wherever the caller injects them. */
 export function getBaseStyles(): string[] {
   if (cached) return cached;
-  cached = [fontsCss as string, mainCss as string];
+  cached = [fontsCss as string, mainCss as string, extractedScopedCss()];
   return cached;
 }
 
@@ -44,6 +70,7 @@ export function injectBaseStylesIntoHead(): void {
   if (injectedIntoHead) return;
   injectedIntoHead = true;
   for (const css of getBaseStyles()) {
+    if (!css) continue;
     const style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);

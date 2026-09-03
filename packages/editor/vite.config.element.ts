@@ -65,10 +65,14 @@ function captureExtractedCssForShadowRoot() {
           replaced = true;
         }
       }
+      // Fails the build rather than warning, for the same reason
+      // vite.config.ts's equivalent does: a missing substitution ships an
+      // element with no component styling, and a warning in a build log
+      // is not enough to catch that before publishing.
       if (!replaced) {
-        this.warn(
+        this.error(
           "[maildeno] scoped-style placeholder not found — component " +
-            "<style scoped> blocks will be missing from the shadow root.",
+            "<style scoped> blocks would be missing from the shadow root.",
         );
       }
     },

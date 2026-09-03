@@ -6,19 +6,31 @@ import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath, URL } from "node:url";
 
 /**
- * Injects every bit of CSS this build extracts — critically including all
- * the Vue <style scoped> blocks from across the component tree — into
- * document.head at runtime, by prepending a self-executing snippet to the
- * entry chunk.
+ * Substitutes every bit of CSS this build extracts — critically including
+ * all the Vue <style scoped> blocks from across the component tree — into
+ * baseStyles.ts's placeholder, so EmailEditor.vue injects it on mount
+ * alongside Tailwind and the fonts.
  *
- * Fixes a real, confirmed bug: those scoped styles are collected by Vite
- * into a separate dist/editor.css asset, which nothing in the consumer's
- * module graph ever imported once styling moved to programmatic injection
- * (that only covered the base layer — Tailwind, icons, fonts — not
- * these). Confirmed via direct inspection: .cdz-empty-icon's rule
- * (width:48px;height:48px) was present in dist/editor.css but completely
- * absent from dist/index.js, so the canvas empty-state icon rendered at
- * full natural size and its surrounding text lost all styling.
+ * Those scoped styles are collected by Vite into a separate
+ * dist/editor.css asset that nothing in the consumer's module graph ever
+ * imports, since styling moved to programmatic injection (which only
+ * covered the base layer — Tailwind, icons, fonts — not these).
+ *
+ * 0.4.2 delivered them by prepending a self-executing snippet to the
+ * entry chunk. That worked in this repo and broke for anyone installing
+ * from npm: package.json declares `sideEffects: ["**\/*.css"]`, marking
+ * every .js file pure, and Rollup emitted dist/index.js as a thin facade
+ * containing only that snippet and a set of re-exports. A consumer's
+ * bundler is entitled to delete a pure module whose exports it can reach
+ * directly — so it dropped the facade, the snippet went with it, and
+ * every scoped style vanished. Confirmed by building a consumer against
+ * the published 0.4.2 tarball: zero of the 32 scoped selectors survived.
+ *
+ * Whether Rollup emits that facade depends on chunking, which is why the
+ * same source built fine here. Substitution into a value the component
+ * actually reads removes the dependence on tree-shaking entirely — the
+ * same reasoning vite.config.element.ts already documents for the shadow
+ * root.
  *
  * The CSS asset is deliberately left in place as well, not deleted — it
  * costs nothing, and a consumer who'd rather control load order manually
@@ -30,10 +42,9 @@ function injectExtractedCssViaJs() {
     apply: "build" as const,
     // Vite emits the extracted CSS asset during generateBundle itself —
     // without enforce:"post" this hook runs first and sees an empty
-    // bundle, silently injecting nothing at all (confirmed: the snippet
-    // was entirely absent from the built entry chunk).
+    // bundle, silently substituting nothing at all.
     enforce: "post" as const,
-    generateBundle(_options: unknown, bundle: Record<string, any>) {
+    generateBundle(this: any, _options: unknown, bundle: Record<string, any>) {
       let css = "";
       for (const [fileName, asset] of Object.entries(bundle)) {
         if (asset.type === "asset" && fileName.endsWith(".css")) {
@@ -41,18 +52,24 @@ function injectExtractedCssViaJs() {
         }
       }
       if (!css.trim()) return;
+      const placeholder = '"__MAILDENO_INDEX_SCOPED_CSS__"';
+      let replaced = false;
       for (const chunk of Object.values(bundle)) {
-        if (chunk.type === "chunk" && chunk.isEntry) {
-          // Guarded by a data attribute so importing this package more
-          // than once (or alongside its own dynamic chunks) can't stack
-          // duplicate <style> tags.
-          chunk.code =
-            `(function(){try{if(typeof document<"u"&&!document.querySelector("style[data-maildeno-editor-css]")){` +
-            `var s=document.createElement("style");s.setAttribute("data-maildeno-editor-css","");` +
-            `s.textContent=${JSON.stringify(css)};document.head.appendChild(s);}}catch(e){` +
-            `console.error("[maildeno-editor] style injection failed",e);}})();\n` +
-            chunk.code;
+        if (chunk.type === "chunk" && chunk.code.includes(placeholder)) {
+          chunk.code = chunk.code.replace(placeholder, JSON.stringify(css));
+          replaced = true;
         }
+      }
+      // Fails the build rather than warning. A missing substitution ships
+      // an editor with no component styling at all, and 0.4.2 proved that
+      // is not obvious enough in a build log to catch before publishing.
+      if (!replaced) {
+        this.error(
+          "[maildeno] scoped-style placeholder not found in any chunk — " +
+            "component <style scoped> blocks would be missing from the " +
+            "Vue-component build. Check baseStyles.ts still contains " +
+            "__MAILDENO_INDEX_SCOPED_CSS__.",
+        );
       }
     },
   };
