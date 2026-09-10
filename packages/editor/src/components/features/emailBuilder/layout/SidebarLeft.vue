@@ -32,5 +32,5 @@ import LayoutTab from "../tabs/LayoutTab.vue";
 import GeneralTab from "../tabs/GeneralTab.vue";
 
 const tabs = ["Content", "Layout", "General"];
-const activeTab = ref("Content");
+const activeTab = ref("Layout");
 </script>
