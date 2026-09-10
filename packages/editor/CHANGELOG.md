@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.8
+
+No API changes.
+
+### Changed
+- The **Layout** tab is now the default tab in the left-hand panel.
+
+### Removed
+- Unused code in `CanvasRowDropZone`.
+
 ## 0.4.7
 
 Public API surface. No runtime change.
