@@ -81,7 +81,7 @@ const emit = defineEmits<{
   (e: "drop", insertIndex: number): void;
 }>();
 
-const { isLayoutDragActive, layoutDragPayload, endLayoutDrag } =
+const { isLayoutDragActive, endLayoutDrag } =
   useLayoutDrag();
 
 // Accept nested-row drags too (row being moved to canvas top-level)
