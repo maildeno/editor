@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.9
+
+No API changes.
+
+### Changed
+- The **Content** tab is now the default tab in the left-hand panel.
+
 ## 0.4.8
 
 No API changes.
