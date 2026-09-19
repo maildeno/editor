@@ -27,8 +27,8 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
       ? `letter-spacing:${props.letterSpacing}px;`
       : "";
 
-  return `              <div style="${marginStyle} ${paddingStyle} ${anchorAlign}" class="${anchorContainerClasses}">
-                <a href="${safeUrl(props.link)}" style="color:${props.color}; font-size:${props.fontSize}px; font-weight:${props.fontWeight}; font-family:'${props.fontFamily}', Arial, sans-serif; line-height: normal; ${letterSpacingStyle} text-decoration:${props.textDecoration};" target="_blank" rel="noopener noreferrer nofollow" class="${anchorLinkClasses}">${props.text}</a>
+  return `              <div style="${marginStyle} ${anchorAlign}" class="${anchorContainerClasses}">
+                <a href="${safeUrl(props.link)}" style="${paddingStyle} color:${props.color}; font-size:${props.fontSize}px; font-weight:${props.fontWeight}; font-family:'${props.fontFamily}', Arial, sans-serif; line-height: normal; ${letterSpacingStyle} text-decoration:${props.textDecoration};" target="_blank" rel="noopener noreferrer nofollow" class="${anchorLinkClasses}">${props.text}</a>
               </div>
 `;
 }
@@ -56,8 +56,8 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
   return `<mj-text  padding="0" 
       font-size="0" 
       line-height="0" 
-      font-family="none">              <div style="${marginStyle} ${paddingStyle} ${anchorAlign}" class="${anchorContainerClasses}">
-                <a href="${safeUrl(props.link)}" style="color:${props.color}; font-size:${props.fontSize}px; ${letterSpacingStyle} font-weight:${props.fontWeight}; font-family:'${props.fontFamily}', Arial, sans-serif; line-height: normal; text-decoration:${props.textDecoration};" target="_blank" rel="noopener noreferrer nofollow" class="${anchorLinkClasses}">${props.text}</a>
+      font-family="none">              <div style="${marginStyle} ${anchorAlign}" class="${anchorContainerClasses}">
+                <a href="${safeUrl(props.link)}" style="${paddingStyle} color:${props.color}; font-size:${props.fontSize}px; ${letterSpacingStyle} font-weight:${props.fontWeight}; font-family:'${props.fontFamily}', Arial, sans-serif; line-height: normal; text-decoration:${props.textDecoration};" target="_blank" rel="noopener noreferrer nofollow" class="${anchorLinkClasses}">${props.text}</a>
               </div>
 </mj-text>`;
 }
@@ -79,12 +79,18 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   );
   const anchorLinkClasses = getResponsiveClasses(false, false, "link");
 
+  const anchorContainerStyle = {
+    ...parseMarginPaddingDiscrete(props.margin, undefined),
+    textAlign: anchorAlign,
+  };
+
   const anchorLinkStyle: Record<string, any> = {
     color: props.color,
     fontSize: `${props.fontSize}px`,
     fontWeight: String(props.fontWeight),
     fontFamily: normalizeFontFamily(`'${props.fontFamily}', Arial, sans-serif`),
     lineHeight: "normal",
+    ...parseMarginPaddingDiscrete(undefined, props.padding),
     ...((props.letterSpacing as number) > 0 && {
       letterSpacing: `${props.letterSpacing}px`,
     }),
@@ -93,7 +99,7 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
 
   return `<div
   className="${anchorContainerClasses}"
-  style={{ ${styleObj({ ...parseMarginPaddingDiscrete(props.margin, props.padding), textAlign: anchorAlign })} }}
+  style={{ ${styleObj(anchorContainerStyle)} }}
 >
   <Link
     href="${safeUrl(props.link)}"

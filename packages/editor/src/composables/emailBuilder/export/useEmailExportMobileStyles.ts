@@ -172,11 +172,11 @@ export const useEmailExportMobileStyles = () => {
     ================================= */
 
     // ── Button / Anchor — visual styles target the <a> tag ──────────────────
-    if (anchorTypes.has(compType)) {
+    if (isAnchorType) {
       pushTextStyles(elementRules);
 
-      // Button padding belongs on the <a> (it defines the clickable hit area)
-      if (m.padding && compType === "button") {
+      // Button/anchor padding belongs on the <a> (it defines the clickable hit area)
+      if (m.padding) {
         const pd = m.padding;
         elementRules.push(
           `padding: ${pd.top}px ${pd.right}px ${pd.bottom}px ${pd.left}px !important`,
@@ -496,7 +496,7 @@ export const useEmailExportMobileStyles = () => {
     }
 
     if (elementRules.length > 0) {
-      const selector = anchorTypes.has(compType)
+      const selector = isAnchorType
         ? `.${uid}-link`
         : compType === "image"
           ? `.${uid} img`
