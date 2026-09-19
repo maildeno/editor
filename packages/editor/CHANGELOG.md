@@ -1,22 +1,31 @@
 # Changelog
 
+## 0.4.11
+
+API changes.
+
+### Changed
++ Moved Button and Anchor padding from the container `<div>` to the clickable `<a>` / `<Link>` element.
++ Updated HTML, MJML, and React Email renderers to consistently apply padding to the link element.
++ Updated generated styles so Button and Anchor padding targets the .{uid}-link selector.
+
 ## 0.4.10
 
-No API changes.
+API change.
 
 ### Changed
 - Reduced the **Image** panel minimum width from `8px` to `1px`.
 
 ## 0.4.9
 
-No API changes.
+API change.
 
 ### Changed
 - The **Content** tab is now the default tab in the left-hand panel.
 
 ## 0.4.8
 
-No API changes.
+API changes.
 
 ### Changed
 - The **Layout** tab is now the default tab in the left-hand panel.
