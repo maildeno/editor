@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.10
+
+No API changes.
+
+### Changed
+- Reduced the **Image** panel minimum width from `8px` to `1px`.
+
 ## 0.4.9
 
 No API changes.
