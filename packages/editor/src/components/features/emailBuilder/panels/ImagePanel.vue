@@ -124,7 +124,7 @@
       <PropertyNumberSlider
         label="Width (%)"
         :model-value="displayValue('width')"
-        :min="8"
+        :min="1"
         :max="100"
         :step="1"
         unit="%"
