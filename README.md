@@ -69,7 +69,7 @@ Your application can also register its own blocks.
 
 Create desktop and mobile email layouts from the same visual editor.
 
-Individual blocks support mobile-specific styling overrides so you can control how your email behaves on smaller screens.
+Components, rows, columns and row spacers support mobile-specific styling overrides so you can control how your email behaves on smaller screens.
 
 ### 📦 Multiple export formats
 
@@ -373,6 +373,8 @@ canvas
 rows
 schema_version
 ```
+
+Per-device styling is stored in a sparse `mobile` object on the rows, columns, row spacers and components that have overrides. A block without overrides has no `mobile` key.
 
 This makes templates straightforward to store, version, migrate, or move between systems.
 

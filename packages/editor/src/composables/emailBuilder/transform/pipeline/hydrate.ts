@@ -113,6 +113,15 @@ const ROW_DEFAULTS = {
   gap: 12,
   mobileStack: true,
   visibility: createDefaultVisibility(),
+  // Per-device overrides. null = no override; optimize.ts strips the nulls.
+  mobile: {
+    backgroundColor: null,
+    backgroundGradient: null,
+    padding: null,
+    border: null,
+    minHeight: null,
+    gap: null,
+  },
 } as const;
 
 const ROW_SPACER_DEFAULTS = {
@@ -130,6 +139,11 @@ const ROW_SPACER_DEFAULTS = {
     },
   },
   visibility: createDefaultVisibility(),
+  mobile: {
+    height: null,
+    backgroundColor: null,
+    backgroundGradient: null,
+  },
 } as const;
 
 const COLUMN_DEFAULTS = {
@@ -153,6 +167,13 @@ const COLUMN_DEFAULTS = {
   padding: { top: 0, right: 0, bottom: 0, left: 0 },
   border: { width: 0, style: "solid", color: "#000000", radius: 0 },
   verticalAlign: "top",
+  mobile: {
+    backgroundColor: null,
+    backgroundGradient: null,
+    padding: null,
+    border: null,
+    verticalAlign: null,
+  },
 } as const;
 
 const CANVAS_DEFAULTS = {

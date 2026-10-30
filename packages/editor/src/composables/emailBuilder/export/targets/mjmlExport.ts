@@ -25,7 +25,16 @@ import {
   buildBackgroundStyles,
   buildMobileStackGapCSS,
 } from "../shared/styles";
-import { wrapWithContainerDiv } from "../shared/containers";
+import {
+  buildRowBox,
+  classAttr,
+  columnClasses,
+  cssDecls,
+  gapClasses,
+  renderBoxHtml,
+  spacerClasses,
+  type RowBox,
+} from "../shared/nodeBox";
 import { formatMJML } from "../transformers/formatting";
 import { applyTagTransform } from "../transformers/tagMapper";
 import { wrapWithESPLogic, type ESPSyntax } from "../transformers/espWrapper";
@@ -139,7 +148,7 @@ export const mjmlExport = (deps: Deps) => {
       if (childType === "row-spacer") {
         if (!child.height || child.height <= 0) continue;
         const spacerStyles = buildBackgroundStyles(child);
-        let spacerHtml = `<div height="${child.height}" style="height:${child.height}px;line-height:${child.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;</div>`;
+        let spacerHtml = `<div${classAttr(spacerClasses(child))} height="${child.height}" style="height:${child.height}px;line-height:${child.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;</div>`;
         if (mode === "wrap" && shouldESPWrap(child.visibility)) {
           spacerHtml = wrapWithESPLogic(
             spacerHtml,
@@ -173,17 +182,16 @@ export const mjmlExport = (deps: Deps) => {
     return html;
   };
 
-  // ── Build nested row HTML (table-based, email-safe) ───────────────────────
-  // Same structure as a top-level row but rendered inline within a parent <td>.
-  const buildNestedRowHTML = (
+  // ── Row inner table: the columns and gap cells ─────────────────────────────
+  // Shared by top-level and nested rows. `childDepth` is the depth handed to
+  // renderChildren for the columns' children: 0 for a top-level row, the nested
+  // row's own depth otherwise, so the MAX_DEPTH guard fires correctly.
+  const buildRowInnerTable = (
     row: any,
     ctx: Record<string, string>,
     mode: ExportMode,
-    depth: number,
+    childDepth: number,
   ): string => {
-    if (!row.columns?.length) return "";
-
-    const rowBackgroundStyles = buildBackgroundStyles(row);
     const canvasWidth = canvasStyles.value.mobileBreakpoint || 600;
     const gap = row.gap || 0;
     const gapPercentage = (gap / canvasWidth) * 100;
@@ -208,69 +216,79 @@ export const mjmlExport = (deps: Deps) => {
         return;
 
       const colWidthPct = columnPercentages[index];
-      const responsiveClass = row.mobileStack ? "mobile-stack" : "";
       const colBgStyles = buildBackgroundStyles(col);
+      // Everything the column needs lives on the <td>, as in the HTML and
+      // React Email exports. There is no wrapper div.
       const colTdStyles = [
         `width:${colWidthPct}%`,
+        // `max-width:${colWidthPct}%`,
         `box-sizing:border-box`,
         `vertical-align:${col.verticalAlign ?? "middle"}`,
-        `border:${col.border.width}px ${col.border.style} ${col.border.color}`,
-        `border-radius:${col.border.radius}px`,
-        `overflow:hidden`,
         ...colBgStyles,
+        `border:${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
+        `border-radius:${col.border?.radius ?? 0}px`,
+        `overflow:hidden`,
+        `line-height:0`,
+        `font-size:0`,
+        `padding:${col.padding?.top ?? 0}px ${col.padding?.right ?? 0}px ${col.padding?.bottom ?? 0}px ${col.padding?.left ?? 0}px`,
       ];
 
       // ── CRITICAL: use children ?? components for backward compat ─────────
       const kids = col.children ?? col.components ?? [];
-      // FIX: pass the current depth (not hardcoded 0) so the MAX_DEPTH guard
-      // fires correctly and nested rows recurse with an accurate depth counter.
-      const componentsHtml = renderChildren(kids, ctx, mode, depth);
+      const componentsHtml = renderChildren(kids, ctx, mode, childDepth);
 
-      const wrappedContent = wrapWithContainerDiv(
-        componentsHtml,
-        col.border,
-        [],
-        col.padding,
-      );
-
-      const classAttr = responsiveClass ? ` class="${responsiveClass}"` : "";
-
-      columnsTd += `<td valign="${col.verticalAlign ?? "middle"}"${classAttr} style="${colTdStyles.join(";")}">
-${wrappedContent}
+      columnsTd += `<td valign="${col.verticalAlign ?? "middle"}"${classAttr(columnClasses(row, col))} style="${colTdStyles.join(";")}">
+${componentsHtml}
 </td>\n`;
 
+      // ── Gap <td> ───────────────────────────────────────────────────────────
       if (index < row.columns.length - 1 && gap > 0) {
-        const gapClass = responsiveClass
-          ? `gap-${gap} ${responsiveClass}`
-          : `gap-${gap}`;
-        columnsTd += `<td class="${gapClass}" width="${gapPercentage}%" style="width:${gapPercentage}%;max-width:${gapPercentage}%;font-size:0;line-height:0;padding:0;">&nbsp;</td>\n`;
+        columnsTd += `<td class="${gapClasses(row).join(" ")}" width="${gapPercentage}%" style="width:${gapPercentage}%;max-width:${gapPercentage}%;font-size:0;line-height:0;padding:0;">&nbsp;</td>\n`;
       }
     });
-
-    const rowBorderCss =
-      (row.border?.width ?? 0) > 0
-        ? `border:${row.border.width}px ${row.border.style} ${row.border.color};${row.border?.radius ?? 0}`
-        : `border-radius:${row.border.radius}px;overflow:hidden;`;
-
-    const rowPad = row.padding
-      ? `${row.padding.top ?? 0}px ${row.padding.right ?? 0}px ${row.padding.bottom ?? 0}px ${row.padding.left ?? 0}px`
-      : "0px";
-
-    const rowBgStyle = rowBackgroundStyles.length
-      ? `${rowBackgroundStyles.join(";")};`
-      : "";
 
     const hasColumnRadius = row.columns.some(
       (col: any) => (col.border?.radius ?? 0) > 0,
     );
     const needsSeparate = (row.gap ?? 0) > 0 || hasColumnRadius;
-
-    return `<div style="padding:${rowPad};${rowBorderCss}${rowBgStyle}">
-<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:${needsSeparate ? "separate" : "collapse"};">
+    return `<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:${needsSeparate ? "separate" : "collapse"};">
 <tr>
 ${columnsTd}</tr>
-</table>
-</div>`;
+</table>`;
+  };
+
+  // ── Row <td> attributes (hook class + style) ───────────────────────────────
+  // The <td> carries the background, the radius, the clip and the min-height.
+  const rowTdAttrs = (row: any, box: RowBox): string => {
+    const styles = [
+      ...buildBackgroundStyles(row),
+      ...cssDecls(box.td.decls),
+    ].filter(Boolean);
+    if (box.minHeight > 0) styles.push(`min-height:${box.minHeight}px`);
+    return `${classAttr(box.td.classes)} style="${styles.join(";")}"`;
+  };
+
+  // ── Build nested row HTML (table-based, email-safe) ───────────────────────
+  // The same shell as a top-level row, and as the HTML export's nested rows,
+  // rendered inline within a parent <td>. See shared/nodeBox.ts.
+  const buildNestedRowHTML = (
+    row: any,
+    ctx: Record<string, string>,
+    mode: ExportMode,
+    depth: number,
+  ): string => {
+    if (!row.columns?.length) return "";
+
+    const rowBox = buildRowBox(row);
+    const innerTable = buildRowInnerTable(row, ctx, mode, depth);
+
+    return `<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+<tr>
+  <td${rowTdAttrs(row, rowBox)}>
+${renderBoxHtml(rowBox, innerTable)}
+  </td>
+</tr>
+</table>`;
   };
 
   // ── Pipeline (private) ──────────────────────────────────────────────────────
@@ -327,7 +345,7 @@ ${columnsTd}</tr>
  <table width="100%" cellpadding="0" cellspacing="0">
  <tr>
  <td>
- <div height="${row.height}" style="height:${row.height}px;line-height:${row.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;</div>
+ <div${classAttr(spacerClasses(row))} height="${row.height}" style="height:${row.height}px;line-height:${row.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;</div>
  </td>
  </tr>
  </table>
@@ -343,28 +361,7 @@ ${columnsTd}</tr>
         return;
       }
 
-      // ── Column width calculations ────────────────────────────────────────────
-      const canvasWidth = canvasStyles.value.mobileBreakpoint || 600;
-      const gap = row.gap || 0;
-      const gapPercentage = (gap / canvasWidth) * 100;
-      const totalGapPercentage = gapPercentage * (row.columns.length - 1);
-      const availableWidthPercentage = 100 - totalGapPercentage;
-
-      const columnPercentages: number[] = [];
-      let totalCalculatedPercentage = 0;
-      row.columns.forEach((col: any) => {
-        const pct = (col.width / 100) * availableWidthPercentage;
-        columnPercentages.push(pct);
-        totalCalculatedPercentage += pct;
-      });
-      const roundingError =
-        availableWidthPercentage - totalCalculatedPercentage;
-      if (Math.abs(roundingError) > 0.01 && columnPercentages.length > 0) {
-        columnPercentages[columnPercentages.length - 1] += roundingError;
-      }
-
-      // ── Row background ───────────────────────────────────────────────────────
-      const rowBackgroundStyles = buildBackgroundStyles(row);
+      // ── Row background (Outlook fallback colour) ─────────────────────────────
       const rowBgSolid = (() => {
         const bg = row.backgroundGradient;
         const hasGradient =
@@ -377,114 +374,12 @@ ${columnsTd}</tr>
       const rowBgAttr =
         rowBgSolid && rowBgSolid !== "transparent" ? rowBgSolid : "";
 
-      // ── Row padding ──────────────────────────────────────────────────────────
-      const rowPad = row.padding
-        ? `${row.padding.top ?? 0}px ${row.padding.right ?? 0}px ${row.padding.bottom ?? 0}px ${row.padding.left ?? 0}px`
-        : "0px";
+      // ── Row shell: <td>, wrapper divs and hook classes ───────────────────────
+      // Shared with the HTML and React exporters: see shared/nodeBox.ts.
+      const rowBox = buildRowBox(row);
+      const innerTable = buildRowInnerTable(row, ctx, mode, 0);
 
-      // ── Row outer td styles ──────────────────────────────────────────────────
-      const hasBorderRadius = (row.border?.radius ?? 0) > 0;
-      const hasSimpleBorder =
-        (row.border?.width ?? 0) > 0 && (row.border?.radius ?? 0) === 0;
-
-      const rowTdStyleParts: string[] = [
-        ...rowBackgroundStyles,
-        `overflow:hidden`,
-      ];
-
-      // Simple border — apply directly on <td>, same as columns
-      if (hasSimpleBorder) {
-        rowTdStyleParts.push(
-          `border:${row.border.width}px ${row.border.style} ${row.border.color}`,
-        );
-        rowTdStyleParts.push(`padding:${rowPad}`);
-      }
-
-      // Prevent background bleed when border-radius is present
-      if (hasBorderRadius) {
-        rowTdStyleParts.push(`border-radius:${row.border.radius + 2}px`);
-      }
-
-      if ((row.minHeight ?? 0) > 0) {
-        rowTdStyleParts.push(`min-height:${row.minHeight}px`);
-      }
-      const rowTdStyle = rowTdStyleParts.length
-        ? ` style="${rowTdStyleParts.join(";")}"`
-        : "";
-
-      // ── Row border for the inner wrapper div ─────────────────────────────────
-      let rowBorderCss = "";
-      if ((row.border?.width ?? 0) > 0) {
-        rowBorderCss = `border:${row.border.width}px ${row.border.style} ${row.border.color};`;
-        if ((row.border?.radius ?? 0) > 0) {
-          rowBorderCss += `border-radius:${row.border.radius}px;overflow:hidden;`;
-        }
-      }
-
-      const innerDivStyle = [
-        `padding:${rowPad}`,
-        `font-size:0`,
-        `line-height:0`,
-        rowBorderCss,
-      ]
-        .filter(Boolean)
-        .join(";");
-
-      // ── Build column <td>s ───────────────────────────────────────────────────
-      let columnsTd = "";
-      row.columns.forEach((col: any, index: number) => {
-        if (mode === "prune" && !evaluateVisibility(col.props?.visibility, ctx))
-          return;
-
-        const colWidthPct = columnPercentages[index];
-        const responsiveClass = row.mobileStack ? "mobile-stack" : "";
-        const colBgStyles = buildBackgroundStyles(col);
-        const colTdStyles = [
-          `width:${colWidthPct}%`,
-          // `max-width:${colWidthPct}%`,
-          `box-sizing:border-box`,
-          `vertical-align:${col.verticalAlign ?? "middle"}`,
-          ...colBgStyles,
-          `border:${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
-          `border-radius:${col.border?.radius ?? 0}px`,
-          `overflow:hidden`,
-          `line-height:0`,
-          `font-size:0`,
-          `padding:${col.padding?.top ?? 0}px ${col.padding?.right ?? 0}px ${col.padding?.bottom ?? 0}px ${col.padding?.left ?? 0}px`,
-        ];
-
-        // ── CRITICAL: use children ?? components for backward compat ───────
-        const kids = col.children ?? col.components ?? [];
-        // FIX: Top-level rows are depth=0; pass 0 explicitly (was already 0,
-        // but now named for clarity). Nested rows pass their own depth via
-        // buildNestedRowHTML → renderChildren(kids, ctx, mode, depth).
-        const componentsHtml = renderChildren(kids, ctx, mode, 0);
-
-        const classAttr = responsiveClass ? ` class="${responsiveClass}"` : "";
-
-        columnsTd += `<td valign="${col.verticalAlign ?? "middle"}"${classAttr} style="${colTdStyles.join(";")}">
-${componentsHtml}
-</td>\n`;
-
-        // ── Gap <td> ───────────────────────────────────────────────────────────
-        if (index < row.columns.length - 1 && gap > 0) {
-          const gapClass = responsiveClass
-            ? `gap-${gap} ${responsiveClass}`
-            : `gap-${gap}`;
-          columnsTd += `<td class="${gapClass}" width="${gapPercentage}%" style="width:${gapPercentage}%;max-width:${gapPercentage}%;font-size:0;line-height:0;padding:0;">&nbsp;</td>\n`;
-        }
-      });
-
-      const hasColumnRadius = row.columns.some(
-        (col: any) => (col.border?.radius ?? 0) > 0,
-      );
-      const needsSeparate = (row.gap ?? 0) > 0 || hasColumnRadius;
-      const innerTable = `<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:${needsSeparate ? "separate" : "collapse"};">
-<tr>
-${columnsTd}</tr>
-</table>`;
-
-      let rowContent = `<div style="${innerDivStyle}">${innerTable}</div>`;
+      let rowContent = renderBoxHtml(rowBox, innerTable);
 
       if (mode === "wrap" && shouldESPWrap(row.visibility)) {
         rowContent = wrapWithESPLogic(
@@ -502,7 +397,7 @@ ${columnsTd}</tr>
  <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
  <tbody>
  <tr>
- <td${rowTdStyle}>
+ <td${rowTdAttrs(row, rowBox)}>
  ${rowContent}
  </td>
  </tr>

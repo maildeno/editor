@@ -184,6 +184,10 @@
 import { computed, type CSSProperties } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useEmailBuilderVisibility } from "@/composables/emailBuilder/core/useEmailBuilderVisibility";
+import {
+  applyMobileOverrides,
+  applyNodeMobileOverrides,
+} from "@/blocks/canvasStyleHelpers";
 
 const props = defineProps<{
   component: any;
@@ -232,15 +236,9 @@ const isVisible = computed(() => {
 
 // ── resolveProps: mirrors CanvasComponent's mobile-override logic ─────────
 
-const p = computed(() => {
-  const base = props.component.props ?? {};
-  if (!props.forceMobile || !base.mobile) return base;
-  const merged: Record<string, any> = { ...base };
-  for (const [k, v] of Object.entries(base.mobile)) {
-    if (v !== null && v !== undefined) merged[k] = v;
-  }
-  return merged;
-});
+const p = computed(() =>
+  applyMobileOverrides(props.component.props ?? {}, !!props.forceMobile),
+);
 
 // ── Generic helpers ───────────────────────────────────────────────────────
 
@@ -276,8 +274,9 @@ function resolveBackground(target: any): string {
 // ── Nested row & column (re-uses CanvasRow / CanvasColumn semantics) ──────
 
 const nestedRowStyle = computed(() => {
-  const row = props.component;
-  const isStacked = props.forceMobile && row.mobileStack === true;
+  const isStacked = props.forceMobile && props.component.mobileStack === true;
+  // `gap` only changes on mobile while the row is stacked (see the helper).
+  const row = applyNodeMobileOverrides(props.component, !!props.forceMobile);
   const styles: Record<string, string> = {
     display: "flex",
     flexDirection: isStacked ? "column" : "row",
@@ -317,9 +316,9 @@ const VERTICAL_ALIGN_MAP: Record<string, string> = {
   bottom: "flex-end",
 };
 
-function nestedColumnStyle(col: any): Record<string, string> {
-  const row = props.component;
-  const isStacked = props.forceMobile && row.mobileStack === true;
+function nestedColumnStyle(node: any): Record<string, string> {
+  const isStacked = props.forceMobile && props.component.mobileStack === true;
+  const col = applyNodeMobileOverrides(node, !!props.forceMobile);
   const radius = col.border?.radius ?? 0;
   const styles: Record<string, string> = {
     width: isStacked ? "100%" : `${col.width ?? 100}%`,
@@ -356,11 +355,14 @@ function nestedColumnStyle(col: any): Record<string, string> {
 
 // ── Leaf row-spacer (rare — typically only at row level) ──────────────────
 
-const rowSpacerLeafStyle = computed(() => ({
-  width: "100%",
-  height: (props.component.height ?? 20) + "px",
-  background: resolveBackground(props.component),
-}));
+const rowSpacerLeafStyle = computed(() => {
+  const spacer = applyNodeMobileOverrides(props.component, !!props.forceMobile);
+  return {
+    width: "100%",
+    height: (spacer.height ?? 20) + "px",
+    background: resolveBackground(spacer),
+  };
+});
 
 // ── Heading ───────────────────────────────────────────────────────────────
 

@@ -9,7 +9,7 @@
         label="Icon Size (px)"
         :model-value="displayValue('iconSize')"
         :min="20"
-        :max="40"
+        :max="100"
         :step="1"
         unit="px"
         :is-overridden="isOverridden('iconSize')"

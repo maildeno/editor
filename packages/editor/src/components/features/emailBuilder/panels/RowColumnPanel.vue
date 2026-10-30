@@ -1,21 +1,47 @@
 <template>
   <div class="space-y-3">
+    <DeviceTabs v-model="editMode" />
+
     <Loading v-if="isBgUploading" message="Uploading image" />
 
     <!-- Background -->
     <PropertySection title="Background">
       <div>
-        <label class="block text-xs font-medium text-(--md-text-muted) mb-1"
-          >Background Color</label
-        >
+        <div class="flex items-center justify-between mb-1">
+          <label
+            class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
+          >
+            Background Color
+            <OverrideBadge :show="isBackgroundOverridden()" />
+          </label>
+          <button
+            v-if="isBackgroundOverridden()"
+            type="button"
+            @click="resetBackground"
+            class="text-[11px] text-(--md-selection-fg) hover:opacity-80"
+          >
+            ↩ Reset
+          </button>
+        </div>
+        <!-- The badge and Reset above cover Solid and Gradient alike, so the
+             picker's own (Solid only) are left off: one of each, never two. -->
         <PropertyGradientColor
-          :model-value="columnBackground"
-          @update:model-value="onBackgroundChange"
+          :model-value="background"
+          @update:model-value="setBackground($event)"
         />
       </div>
 
-      <!-- Background Image -->
-      <div>
+      <!-- The image is not a mobile setting; say what happens to it there. -->
+      <p
+        v-if="editMode === 'mobile' && column.backgroundImage"
+        class="text-[11px] text-(--md-text-subtle)"
+      >
+        This column has a background image. On mobile the image stays and paints
+        over the colour, and a gradient is not applied.
+      </p>
+
+      <!-- Background Image (desktop only) -->
+      <div v-if="editMode === 'desktop'">
         <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5">
           Background Image
         </label>
@@ -62,8 +88,8 @@
         </div>
       </div>
 
-      <!-- Image options (only when image is set) -->
-      <template v-if="column.backgroundImage">
+      <!-- Image options (desktop only, and only when image is set) -->
+      <template v-if="editMode === 'desktop' && column.backgroundImage">
         <!-- Background Size -->
         <div>
           <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
@@ -138,52 +164,91 @@
     <PropertySection title="Layout">
       <PropertySelect
         label="Vertical Align"
-        :model-value="column.verticalAlign"
+        :model-value="displayValue('verticalAlign')"
         :options="verticalAlignOptions"
         placeholder="Search vertical align..."
-        @update:model-value="onVerticalAlignChange"
+        :is-overridden="isOverridden('verticalAlign')"
+        @update:model-value="setProp('verticalAlign', $event)"
+        @reset="resetProp('verticalAlign')"
       />
     </PropertySection>
 
     <!-- Border -->
     <PropertySection title="Border">
+      <div v-if="isBorderOverridden()" class="flex justify-end -mb-1">
+        <button
+          type="button"
+          @click="resetBorder"
+          class="text-xs text-(--md-text-subtle) hover:text-(--md-text-muted)"
+        >
+          Reset All
+        </button>
+      </div>
       <PropertyNumberSlider
         label="Width (px)"
-        :model-value="column.border.width"
+        :model-value="displayBorderValue('width') ?? 0"
         :min="0"
         :max="100"
         :step="1"
         unit="px"
-        @update:model-value="onBorderWidthChange"
+        :is-overridden="isBorderPropOverridden('width')"
+        @update:model-value="setBorderProp('width', $event)"
+        @reset="resetBorderProp('width')"
       />
       <PropertyNumberSlider
         label="Border Radius (px)"
-        :model-value="column.border.radius"
+        :model-value="displayBorderValue('radius') ?? 0"
         :min="0"
         :max="100"
         :step="1"
         unit="px"
-        @update:model-value="onBorderRadiusChange"
+        :is-overridden="isBorderPropOverridden('radius')"
+        @update:model-value="setBorderProp('radius', $event)"
+        @reset="resetBorderProp('radius')"
       />
       <div class="grid grid-cols-4 gap-2">
         <div class="col-span-2">
-          <label class="text-xs font-medium text-(--md-text-muted)"
-            >Color</label
-          >
+          <div class="flex items-center justify-between">
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
+            >
+              Color <OverrideBadge :show="isBorderPropOverridden('color')" />
+            </label>
+            <button
+              v-if="isBorderPropOverridden('color')"
+              type="button"
+              @click="resetBorderProp('color')"
+              class="text-[11px] text-(--md-selection-fg) hover:opacity-80"
+            >
+              ↩ Reset
+            </button>
+          </div>
           <PropertyColor
             label="Color"
             bare
             show-input
-            :model-value="column.border.color"
-            @update:model-value="onBorderColorChange"
+            :model-value="displayBorderValue('color') ?? '#000000'"
+            @update:model-value="setBorderProp('color', $event)"
           />
         </div>
         <div class="col-span-2">
-          <label class="text-xs font-medium text-(--md-text-muted)"
-            >Style</label
-          >
+          <div class="flex items-center justify-between">
+            <label
+              class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
+            >
+              Style <OverrideBadge :show="isBorderPropOverridden('style')" />
+            </label>
+            <button
+              v-if="isBorderPropOverridden('style')"
+              type="button"
+              @click="resetBorderProp('style')"
+              class="text-[11px] text-(--md-selection-fg) hover:opacity-80"
+            >
+              ↩ Reset
+            </button>
+          </div>
           <Select
-            :model-value="column.border.style"
+            :model-value="displayBorderValue('style') ?? 'solid'"
             :options="borderStyleOptions"
             optionLabel="label"
             optionValue="value"
@@ -198,8 +263,14 @@
     <PropertySection title="Spacing">
       <SpacingControl
         label="Padding"
-        :model-value="column.padding"
-        @update:model-value="onPaddingChange"
+        :model-value="
+          editMode === 'mobile'
+            ? (column.mobile?.padding ?? null)
+            : column.padding
+        "
+        :desktop-value="column.padding"
+        :is-mobile-edit="editMode === 'mobile'"
+        @update:model-value="setProp('padding', $event)"
       />
     </PropertySection>
   </div>
@@ -209,12 +280,16 @@
 import { ref, computed } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useImageUploader } from "@/composables/system/useImageUpload";
+import { useNodeStyleEditor } from "@/composables/emailBuilder/components/useNodeStyleEditor";
+import type { EditMode } from "@/composables/emailBuilder/components/useComponentStyleEditor";
 
 import InputText from "@/components/ui/primitives/InputText.vue";
 import Select from "@/components/ui/primitives/Select.vue";
 import Icon from "@/components/ui/Icon.vue";
 
 import Loading from "@/components/ui/Loading.vue";
+import DeviceTabs from "./shared/DeviceTabs.vue";
+import OverrideBadge from "./shared/OverrideBadge.vue";
 import PropertySection from "./ui/PropertySection.vue";
 import PropertyNumberSlider from "./ui/PropertyNumberSlider.vue";
 import PropertySelect from "./ui/PropertySelect.vue";
@@ -222,78 +297,52 @@ import PropertyColor from "./ui/PropertyColor.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
 import PropertyGradientColor from "./ui/PropertyGradientColor.vue";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface BackgroundValue {
-  useGradient: boolean;
-  solid: string;
-  gradient: {
-    type: "linear" | "radial";
-    direction: string;
-    colors: { color: string; position: number }[];
-  };
-}
-
 // ─── Setup ────────────────────────────────────────────────────────────────────
 
-const { saveToHistory } = useEmailBuilder();
+const { saveToHistory, previewMode } = useEmailBuilder();
 const { handleImageUploadFlow, swapOnLoad } = useImageUploader();
 
 const props = defineProps({
   column: { type: Object, required: true },
 });
 
-// ─── Background ───────────────────────────────────────────────────────────────
+// ─── Desktop / Mobile ─────────────────────────────────────────────────────────
 
-const DEFAULT_GRADIENT = {
-  type: "linear" as const,
-  direction: "to right",
-  colors: [
-    { color: "#ffffff", position: 0 },
-    { color: "#eeeeee", position: 100 },
-  ],
-};
-
-/**
- * Build the BackgroundValue the GradientPicker expects.
- * getSolid is inlined inside the computed so it stays reactive.
- */
-const columnBackground = computed<BackgroundValue>(() => {
-  const bg = props.column.backgroundGradient;
-
-  // Resolve solid colour reactively (was previously a plain function called outside computed)
-  const solid = (() => {
-    if (bg?.solid && bg.solid !== "transparent") return bg.solid;
-    if (
-      props.column.backgroundColor &&
-      props.column.backgroundColor !== "transparent"
-    ) {
-      return props.column.backgroundColor;
-    }
-    return "transparent";
-  })();
-
-  return {
-    useGradient: bg?.useGradient ?? false,
-    solid,
-    gradient: {
-      ...DEFAULT_GRADIENT,
-      ...(bg?.gradient ?? {}),
-    },
-  };
+// Writable computed over the global preview mode, as in the component panels:
+// the tabs, the canvas and this panel always agree, and no watcher is needed.
+const editMode = computed<EditMode>({
+  get: () => previewMode.value as EditMode,
+  set: (v: EditMode) => {
+    previewMode.value = v;
+  },
 });
 
-/**
- * Persist the BackgroundValue back onto the column.
- * Keeps backgroundColor in sync as a plain-CSS fallback for the HTML exporter.
- */
-const onBackgroundChange = (value: BackgroundValue) => {
-  props.column.backgroundGradient = value;
-  props.column.backgroundColor = value.useGradient
-    ? (value.gradient.colors[0]?.color ?? value.solid)
-    : value.solid;
-  saveToHistory("column-background");
-};
+// A column has no `props`: its style sits on the node and its overrides on
+// `node.mobile`. The adapter gives it the same API the component panels use.
+const node = computed(() => props.column);
+
+const {
+  displayValue,
+  isOverridden,
+  setProp,
+  resetProp,
+  displayBorderValue,
+  setBorderProp,
+  isBorderPropOverridden,
+  resetBorderProp,
+  isBorderOverridden,
+  resetBorder,
+  displayBackground,
+  setBackground,
+  isBackgroundOverridden,
+  resetBackground,
+} = useNodeStyleEditor(node, editMode);
+
+// ─── Background ───────────────────────────────────────────────────────────────
+
+// The picker's value for the current mode. setBackground writes the gradient
+// object and the plain `backgroundColor` fallback together, in one history step.
+const background = computed(() => displayBackground());
 
 // ─── Inline prop mutation handlers (each calls saveToHistory) ─────────────────
 
@@ -317,34 +366,9 @@ const onBgPositionChange = (value: string) => {
   saveToHistory("column-bg-position");
 };
 
-const onVerticalAlignChange = (value: string) => {
-  props.column.verticalAlign = value;
-  saveToHistory("column-vertical-align");
-};
-
-const onBorderWidthChange = (value: number) => {
-  props.column.border.width = value;
-  saveToHistory("column-border-width");
-};
-
-const onBorderRadiusChange = (value: number) => {
-  props.column.border.radius = value;
-  saveToHistory("column-border-radius");
-};
-
-const onBorderColorChange = (value: string) => {
-  props.column.border.color = value;
-  saveToHistory("column-border-color");
-};
-
 const onBorderStyleChange = (value: unknown) => {
-  props.column.border.style = value as string;
-  saveToHistory("column-border-style");
-};
-
-const onPaddingChange = (value: any) => {
-  props.column.padding = value;
-  saveToHistory("column-padding");
+  if (typeof value !== "string") return;
+  setBorderProp("style", value);
 };
 
 // ─── Background image upload ──────────────────────────────────────────────────

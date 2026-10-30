@@ -113,13 +113,32 @@ const handleInput = (e: Event) => {
   if (!isNaN(val)) emit("update:modelValue", val);
 };
 
-const clampValue = () => {
+// On blur: keep the value inside min and max (and on the step grid for
+// fractional steps). Typing has already updated the model, one keystroke at a
+// time, so this only has something to say when that left it out of range.
+// Emitting the same value again would still reach the panel, which writes it:
+// a click into the box and out again would create an override that equals the
+// desktop value, add an undo step that changes nothing and fire onChange.
+const clampValue = (e: FocusEvent) => {
   let val = props.modelValue;
   if (val < props.min) val = props.min;
   if (val > props.max) val = props.max;
   if (props.step < 1)
     val = parseFloat((Math.round(val / props.step) * props.step).toFixed(1));
-  emit("update:modelValue", val);
+
+  if (val !== props.modelValue) {
+    emit("update:modelValue", val);
+    return;
+  }
+
+  // Nothing to write. The box can still hold text that is not the model's
+  // number: "" and "abc" never became one, "050" and "1,5" became 50 and 1.
+  // With no new value there is no re-render to put the number back, so do it
+  // here.
+  const input = e.target as HTMLInputElement | null;
+  if (input && Number.isFinite(val) && input.value !== String(val)) {
+    input.value = String(val);
+  }
 };
 
 const handleSlider = (e: Event) => {

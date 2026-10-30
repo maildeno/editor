@@ -31,6 +31,36 @@ export interface GradientConfig {
   };
 }
 
+/**
+ * Per-device (mobile) overrides on a row, column or row-spacer. These nodes
+ * have no `props`, so the overrides live on the node itself as `mobile`, the
+ * same sparse shape components keep in `props.mobile`. In editor state every
+ * key is present and null means "no override"; saved JSON keeps only the keys
+ * that are set (see optimizeNodeMobile).
+ */
+export interface RowMobile {
+  backgroundColor?: string | null;
+  backgroundGradient?: GradientConfig | null;
+  padding?: Record<string, number> | null;
+  border?: BorderConfig | null;
+  minHeight?: number | null;
+  gap?: number | null;
+}
+
+export interface ColumnMobile {
+  backgroundColor?: string | null;
+  backgroundGradient?: GradientConfig | null;
+  padding?: Record<string, number> | null;
+  border?: BorderConfig | null;
+  verticalAlign?: string | null;
+}
+
+export interface RowSpacerMobile {
+  height?: number | null;
+  backgroundColor?: string | null;
+  backgroundGradient?: GradientConfig | null;
+}
+
 interface Component {
   id: string;
   /** New discriminated shape uses "component"; legacy uses the componentType directly */
@@ -58,6 +88,7 @@ export interface Column {
   padding?: Record<string, number>;
   border?: BorderConfig;
   verticalAlign?: string;
+  mobile?: ColumnMobile | null;
   [key: string]: unknown;
 }
 
@@ -75,6 +106,7 @@ export interface NestedRow {
   padding?: Record<string, number>;
   backgroundGradient?: GradientConfig;
   minHeight?: number;
+  mobile?: RowMobile | null;
   [key: string]: unknown;
 }
 
@@ -86,6 +118,7 @@ export interface RowSpacer {
   backgroundColor?: string;
   backgroundGradient?: GradientConfig;
   visibility?: VisibilityConfig;
+  mobile?: RowSpacerMobile | null;
   [key: string]: unknown;
 }
 
@@ -192,16 +225,54 @@ const optimizeSocialsPlatforms = (
 
 // ─── Mobile override stripper ─────────────────────────────────────────────────
 
+/**
+ * Drops null overrides and a mobile gradient with `useGradient: false`.
+ *
+ * That gradient object is noise when the desktop node is not a gradient, but
+ * over a desktop gradient it IS the override ("go solid on mobile"). Pass the
+ * desktop gradient and it is kept; otherwise the node would inherit the
+ * desktop gradient again after a save and reload.
+ */
 const stripMobileOverrides = (
   mobile: Record<string, unknown>,
+  desktopGradient?: unknown,
 ): Record<string, unknown> | undefined => {
+  const keepSolidOverGradient =
+    (desktopGradient as GradientConfig | null | undefined)?.useGradient ===
+    true;
+
   const cleaned: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(mobile)) {
     if (isNullOrUndefined(value)) continue;
-    if (key === "backgroundGradient" && isDefaultGradient(value)) continue;
+    if (
+      key === "backgroundGradient" &&
+      isDefaultGradient(value) &&
+      !keepSolidOverGradient
+    ) {
+      continue;
+    }
     cleaned[key] = value;
   }
   return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+};
+
+/**
+ * Rows, columns and row-spacers keep their overrides on `node.mobile` (they
+ * have no `props`). Writes the stripped object back, or removes the key when
+ * nothing is left. hydrate.ts restores the null baseline on import.
+ */
+const optimizeNodeMobile = (
+  optimized: Record<string, unknown>,
+  desktopGradient: unknown,
+): void => {
+  const mobile = optimized.mobile;
+  const stripped =
+    mobile && typeof mobile === "object"
+      ? stripMobileOverrides(mobile as Record<string, unknown>, desktopGradient)
+      : undefined;
+
+  if (stripped) optimized.mobile = stripped;
+  else delete optimized.mobile;
 };
 
 // ─── Component optimizer ──────────────────────────────────────────────────────
@@ -212,6 +283,7 @@ const optimizeComponent = (comp: Component): Component => {
   if (comp.props.mobile && typeof comp.props.mobile === "object") {
     const strippedMobile = stripMobileOverrides(
       comp.props.mobile as Record<string, unknown>,
+      comp.props.backgroundGradient,
     );
     if (strippedMobile) {
       optimized.mobile = strippedMobile;
@@ -296,6 +368,7 @@ const optimizeColumn = (col: Column): Partial<Column> => {
   if (isDefaultGradient(col.backgroundGradient))
     delete optimized.backgroundGradient;
   if (isAllZeroPadding(col.padding)) delete optimized.padding;
+  optimizeNodeMobile(optimized, col.backgroundGradient);
 
   if (!col.backgroundImage) {
     delete optimized.backgroundImage;
@@ -326,6 +399,7 @@ const optimizeRowSpacer = (row: Row): Partial<Row> => {
   if (isDefaultVisibility(row.visibility)) delete optimized.visibility;
   if (isDefaultGradient((row as RowSpacer).backgroundGradient))
     delete optimized.backgroundGradient;
+  optimizeNodeMobile(optimized, (row as RowSpacer).backgroundGradient);
 
   const { height, ...remainingOptimized } = optimized;
   return {
@@ -350,6 +424,7 @@ const optimizeRow = (row: Row): Partial<Row> => {
   if (isDefaultGradient((row as NestedRow).backgroundGradient))
     delete optimized.backgroundGradient;
   if (isAllZeroPadding((row as NestedRow).padding)) delete optimized.padding;
+  optimizeNodeMobile(optimized, (row as NestedRow).backgroundGradient);
 
   if (!(row as NestedRow).backgroundImage) {
     delete optimized.backgroundImage;

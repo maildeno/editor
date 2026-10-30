@@ -1,7 +1,9 @@
 <template>
   <div class="space-y-3">
-    <!-- Row Name -->
-    <PropertySection title="Name">
+    <DeviceTabs v-model="editMode" />
+
+    <!-- Row Name (desktop only: a name is not a per-device setting) -->
+    <PropertySection v-if="editMode === 'desktop'" title="Name">
       <div>
         <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5">
           Row Spacer Name
@@ -24,22 +26,39 @@
     <PropertySection title="Spacer">
       <PropertyNumberSlider
         label="Height (px)"
-        :model-value="spacer.height"
+        :model-value="displayValue('height')"
         :min="1"
         :max="600"
         :step="5"
         unit="px"
-        @update:model-value="updateHeight"
+        :is-overridden="isOverridden('height')"
+        @update:model-value="setProp('height', $event)"
+        @reset="resetProp('height')"
       />
 
       <!-- Solid / Gradient picker (replaces plain PropertyColor) -->
       <div>
-        <label class="block text-xs font-medium text-(--md-text-muted) mb-1.5"
-          >Background Color</label
-        >
+        <div class="flex items-center justify-between mb-1.5">
+          <label
+            class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
+          >
+            Background Color
+            <OverrideBadge :show="isBackgroundOverridden()" />
+          </label>
+          <button
+            v-if="isBackgroundOverridden()"
+            type="button"
+            @click="resetBackground"
+            class="text-[11px] text-(--md-selection-fg) hover:opacity-80"
+          >
+            ↩ Reset
+          </button>
+        </div>
+        <!-- The badge and Reset above cover Solid and Gradient alike, so the
+             picker's own (Solid only) are left off: one of each, never two. -->
         <PropertyGradientColor
-          :model-value="spacerBackground"
-          @update:model-value="onBackgroundChange"
+          :model-value="background"
+          @update:model-value="setBackground($event)"
         />
       </div>
     </PropertySection>
@@ -52,6 +71,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
+import { useNodeStyleEditor } from "@/composables/emailBuilder/components/useNodeStyleEditor";
+import type { EditMode } from "@/composables/emailBuilder/components/useComponentStyleEditor";
 import {
   displayName,
   toRowName,
@@ -59,21 +80,45 @@ import {
 
 import InputText from "@/components/ui/primitives/InputText.vue";
 
+import DeviceTabs from "./shared/DeviceTabs.vue";
+import OverrideBadge from "./shared/OverrideBadge.vue";
 import PropertySection from "./ui/PropertySection.vue";
 import PropertyNumberSlider from "./ui/PropertyNumberSlider.vue";
 import PropertyGradientColor from "./ui/PropertyGradientColor.vue";
 import PropertyVisibility from "./ui/PropertyVisibility.vue";
 
-const { saveToHistory } = useEmailBuilder();
+const { saveToHistory, previewMode } = useEmailBuilder();
 
 const props = defineProps({
   spacer: { type: Object, required: true },
 });
 
-const updateHeight = (value: number) => {
-  props.spacer.height = value;
-  saveToHistory("spacer-height");
-};
+// ─── Desktop / Mobile ─────────────────────────────────────────────────────────
+
+// Writable computed over the global preview mode, as in the component panels:
+// the tabs, the canvas and this panel always agree, and no watcher is needed.
+const editMode = computed<EditMode>({
+  get: () => previewMode.value as EditMode,
+  set: (v: EditMode) => {
+    previewMode.value = v;
+  },
+});
+
+// A row-spacer has no `props`: its style sits on the node and its overrides on
+// `node.mobile`. The adapter gives it the same API the component panels use,
+// and its writes commit history themselves.
+const node = computed(() => props.spacer);
+
+const {
+  displayValue,
+  isOverridden,
+  setProp,
+  resetProp,
+  displayBackground,
+  setBackground,
+  isBackgroundOverridden,
+  resetBackground,
+} = useNodeStyleEditor(node, editMode);
 
 // ─── Row Spacer Name ─────────────────────────────────────────────────────────────────
 
@@ -118,72 +163,9 @@ const onNameBlur = () => {
 };
 
 // ─── Background ───────────────────────────────────────────────────────────────
-// ─── Types ───
 
-interface BackgroundValue {
-  useGradient: boolean;
-  solid: string;
-  gradient: {
-    type: "linear" | "radial";
-    direction: string;
-    colors: { color: string; position: number }[];
-  };
-}
-
-const DEFAULT_GRADIENT = {
-  type: "linear" as const,
-  direction: "to right",
-  colors: [
-    { color: "#ffffff", position: 0 },
-    { color: "#eeeeee", position: 100 },
-  ],
-};
-
-/**
- * Build the BackgroundValue the GradientPicker expects.
- * Falls back gracefully if the spacer was created before gradient support.
- */
-
-const getSolid = () => {
-  const bg = props.spacer.backgroundGradient;
-
-  if (bg?.solid && bg.solid !== "transparent") return bg.solid;
-
-  if (
-    props.spacer.backgroundColor &&
-    props.spacer.backgroundColor !== "transparent"
-  ) {
-    return props.spacer.backgroundColor;
-  }
-
-  return "transparent";
-};
-
-const spacerBackground = computed<BackgroundValue>(() => {
-  const bg = props.spacer.backgroundGradient;
-
-  return {
-    useGradient: bg?.useGradient ?? false,
-    solid: getSolid(),
-    gradient: {
-      ...DEFAULT_GRADIENT,
-      ...(bg?.gradient ?? {}),
-    },
-  };
-});
-
-/**
- * Persist the BackgroundValue back onto the spacer.
- * Keeps `backgroundColor` in sync as a plain-CSS fallback for the export.
- */
-const onBackgroundChange = (value: BackgroundValue) => {
-  props.spacer.backgroundGradient = value;
-
-  // Sync the solid fallback used by the HTML exporter
-  props.spacer.backgroundColor = value.useGradient
-    ? (value.gradient.colors[0]?.color ?? value.solid)
-    : value.solid;
-
-  saveToHistory("spacer-background");
-};
+// The picker's value for the current mode. Falls back gracefully if the spacer
+// was created before gradient support. setBackground writes the gradient object
+// and the plain `backgroundColor` fallback together, in one history step.
+const background = computed(() => displayBackground());
 </script>

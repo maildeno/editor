@@ -135,7 +135,7 @@ Everything below is identical across frameworks. Only the mounting differs.
 - **ESP-aware conditional logic** — visibility rules compile to the right syntax for Klaviyo, Mailchimp, Braze, SFMC, HubSpot, Iterable, Handlebars and more.
 - **Merge tags** with an in-editor picker.
 - **Saved templates and saved rows** — reusable snippets and full documents.
-- **Desktop/mobile styling** — per-block mobile overrides.
+- **Desktop/mobile styling** — per-block mobile overrides on components, rows, columns and row spacers.
 - **Undo/redo**, autosave draft recovery, and a preview with client-specific rendering checks.
 - **Zero backend required** — defaults to `localStorage`; bring an adapter to use your own.
 
@@ -176,6 +176,53 @@ if (!html) return; // nothing built yet
 ```
 
 `getJson()` returns the portable template format — `template_id`, `template_name`, `canvas`, `rows`, `schema_version`. Store it and pass it back via your adapter's `loadTemplate` to restore exactly.
+
+Per-device styling is saved as a sparse `mobile` object that holds only the settings that change on small screens. Rows, columns and row spacers carry it on the node itself; components carry it in `props.mobile`. Only the keys you override are saved, and a block with no overrides has no `mobile` key at all, so a template that does not use mobile overrides saves exactly as it did before. A row with one column, and a row spacer, as `getJson()` returns them inside `rows`:
+
+```json
+[
+  {
+    "id": "6d9fa0e6da604c60",
+    "type": "row",
+    "name": "hero_section",
+    "padding": { "top": 40, "right": 32, "bottom": 40, "left": 32 },
+    "gap": 12,
+    "mobileStack": true,
+    "mobile": {
+      "backgroundColor": "#123a63",
+      "padding": { "top": 24, "right": 16, "bottom": 24, "left": 16 }
+    },
+    "backgroundColor": "#0a2540",
+    "columns": [
+      {
+        "id": "23fbdff8bc7149c6-0",
+        "width": 100,
+        "verticalAlign": "middle",
+        "mobile": { "verticalAlign": "top" },
+        "backgroundColor": "transparent",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "bf90d4be44174a23",
+    "type": "row-spacer",
+    "height": 40,
+    "backgroundColor": "transparent",
+    "mobile": { "height": 16 }
+  }
+]
+```
+
+What each block can override on mobile:
+
+| Block | `mobile` keys |
+| --- | --- |
+| Row | `backgroundColor`, `backgroundGradient`, `padding`, `border`, `minHeight`, `gap` |
+| Column | `backgroundColor`, `backgroundGradient`, `padding`, `border`, `verticalAlign` |
+| Row spacer | `height`, `backgroundColor`, `backgroundGradient` |
+
+A mobile `padding` or `border` replaces the desktop one as a whole. Sides you leave out are not filled in from desktop, so write all four sides and the complete border. A row's mobile `gap` only applies while the row stacks on mobile (`mobileStack`) and has a desktop `gap` above 0. `schema_version` stays `"1.0"` and there is nothing to migrate: templates saved before 0.4.13 load as they are.
 
 ### Storage adapter
 

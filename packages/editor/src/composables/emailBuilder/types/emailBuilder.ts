@@ -31,6 +31,34 @@ export interface Visibility {
   [conditionKey: string]: any;
 }
 
+// ─── Mobile overrides on structural nodes ─────────────────────────────────────
+// Rows, columns and row-spacers have no `props`, so their per-device overrides
+// live on the node as `mobile` — the same sparse shape components keep in
+// `props.mobile`. null (or a missing key) means "no override". A node that
+// never went through hydrate (a saved row, a freshly added row) may have no
+// `mobile` at all, so always read it with `?.`.
+
+export interface CanvasRowMobile {
+  backgroundColor?: string | null;
+  backgroundGradient?: BackgroundGradient | null;
+  padding?: Padding | null;
+  border?: Border | null;
+  minHeight?: number | null;
+  gap?: number | null;
+}
+export interface CanvasColumnMobile {
+  backgroundColor?: string | null;
+  backgroundGradient?: BackgroundGradient | null;
+  padding?: Padding | null;
+  border?: Border | null;
+  verticalAlign?: CanvasColumn["verticalAlign"] | null;
+}
+export interface CanvasSpacerMobile {
+  height?: number | null;
+  backgroundColor?: string | null;
+  backgroundGradient?: BackgroundGradient | null;
+}
+
 // ─── Discriminated union — the heart of the recursive model ──────────────────
 
 export type CanvasChild =
@@ -63,6 +91,7 @@ export interface CanvasRowNode {
   gap: number;
   mobileStack: boolean;
   visibility: Visibility;
+  mobile?: CanvasRowMobile;
   // ← NO `components` anymore. Columns own children.
 }
 
@@ -74,6 +103,7 @@ export interface CanvasSpacerNode {
   backgroundColor: string;
   backgroundGradient: BackgroundGradient;
   visibility: Visibility;
+  mobile?: CanvasSpacerMobile;
 }
 
 // A column always uses `children` — never `components`
@@ -90,6 +120,7 @@ export interface CanvasColumn {
   padding: Padding;
   border: Border;
   verticalAlign: "top" | "middle" | "bottom";
+  mobile?: CanvasColumnMobile;
 }
 
 // Top-level rows array is CanvasRowNode | CanvasSpacerNode (same as nested)

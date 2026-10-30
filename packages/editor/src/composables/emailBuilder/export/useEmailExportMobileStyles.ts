@@ -1,3 +1,203 @@
+import { hasNodeMobile } from "./shared/nodeBox";
+
+/* ================================
+   BACKGROUND RESOLVER
+
+   The mobile object stores backgroundGradient as:
+     - null  → no override, inherit desktop (do nothing)
+     - BackgroundValue object → the user set a mobile-specific background
+
+   Inside a non-null BackgroundValue:
+     useGradient: true  → emit a CSS gradient
+     useGradient: false → emit the solid colour from .solid
+
+   We intentionally ignore `m.backgroundColor` as a standalone signal
+   when `m.backgroundGradient` is present, because setBackground() in
+   useEmailComponentProps always writes both in sync. The gradient object
+   is the single source of truth for mobile background overrides.
+
+   Returns [] (no override), [solid] (solid mode), or [solid, gradient]
+   (gradient mode — Outlook reads solid, Gmail reads gradient).
+
+   `keepImage` is for rows and columns, which can have a background image.
+   `background: none` and the `background:` shorthand would both wipe it, so
+   with `keepImage` only the colour layer is emitted. That matches the canvas,
+   where the image paints over the colour.
+================================= */
+export const mobileBackgroundRules = (
+  m: Record<string, any>,
+  opts: { keepImage?: boolean } = {},
+): string[] => {
+  const bg = m.backgroundGradient;
+  const solidOnly = (color: string): string[] =>
+    opts.keepImage
+      ? [`background-color: ${color} !important`]
+      : [
+          `background: none !important`,
+          `background-color: ${color} !important`,
+        ];
+
+  if (bg != null) {
+    if (
+      bg.useGradient === true &&
+      Array.isArray(bg.gradient?.colors) &&
+      bg.gradient.colors.length >= 2
+    ) {
+      const { type, direction, colors } = bg.gradient;
+      const stops = colors
+        .map((c: any) => `${c.color} ${c.position}%`)
+        .join(", ");
+      const gradientCss =
+        type === "radial"
+          ? `radial-gradient(circle at center, ${stops})`
+          : `linear-gradient(${direction}, ${stops})`;
+
+      const solid = bg.solid || m.backgroundColor || "";
+      const result: string[] = [];
+      result.push(
+        `background-color: ${solid && solid !== "transparent" ? solid : "transparent"} !important`,
+      );
+      if (!opts.keepImage) result.push(`background: ${gradientCss} !important`);
+      return result;
+    }
+
+    const solidColor = bg.solid ?? m.backgroundColor;
+    return solidColor != null ? solidOnly(solidColor) : [];
+  }
+
+  // Fallback: no gradient object, but standalone mobile backgroundColor
+  return m.backgroundColor != null ? solidOnly(m.backgroundColor) : [];
+};
+
+// ─── Rows, columns and row-spacers ────────────────────────────────────────────
+
+/** A row, column or row-spacer: the nodes that keep their overrides on `mobile`. */
+interface MobileStyledNode {
+  id: string;
+  type?: string;
+  columns?: unknown[];
+  backgroundImage?: string;
+  gap?: number;
+  mobileStack?: boolean;
+  mobile?: Record<string, any> | null;
+}
+
+const spacingCss = (p: Record<string, number>): string =>
+  `${p.top ?? 0}px ${p.right ?? 0}px ${p.bottom ?? 0}px ${p.left ?? 0}px`;
+
+const borderRules = (b: Record<string, any>): string[] => [
+  `border: ${b.width}px ${b.style} ${b.color} !important`,
+  ...(b.radius != null ? [`border-radius: ${b.radius}px !important`] : []),
+];
+
+/**
+ * Mobile CSS for a row, a column or a row-spacer, scoped by the hook classes
+ * from shared/nodeBox (`uid` is `eb-<id>`). Call it with those three kinds
+ * only; leaf components go through emailMobileStyles.
+ *
+ *   .uid                    the background element: row <td>, column <td>, spacer <div>
+ *   .uid-box                the row element that carries the padding
+ *   .uid-outer              the row element that carries the border and radius
+ *   .mobile-stack.uid-gap   the row's gap cells (stacked rows with a desktop gap)
+ */
+export const emailNodeMobileStyles = (
+  node: MobileStyledNode,
+  uid: string,
+): string => {
+  if (!hasNodeMobile(node)) return "";
+  const m = node.mobile as Record<string, any>;
+  const bg = mobileBackgroundRules(m, { keepImage: !!node.backgroundImage });
+  const blocks: string[] = [];
+
+  if (node.type === "row-spacer") {
+    const rules: string[] = [];
+    if (m.height != null) {
+      rules.push(
+        `height: ${m.height}px !important`,
+        `line-height: ${m.height}px !important`,
+      );
+    }
+    rules.push(...bg);
+    if (rules.length) blocks.push(`.${uid} { ${rules.join("; ")} }`);
+  } else if (Array.isArray(node.columns)) {
+    // Row. (Legacy rows may lack `type`, so detect it by its columns.)
+    const td = [...bg];
+    if (m.minHeight != null) td.push(`min-height: ${m.minHeight}px !important`);
+    // The exporters round the row <td> two pixels wider than the border.
+    if (m.border?.radius != null) {
+      td.push(`border-radius: ${m.border.radius + 2}px !important`);
+    }
+    if (td.length) blocks.push(`.${uid} { ${td.join("; ")} }`);
+    if (m.padding) {
+      blocks.push(
+        `.${uid}-box { padding: ${spacingCss(m.padding)} !important }`,
+      );
+    }
+    if (m.border) {
+      blocks.push(`.${uid}-outer { ${borderRules(m.border).join("; ")} }`);
+    }
+    // The gap cells only exist when the desktop gap is above zero (the three
+    // exporters emit them under that condition), so there is nothing to restyle
+    // otherwise.
+    if (m.gap != null && node.mobileStack && (node.gap ?? 0) > 0) {
+      blocks.push(
+        `.mobile-stack.${uid}-gap { height: ${m.gap}px !important; line-height: ${m.gap}px !important; }`,
+      );
+    }
+  } else {
+    // Column
+    const td = [...bg];
+    if (m.padding) td.push(`padding: ${spacingCss(m.padding)} !important`);
+    if (m.border) td.push(...borderRules(m.border));
+    if (m.verticalAlign != null) {
+      td.push(`vertical-align: ${m.verticalAlign} !important`);
+    }
+    if (td.length) blocks.push(`.${uid} { ${td.join("; ")} }`);
+  }
+
+  return blocks.join("\n");
+};
+
+/**
+ * Mobile CSS for every row, column and row-spacer in the tree, top level and
+ * nested. `isVisible` is the export mode's visibility gate (prune mode drops
+ * hidden nodes). Depth handling mirrors the leaf-component walker in
+ * useEmailExportEngine: a row's children are walked at `childDepth`, and each
+ * nested row adds one.
+ */
+export const collectNodeMobileStyles = (
+  rows: any[],
+  isVisible: (node: any) => boolean,
+  maxDepth: number,
+): string[] => {
+  const css: string[] = [];
+
+  const visitRow = (row: any, childDepth: number): void => {
+    if (!isVisible(row)) return;
+    const own = emailNodeMobileStyles(row, `eb-${row.id}`);
+    if (own) css.push(own);
+    if (!Array.isArray(row.columns)) return; // a row-spacer has no columns
+
+    for (const col of row.columns) {
+      const colCss = emailNodeMobileStyles(col, `eb-${col.id}`);
+      if (colCss) css.push(colCss);
+      visitChildren(col.children ?? col.components ?? [], childDepth);
+    }
+  };
+
+  const visitChildren = (children: any[], depth: number): void => {
+    if (depth >= maxDepth) return;
+    for (const child of children) {
+      if (child?.type === "row" || child?.type === "row-spacer") {
+        visitRow(child, depth + 1);
+      }
+    }
+  };
+
+  rows.forEach((row) => visitRow(row, 0));
+  return css;
+};
+
 export const useEmailExportMobileStyles = () => {
   const emailMobileStyles = (comp: any, uid: string): string => {
     // ── CRITICAL: resolve render variant — new shape uses componentType,
@@ -28,72 +228,9 @@ export const useEmailExportMobileStyles = () => {
       if (rule) arr.push(rule);
     };
 
-    /* ================================
-       BACKGROUND RESOLVER
-
-       The mobile object stores backgroundGradient as:
-         - null  → no override, inherit desktop (do nothing)
-         - BackgroundValue object → the user set a mobile-specific background
-
-       Inside a non-null BackgroundValue:
-         useGradient: true  → emit a CSS gradient
-         useGradient: false → emit the solid colour from .solid
-
-       We intentionally ignore `m.backgroundColor` as a standalone signal
-       when `m.backgroundGradient` is present, because setBackground() in
-       useEmailComponentProps always writes both in sync. The gradient object
-       is the single source of truth for mobile background overrides.
-    ================================= */
-
-    // Returns [] (no override), [solid] (solid mode), or [solid, gradient]
-    // (gradient mode — Outlook reads solid, Gmail reads gradient).
-    const resolveMobileBackground = (): string[] => {
-      const bg = m.backgroundGradient;
-
-      if (bg != null) {
-        if (
-          bg.useGradient === true &&
-          Array.isArray(bg.gradient?.colors) &&
-          bg.gradient.colors.length >= 2
-        ) {
-          const { type, direction, colors } = bg.gradient;
-          const stops = colors
-            .map((c: any) => `${c.color} ${c.position}%`)
-            .join(", ");
-          const gradientCss =
-            type === "radial"
-              ? `radial-gradient(circle at center, ${stops})`
-              : `linear-gradient(${direction}, ${stops})`;
-
-          const solid = bg.solid || m.backgroundColor || "";
-          const result: string[] = [];
-          result.push(
-            `background-color: ${solid && solid !== "transparent" ? solid : "transparent"} !important`,
-          );
-          result.push(`background: ${gradientCss} !important`);
-          return result;
-        }
-
-        const solidColor = bg.solid ?? m.backgroundColor;
-        if (solidColor != null) {
-          return [
-            `background: none !important`,
-            `background-color: ${solidColor} !important`,
-          ];
-        }
-        return [];
-      }
-
-      // Fallback: no gradient object, but standalone mobile backgroundColor
-      if (m.backgroundColor != null) {
-        return [
-          `background: none !important`,
-          `background-color: ${m.backgroundColor} !important`,
-        ];
-      }
-
-      return [];
-    };
+    // The rules live in the module-level mobileBackgroundRules, shared with
+    // rows, columns and row-spacers (see emailNodeMobileStyles below).
+    const resolveMobileBackground = (): string[] => mobileBackgroundRules(m);
 
     /* ================================
        SHARED TEXT / ELEMENT STYLES

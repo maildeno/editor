@@ -455,6 +455,7 @@ import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder
 import { useProductRowActions } from "@/composables/emailBuilder/components/useProductRowActions";
 import { useSavedRowCapabilities } from "@/adapters";
 import { displayName } from "@/composables/emailBuilder/core/useEmailBuilderOperations";
+import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
 import CanvasColumn from "./CanvasColumn.vue";
 import DropZone from "../ui/canvas/DropZone.vue";
 import {
@@ -690,7 +691,8 @@ const isStacked = computed(
 );
 
 const rowStyles = computed(() => {
-  const r = props.row;
+  // `gap` only changes on mobile while the row is stacked (see the helper).
+  const r = applyNodeMobileOverrides(props.row, previewMode.value === "mobile");
 
   const bg = r.backgroundGradient;
   const hasGradient =

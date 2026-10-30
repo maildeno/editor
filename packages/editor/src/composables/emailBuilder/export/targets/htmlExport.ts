@@ -21,7 +21,15 @@ import { useEmailExportMobileStyles } from "../useEmailExportMobileStyles";
 import { useEmailBuilderVisibility } from "../../core/useEmailBuilderVisibility";
 
 import { buildBackgroundStyles } from "../shared/styles";
-import { wrapWithContainerDiv } from "../shared/containers";
+import {
+  buildRowBox,
+  classAttr,
+  columnClasses,
+  cssDecls,
+  gapClasses,
+  renderBoxHtml,
+  spacerClasses,
+} from "../shared/nodeBox";
 import { formatHTML } from "../transformers/formatting";
 import {
   applyTagTransform,
@@ -141,7 +149,7 @@ export const htmlExport = (deps: Deps) => {
       if (childType === "row-spacer") {
         if (!child.height || child.height <= 0) continue;
         const spacerStyles = buildBackgroundStyles(child);
-        let spacerHtml = `<div height="${child.height}" style="height:${child.height}px;line-height:${child.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;</div>`;
+        let spacerHtml = `<div${classAttr(spacerClasses(child))} height="${child.height}" style="height:${child.height}px;line-height:${child.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;</div>`;
         if (mode === "wrap" && shouldESPWrap(child.visibility)) {
           spacerHtml = wrapWithESPLogic(
             spacerHtml,
@@ -187,7 +195,7 @@ export const htmlExport = (deps: Deps) => {
       let spacerTr = `
 <tr>
   <td>
-  <div height="${row.height}" style="height:${row.height}px;line-height:${row.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;
+  <div${classAttr(spacerClasses(row))} height="${row.height}" style="height:${row.height}px;line-height:${row.height}px;font-size:1px;mso-line-height-rule:exactly;${spacerStyles.join(";")}">&nbsp;
   </div>
   </td>
 </tr>
@@ -224,7 +232,6 @@ export const htmlExport = (deps: Deps) => {
         return;
 
       const columnPercentage = columnPercentages[index];
-      const responsiveClass = row.mobileStack ? "mobile-stack" : "";
       const colBackgroundStyles = buildBackgroundStyles(col);
       const colTdStyles: string[] = [
         `width:${columnPercentage}%`,
@@ -245,7 +252,7 @@ export const htmlExport = (deps: Deps) => {
       const componentsHtml = renderChildren(kids, ctx, mode, depth);
 
       columnsHtml += `
-              <td valign="${col.verticalAlign ?? "middle"}"${responsiveClass ? ` class="${responsiveClass}"` : ""} style="${colTdStyles.join(";")}">
+              <td valign="${col.verticalAlign ?? "middle"}"${classAttr(columnClasses(row, col))} style="${colTdStyles.join(";")}">
 ${componentsHtml}
               </td>
 `;
@@ -253,7 +260,7 @@ ${componentsHtml}
       if (index < row.columns.length - 1 && row.gap) {
         columnsHtml += `
               <td 
-                class="${responsiveClass ? `gap-${row.gap} ${responsiveClass}` : `gap-${row.gap}`}"
+                class="${gapClasses(row).join(" ")}"
                 width="${gapPercentage}%"
                 style="width:${gapPercentage}%;max-width:${gapPercentage}%;font-size:0;line-height:0;padding:0;">
                 &nbsp;
@@ -272,21 +279,16 @@ ${columnsHtml}
             </tr>
           </table>`;
 
-    // ── Define border flags before building styles ──
-    const hasBorderRadius = (row.border?.radius ?? 0) > 0;
+    // The row shell (the <td>, the wrapper divs and their hook classes) is
+    // shared with the MJML and React Email exporters: see shared/nodeBox.ts.
+    const rowBox = buildRowBox(row);
 
     const rowTdStyles: string[] = [
       ...rowBackgroundStyles,
-      hasBorderRadius ? `border-radius:${row.border.radius + 2}px` : "",
-      `overflow:hidden`,
+      ...cssDecls(rowBox.td.decls),
     ].filter(Boolean);
 
-    let rowContent = wrapWithContainerDiv(
-      innerTable,
-      row.border,
-      [],
-      row.padding,
-    );
+    let rowContent = renderBoxHtml(rowBox, innerTable);
 
     if (mode === "wrap" && shouldESPWrap(row.visibility)) {
       rowContent = wrapWithESPLogic(
@@ -296,13 +298,13 @@ ${columnsHtml}
       );
     }
 
-    if ((row.minHeight ?? 0) > 0) {
-      rowTdStyles.push(`min-height:${row.minHeight}px`);
+    if (rowBox.minHeight > 0) {
+      rowTdStyles.push(`min-height:${rowBox.minHeight}px`);
     }
 
     return `
 <tr>
-  <td${rowTdStyles.length ? ` style="${rowTdStyles.join(";")}"` : ""}>
+  <td${classAttr(rowBox.td.classes)}${rowTdStyles.length ? ` style="${rowTdStyles.join(";")}"` : ""}>
 ${rowContent}
   </td>
 </tr>

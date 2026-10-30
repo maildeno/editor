@@ -14,7 +14,15 @@ import { useEmailExportMobileStyles } from "../useEmailExportMobileStyles";
 import { useEmailBuilderVisibility } from "../../core/useEmailBuilderVisibility";
 
 import { buildBackgroundStylesReact } from "../shared/styles";
-import { wrapWithContainerDivReact } from "../shared/containers";
+import {
+  buildRowBox,
+  classNameAttr,
+  columnClasses,
+  gapClasses,
+  reactEntries,
+  renderBoxJsx,
+  spacerClasses,
+} from "../shared/nodeBox";
 import { formatTSX } from "../transformers/formatting";
 import {
   applyComponentTagSubstitution,
@@ -138,7 +146,8 @@ export const reactEmailExport = (deps: Deps) => {
                 .map(([k, v]) => `${k}:"${v}"`)
                 .join(", ")}`
             : "";
-        let spacerJsx = `<div style={{ display: "block", height: "${child.height}px", lineHeight: "${child.height}px", fontSize: "1px"${spacerStyleObj} }}>&nbsp;</div>`;
+        const spacerHooks = spacerClasses(child);
+        let spacerJsx = `<div${spacerHooks.length ? classNameAttr(spacerHooks) : ""} style={{ display: "block", height: "${child.height}px", lineHeight: "${child.height}px", fontSize: "1px"${spacerStyleObj} }}>&nbsp;</div>`;
         if (mode === "wrap" && shouldReactWrap(child.visibility)) {
           spacerJsx = wrapWithReactLogic(spacerJsx, child.visibility);
         }
@@ -182,10 +191,11 @@ export const reactEmailExport = (deps: Deps) => {
               .map(([k, v]) => `${k}:"${v}"`)
               .join(", ")}`
           : "";
+      const spacerHooks = spacerClasses(row);
       let spacerJsx = `
         {/* Row Spacer */}
         <Section>
-            <div style={{ display: "block", height: "${row.height}px", lineHeight: "${row.height}px", fontSize: "1px"${spacerStyleObj} }}>&nbsp;</div>
+            <div${spacerHooks.length ? classNameAttr(spacerHooks) : ""} style={{ display: "block", height: "${row.height}px", lineHeight: "${row.height}px", fontSize: "1px"${spacerStyleObj} }}>&nbsp;</div>
         </Section>`;
       if (mode === "wrap" && shouldReactWrap(row.visibility)) {
         spacerJsx = wrapWithReactLogic(spacerJsx, row.visibility);
@@ -218,7 +228,6 @@ export const reactEmailExport = (deps: Deps) => {
         return;
 
       const colWidthPercentage = columnPercentages[index];
-      const responsiveClass = row.mobileStack ? "mobile-stack" : "";
       const colBackgroundStylesReact = buildBackgroundStylesReact(col);
 
       const colStyleObj: Record<string, string> = {
@@ -242,9 +251,9 @@ export const reactEmailExport = (deps: Deps) => {
       const kids = col.children ?? col.components ?? [];
       const componentsJsx = renderChildrenJSX(kids, ctx, mode, row, depth);
 
-      // Remove wrapWithContainerDivReact for col (styles are inline now)
+      // Column styles are inline on the <Column>; there is no wrapper div
       columnsJsx += `<Column
-          className="${responsiveClass}"
+          className="${columnClasses(row, col).join(" ")}"
           style={{ ${colStyleEntries} }}
         >
 ${componentsJsx}
@@ -252,7 +261,7 @@ ${componentsJsx}
 
       if (index < row.columns.length - 1 && row.gap) {
         columnsJsx += `<Column
-          className="${responsiveClass ? `gap-${row.gap} ${responsiveClass}` : `gap-${row.gap}`}"
+          className="${gapClasses(row).join(" ")}"
           style={{ width:"${gapPercentage}%", maxWidth:"${gapPercentage}%", fontSize:"0", lineHeight:"0" }}
         >&nbsp;</Column>\n`;
       }
@@ -260,21 +269,18 @@ ${componentsJsx}
 
     const rowBackgroundStylesReact = buildBackgroundStylesReact(row);
 
-    const hasBorderRadius = (row.border?.radius ?? 0) > 0;
+    // The row shell (the <Section>, the wrapper divs and their hook classes) is
+    // shared with the HTML and MJML exporters: see shared/nodeBox.ts. The
+    // radius only goes on the <Section> when needed, which prevents background
+    // bleed. React Email does not emit the row's min-height, as before.
+    const rowBox = buildRowBox(row);
 
-    const rowSectionStyle: Record<string, string> = {
-      ...rowBackgroundStylesReact,
-      // Only add radius to <Section> when needed — prevents background bleed
-      ...(hasBorderRadius
-        ? { borderRadius: `${row.border.radius + 2}px` }
-        : {}),
-      overflow: "hidden",
-    };
-
-    const rowStyleEntries = Object.entries(rowSectionStyle)
-      .filter(([_, v]) => v !== undefined && v !== "")
-      .map(([k, v]) => `${k}:"${v}"`)
-      .join(", ");
+    const rowStyleEntries = [
+      ...Object.entries(rowBackgroundStylesReact)
+        .filter(([_, v]) => v !== undefined && v !== "")
+        .map(([k, v]) => `${k}:"${v}"`),
+      ...reactEntries(rowBox.td.decls),
+    ].join(", ");
 
     const rowStyleAttr = rowStyleEntries
       ? ` style={{ ${rowStyleEntries} }}`
@@ -282,15 +288,9 @@ ${componentsJsx}
 
     const rowInnerContent = `<Row>${columnsJsx}</Row>`;
 
-    const rowWrappedContent = wrapWithContainerDivReact(
-      rowInnerContent,
-      row.border,
-      {},
-      row.padding,
-      true,
-    );
+    const rowWrappedContent = renderBoxJsx(rowBox, rowInnerContent);
 
-    let rowJsx = `      <Section${rowStyleAttr}>
+    let rowJsx = `      <Section${rowBox.td.classes.length ? classNameAttr(rowBox.td.classes) : ""}${rowStyleAttr}>
 ${rowWrappedContent}
       </Section>`;
 

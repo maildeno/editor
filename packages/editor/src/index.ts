@@ -73,6 +73,9 @@ export type { EditorWriteApi, AssistantMount } from "./types/assistant";
 // `Canvas` is the email body's own settings — width, padding,
 // background, preheader — not an HTML canvas. Alias it on import if
 // that reads badly in your codebase.
+//
+// `RowMobile`, `ColumnMobile` and `RowSpacerMobile` are the shapes of the
+// `mobile` override object on `NestedRow`, `Column` and `RowSpacer`.
 export type {
   Canvas,
   NestedRow,
@@ -81,6 +84,9 @@ export type {
   VisibilityConfig,
   BorderConfig,
   GradientConfig,
+  RowMobile,
+  ColumnMobile,
+  RowSpacerMobile,
 } from "./composables/emailBuilder/transform/pipeline/optimize";
 
 // Slot prop on EmailEditor's default slot.

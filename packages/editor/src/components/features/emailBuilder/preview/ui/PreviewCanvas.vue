@@ -185,6 +185,7 @@ import { computed } from "vue";
 import PreviewComponent from "./PreviewComponent.vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useEmailBuilderVisibility } from "@/composables/emailBuilder/core/useEmailBuilderVisibility";
+import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
 
 const props = defineProps<{
   rows: any[];
@@ -252,9 +253,10 @@ function resolveBackground(target: any): string {
 
 // ── Row spacer ─────────────────────────────────────────────────────────────
 
-function rowSpacerStyle(spacer: any): Record<string, string> {
+function rowSpacerStyle(node: any): Record<string, string> {
   // Mirror CanvasRowSpacer.vue:spacerStyles — gradient when useGradient is
   // true, otherwise the solid backgroundColor (fallback "transparent").
+  const spacer = applyNodeMobileOverrides(node, !!props.forceMobile);
   return {
     width: "100%",
     height: (spacer.height ?? 20) + "px",
@@ -264,8 +266,10 @@ function rowSpacerStyle(spacer: any): Record<string, string> {
 
 // ── Row styles (mirrors CanvasRow.vue:rowStyles) ──────────────────────────
 
-function rowStyles(row: any): Record<string, string> {
-  const isStacked = props.forceMobile && row.mobileStack === true;
+function rowStyles(node: any): Record<string, string> {
+  const isStacked = props.forceMobile && node.mobileStack === true;
+  // `gap` only changes on mobile while the row is stacked (see the helper).
+  const row = applyNodeMobileOverrides(node, !!props.forceMobile);
 
   const styles: Record<string, string> = {
     display: "flex",
@@ -308,8 +312,9 @@ const VERTICAL_ALIGN_MAP: Record<string, string> = {
   bottom: "flex-end",
 };
 
-function columnStyles(col: any, row: any): Record<string, string> {
+function columnStyles(node: any, row: any): Record<string, string> {
   const isStacked = props.forceMobile && row.mobileStack === true;
+  const col = applyNodeMobileOverrides(node, !!props.forceMobile);
   const radius = col.border?.radius ?? 0;
 
   const styles: Record<string, string> = {

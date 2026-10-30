@@ -46,7 +46,7 @@
         <span
           class="text-xs text-(--md-on-inverse) bg-(--md-row-selection-fg) px-1.5 py-px rounded shadow-sm"
         >
-          {{ spacer.height }}px
+          {{ shown.height }}px
         </span>
       </div>
     </div>
@@ -309,6 +309,7 @@ import {
   isVisibilityActive,
   visibilityRuleCount,
 } from "@/composables/emailBuilder/core/ui/visibilityBadgeHelpers";
+import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
 import VisibilityPopover from "../ui/visibility/VisibilityPopover.vue";
 import DropZone from "../ui/canvas/DropZone.vue";
 
@@ -335,7 +336,14 @@ const {
   isRowDragActive,
   isTopLevelRowDragActive,
   layerHoveredId,
+  previewMode,
 } = useEmailBuilder();
+
+// The spacer as it looks in the current mode: height and background can differ
+// on mobile. The height label and the styles both read this.
+const shown = computed(() =>
+  applyNodeMobileOverrides(props.spacer, previewMode.value === "mobile"),
+);
 
 const isLayerHovered = computed(
   () => layerHoveredId.value === String(props.spacer.id),
@@ -468,7 +476,7 @@ const handleDrop = (e: DragEvent) => {
 };
 
 const spacerStyles = computed(() => {
-  const s = props.spacer;
+  const s = shown.value;
 
   // ── Resolve background ──────────────────────────────────────────────────────
   // Prefer gradient when useGradient is true, fall back to solid backgroundColor.

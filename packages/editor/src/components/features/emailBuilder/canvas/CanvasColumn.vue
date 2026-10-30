@@ -106,6 +106,7 @@ import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useLayoutDrag } from "@/composables/emailBuilder/core/ui/useLayoutDrag";
 import { useProductRows } from "@/composables/emailBuilder/components/useProductRows";
+import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
 import CanvasElement from "./CanvasElement.vue";
 
 const props = defineProps({
@@ -255,7 +256,11 @@ const handleDragLeave = (e: DragEvent) => {
 
 // ─── Column styles ─────────────────────────────────────────────────────────────
 const getColumnStyles = (): Record<string, string> => {
-  const c = props.column;
+  // `width` is not overridable, and the stacked width below reads the row.
+  const c = applyNodeMobileOverrides(
+    props.column,
+    previewMode.value === "mobile",
+  );
 
   const bg = c.backgroundGradient;
   const hasGradient =

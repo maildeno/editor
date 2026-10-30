@@ -17,6 +17,7 @@ import { useInfoDialog } from "../../ui/useInfoDialog";
 import { useEmailBuilderVisibility } from "../core/useEmailBuilderVisibility";
 
 import { buildMobileStackGapCSS } from "./shared/styles";
+import { collectNodeMobileStyles } from "./useEmailExportMobileStyles";
 import { type ESPSyntax } from "./transformers/espWrapper";
 
 import { htmlExport } from "./targets/htmlExport";
@@ -310,6 +311,17 @@ export const useEmailExportEngine = (
     emailMobileStyles: (comp: any, uid: string) => string,
   ): string[] => {
     const overrides: string[] = [];
+
+    // Rows, columns and row-spacers carry mobile overrides of their own
+    // (node.mobile). Leaf components are handled below.
+    overrides.push(
+      ...collectNodeMobileStyles(
+        rows.value,
+        (node) => mode !== "prune" || evaluateVisibility(node.visibility, ctx),
+        MAX_DEPTH,
+      ),
+    );
+
     rows.value.forEach((row: any) => {
       if (mode === "prune" && !evaluateVisibility(row.visibility, ctx)) return;
       if (!row.columns) return;
