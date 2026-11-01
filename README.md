@@ -274,7 +274,7 @@ import { EmailEditor } from "@maildeno/editor";
 </script>
 
 <template>
-  <EmailEditor :capabilities="{ export: ['html', 'react-email', 'mjml', 'json'] }" />
+  <EmailEditor :capabilities="{ export: ['html', 'react', 'mjml', 'json'] }" />
 </template>
 ```
 

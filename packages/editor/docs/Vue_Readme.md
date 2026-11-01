@@ -99,6 +99,47 @@ editor.value.getJson();
 Theming is reactive through the `theme` prop — change it and the editor
 re-themes live; no imperative call needed.
 
+## Styling and isolation
+
+`<EmailEditor />` renders into your page like any other component. There is no
+shadow root. Its CSS goes into `<head>` on mount and is scoped to the editor's
+root element, so it can't restyle your app.
+
+The reverse isn't true: your page's CSS can reach the editor. The editor's CSS
+is built with Tailwind v4, so it lives in the cascade layers `theme`, `base`,
+`components` and `utilities`, and a rule that isn't in any layer beats a layered
+one whatever its specificity. A global `button { … }` or `h1 { … }` in your app
+can therefore override the editor's own styling of those elements.
+
+|                                    | `<EmailEditor />` | `init()`                                                                    |
+| ---------------------------------- | ----------------- | --------------------------------------------------------------------------- |
+| Shadow root                        | No                | Yes (default)                                                               |
+| Editor styles leak into your page  | No                | No                                                                          |
+| Your page's CSS reaches the editor | Yes               | Selectors no; inherited properties such as `color` and `font-size` still do |
+| Vue runtime                        | Yours             | A second, bundled copy                                                      |
+
+If your global styles collide with the editor, you have two options:
+
+- **Put your global rules in a layer that ranks below the editor's.** Declare the
+  layer order before anything else in your CSS. Order is set by first
+  appearance, so if Tailwind or another stylesheet declares these layers first,
+  this does nothing:
+
+  ```css
+  @layer host, theme, base, components, utilities;
+
+  @layer host {
+    /* your global element rules: button, h1, input, … */
+  }
+  ```
+
+  Third-party CSS can join the layer too, with
+  `@import url("vendor.css") layer(host);` right after that statement. Scoping
+  your selectors to a wrapper only helps if the wrapper doesn't contain the
+  editor.
+- **Use [`init()`](#alternative-init)**, which isolates the editor in a shadow
+  root at the cost of a second Vue runtime.
+
 ## Alternative: `init()`
 
 The same API the React and vanilla guides use also works in Vue:
@@ -128,9 +169,15 @@ Vue app ships two Vue runtimes (~60 kB gzipped plus a second reactivity graph).
 The component uses the Vue you already have, and gives you reactive props,
 template refs, normal event binding and devtools visibility.
 
-The one case where `init()` wins: it renders in a shadow root, so your app's
-global CSS can't reach the editor. If your stylesheets conflict with it, that
-isolation is worth the duplicate runtime.
+The one case where `init()` wins: it renders in a shadow root, so selectors in
+your app's global CSS can't reach the editor. If your stylesheets conflict with
+it and you can't move them into a layer (see
+[Styling and isolation](#styling-and-isolation)), that isolation is worth the
+duplicate runtime.
+
+`init({ shadowDom: false })` renders in the page instead of a shadow root. In a
+Vue app that is the component's behaviour plus a second Vue runtime, so use the
+component.
 
 ## Reading the canvas
 
