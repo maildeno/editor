@@ -46,27 +46,39 @@ const emit = defineEmits<{
 const portalTarget = usePortalTarget();
 
 const open = ref(false);
+
+/**
+ * What the user has typed into the search box since the list opened, and
+ * nothing else. It is also the list filter (`filteredOptions`), so anything
+ * that is not the user typing must never land in it.
+ */
 const search = ref("");
 
 /**
  * What the search input actually displays.
  *
- * The input cannot simply be bound to `search`. Reka writes the chosen item's
- * text back into the input on selection, so `search` keeps holding the old
- * label — and an input's value always wins over its placeholder. That made the
- * field show a stale font after undo/redo/Reset: `displayLabel` (bound to the
- * placeholder) updated correctly underneath, but stayed invisible behind the
- * leftover text.
- *
  * Closed, it shows the selected label, so it tracks modelValue like the
- * non-filter branch already did. Open, it shows whatever is being typed.
+ * non-filter branch does. Open, it shows what is being typed.
+ *
+ * The input is bound one way, and `search` follows the native `input` event
+ * only (`onSearchInput`). Reka also writes into the input's model on its own:
+ * `resetSearchTerm()` runs on mount, on every selection and shortly after it
+ * closes the list, and ends by re-emitting whatever the box is bound to, which
+ * is the current label. Taking those writes turned `search` into a snapshot of
+ * the label as of the last reset. Nothing refreshed it when the parent changed
+ * modelValue (another block selected, undo, Reset), so the next open showed the
+ * previous value in the box, and `filteredOptions` cut the list down to that
+ * one match. Ignoring them only while the list is closed is not enough: in the
+ * custom-element build the first click makes Reka close the list and this
+ * component reopen it, so a reset can land while it is open.
  */
-const inputValue = computed({
-  get: () => (open.value ? search.value : displayLabel.value),
-  set: (v: string) => {
-    search.value = v;
-  },
-});
+const inputValue = computed(() =>
+  open.value ? search.value : displayLabel.value,
+);
+
+function onSearchInput(event: Event) {
+  search.value = (event.target as HTMLInputElement).value;
+}
 
 /* ---------------------------------------------------------
  * Option helpers
@@ -136,6 +148,26 @@ const displayLabel = computed(() => {
   return selected ? labelOf(selected) : "";
 });
 
+/**
+ * The option that matches modelValue, handed to ComboboxRoot below.
+ *
+ * Without it Reka keeps its own, uncontrolled copy of the selection: whatever
+ * was last picked in this instance. The check mark and the highlighted row read
+ * that copy, and the properties panel reuses one Select while the selected block
+ * changes, so both pointed at the previous block's value.
+ *
+ * `null`, not `undefined`, for "no match": Reka decides once, at setup, whether
+ * the root is controlled by checking for `undefined`.
+ */
+const selectedOption = computed(
+  () =>
+    props.options.find((option) => valueOf(option) === props.modelValue) ??
+    null,
+);
+
+/** Compared by value, so an options array that is rebuilt still matches. */
+const sameOption = (a: unknown, b: unknown) => valueOf(a) === valueOf(b);
+
 /* ---------------------------------------------------------
  * Filtering
  * --------------------------------------------------------- */
@@ -177,9 +209,8 @@ function onSelect(option: unknown) {
 function onOpenChange(value: boolean) {
   open.value = value;
 
-  if (!value) {
-    search.value = "";
-  }
+  // Clear on open as well as on close, so nothing left over can seed the query.
+  search.value = "";
 }
 
 function openDropdown() {
@@ -193,6 +224,8 @@ function openDropdown() {
 
 <template>
   <ComboboxRoot
+    :model-value="selectedOption"
+    :by="sameOption"
     :open="open"
     :disabled="props.disabled"
     :ignore-filter="true"
@@ -216,9 +249,10 @@ function openDropdown() {
 
       <ComboboxInput
         v-if="props.filter"
-        v-model="inputValue"
+        :model-value="inputValue"
         class="md-sel__input"
         :placeholder="props.filterPlaceholder || props.placeholder"
+        @input="onSearchInput"
         @focus="openDropdown"
         @click="openDropdown"
       />

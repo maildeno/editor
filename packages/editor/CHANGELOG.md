@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.14
+
+### Fixed
+
+**Selects no longer show the previous value when you open them.** After you picked a value in a select and then selected another block, opening Font Family, Weight, Heading Level or any other select showed the earlier value in the search box, cut the list down to that one option and put the check mark on it. Typing a new search appended to the stale text, so another option could not be found without clearing the box first. The closed label was always right, and values were always written to the right block; only what the open select showed was wrong.
+
+The shared `Select` now follows the selected block: the box starts empty, the full list shows, the check mark sits on the block's current value, and typing filters as before. This covers every select that uses it, in both the Vue component and the `init()` custom element.
+
+The cause was two copies of the selection that never followed the parent. `Select` never gave Reka's `ComboboxRoot` the current value, so Reka kept its own copy of the last item picked in that instance. It also reused the text Reka writes into the search box as the list filter, and that text was a snapshot of the label from the last reset. `ComboboxRoot` is now controlled by `modelValue`, and the search box is bound one way, so only what the user types reaches the filter. In the custom-element build the first click makes Reka close the list and `Select` reopen it, which is why ignoring Reka's writes only while the list is closed was not enough.
+
 ## 0.4.13
 
 API changes.
