@@ -334,8 +334,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, nextTick, ref } from "vue";
+import { computed, watch, nextTick, ref, toRef } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
+import type { MergeTagEntry } from "@/composables/emailBuilder/core/useSidebarUiState";
 import {
   extractMergeTags,
   extractMergeTagsWithDefaults,
@@ -354,22 +355,27 @@ import Icon from "@/components/ui/Icon.vue";
 // they resolve inside the shadow root as well as the light DOM.
 const rootEl = ref<HTMLElement | null>(null);
 
-const { mergeTagPreviewContext, mergeTagPreviewActive, rows, espConfig } =
-  useEmailBuilder();
+const {
+  mergeTagPreviewContext,
+  mergeTagPreviewActive,
+  rows,
+  espConfig,
+  sidebarUi,
+} = useEmailBuilder();
 
 // ─── Persistent state ─────────────────────────────────────────────────────────
+// This component is removed whenever another tab is open, so anything the user
+// typed lives in the editor instance (sidebarUi) and survives that. See
+// useSidebarUiState.ts.
 
-interface TagEntry {
-  tag: string;
-  fallback: string;
-  value: string;
-}
-
-const tagEntries = ref<TagEntry[]>([]);
-const isPreviewActive = ref<boolean>(false);
-const showDetectedSummary = ref<boolean>(true);
-const showSystemTags = ref<boolean>(false);
-const showESPPreview = ref<boolean>(true);
+const tagEntries = toRef(sidebarUi.mergeTags, "entries");
+const showDetectedSummary = toRef(sidebarUi.mergeTags, "showDetectedSummary");
+const showSystemTags = toRef(sidebarUi.mergeTags, "showSystemTags");
+const showESPPreview = toRef(sidebarUi.mergeTags, "showESPPreview");
+// Starts from the editor's flag, not false: the preview can still be on when
+// this tab is reopened, and a switch that says OFF while the canvas is
+// previewing cannot be used (the entries are what enable it).
+const isPreviewActive = ref<boolean>(mergeTagPreviewActive.value);
 
 // ─── ESP display helpers ──────────────────────────────────────────────────────
 
@@ -436,13 +442,13 @@ const detectedDefaults = computed<Map<string, string>>(() => {
   return merged;
 });
 
-const espTokenFor = (entry: TagEntry): string => {
+const espTokenFor = (entry: MergeTagEntry): string => {
   const fallback =
     entry.fallback.trim() || detectedDefaults.value.get(entry.tag) || undefined;
   return transformToken(entry.tag, espConfig.value.syntax, fallback);
 };
 
-const previewValueFor = (entry: TagEntry): string => {
+const previewValueFor = (entry: MergeTagEntry): string => {
   if (entry.value.trim()) return entry.value.trim();
   if (entry.fallback.trim()) return entry.fallback.trim();
   const d = detectedDefaults.value.get(entry.tag);

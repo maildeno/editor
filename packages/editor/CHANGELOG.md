@@ -1,5 +1,92 @@
 # Changelog
 
+## 0.4.15
+
+### Fixed
+
+**The Merge Tag and Link Tag tabs no longer clear when you switch to another tab.** The tag names and preview values you had typed, the Preview switch and which sections were open or collapsed were lost as soon as you opened another tab: Merge Tag to Link Tag, Tags to Styles, or General to Content. Preview could also be left on with nothing to turn it off. After you came back, the switch said "Preview OFF" and was disabled, while the canvas was still showing the preview values.
+
+They now stay for as long as the editor is open. The sidebar also remembers which tab you were on at each level, so coming back to General opens Tags where you left it. The values are sample data for previewing, so they are not saved in the template and are gone when the page is reloaded. Two editors on one page do not share them.
+
+The cause was that each tab is removed from the page while another one is open, and the two tag tabs kept their data in the component, so it went with it. The data now lives in the editor instance, next to the other preview state (`sidebarUi`, on what `useEmailBuilder()` returns), and a tab opened while the preview is on starts with the switch on.
+
+## 0.4.14
+
+### Fixed
+
+**Selects no longer show the previous value when you open them.** After you picked a value in a select and then selected another block, opening Font Family, Weight, Heading Level or any other select showed the earlier value in the search box, cut the list down to that one option and put the check mark on it. Typing a new search appended to the stale text, so another option could not be found without clearing the box first. The closed label was always right, and values were always written to the right block; only what the open select showed was wrong.
+
+The shared `Select` now follows the selected block: the box starts empty, the full list shows, the check mark sits on the block's current value, and typing filters as before. This covers every select that uses it, in both the Vue component and the `init()` custom element.
+
+The cause was two copies of the selection that never followed the parent. `Select` never gave Reka's `ComboboxRoot` the current value, so Reka kept its own copy of the last item picked in that instance. It also reused the text Reka writes into the search box as the list filter, and that text was a snapshot of the label from the last reset. `ComboboxRoot` is now controlled by `modelValue`, and the search box is bound one way, so only what the user types reaches the filter. In the custom-element build the first click makes Reka close the list and `Select` reopen it, which is why ignoring Reka's writes only while the list is closed was not enough.
+
+## 0.4.13
+
+API changes.
+
+### Added
+- Rows, columns and row spacers support per-device overrides, as components do. `NestedRow`, `Column` and `RowSpacer` accept a sparse `mobile` object; they have no `props`, so it sits on the node itself, while components keep theirs in `props.mobile`. A row can override background, padding, border, `minHeight` and `gap`; a column background, padding, border and `verticalAlign`; a row spacer `height` and background. A `padding` or `border` override replaces the whole object, so it has to include every side or field, as it does for components. The shapes are exported as `RowMobile`, `ColumnMobile` and `RowSpacerMobile`.
+- Saving drops unset keys and an empty `mobile`; loading restores the null baseline. `schema_version` stays `"1.0"`, and a template without `mobile` loads and saves exactly as before. A template that has these `mobile` objects can still go through 0.4.12: its load and save code keeps them and its exporters ignore them.
+- The HTML, React Email and MJML exporters write the mobile rules for them and add an `eb-` class only to elements that have overrides, so a template without overrides exports as before, apart from the entries under Changed and Fixed. The three exporters now build a row's markup with one shared module, `export/shared/nodeBox.ts`. For HTML that changes nothing; React Email and MJML are covered below.
+- The editor canvas and the Preview screen draw these overrides on mobile, the same way they draw component overrides, so what you see matches the exported email. A row's mobile `gap` only applies while the row is stacked on mobile and has a gap on desktop, because that is when the exported email has gap cells to resize.
+- The **Row**, **Column** and **Row Spacer** panels have the Desktop and Mobile tabs that the component panels have. In Mobile mode each overridable control shows a badge and a Reset button, and a control you have not touched shows the desktop value. The name and the background image stay on Desktop. A row's mobile **Gap** appears only while the row is stacked and has a gap on desktop, with a note when it does not. A mobile border that ends up equal to the desktop border is dropped, so the exported markup does not change for no visible reason.
+- The README and the framework guides show a row, a column and a row spacer with a sparse `mobile` object under "Getting content out", and list what each can override.
+
+### Changed
+- React Email export: the wrapper `<div>` of a row with a simple border (border width above 0, no radius) now writes its style properties in a different order, with `border` before `lineHeight` and `fontSize`. The rendered result is the same, and exports of every other row are unchanged.
+- MJML export: a nested row is now built the same way as a top-level row and as in the HTML export: a `<td>` that carries the background, the corner radius and the clip, around a `<div>` that carries the padding. The corner radius on that `<td>` is the row's radius plus 2px, as in the HTML export. A row with a border and a radius now gets an outer `<div>` (border, radius, clip) around an inner `<div>` (padding), where it used to get a single `<div>`.
+- MJML export: the row `<td>` and the `<div>` inside it write some style declarations in a different order, for example `line-height` before `font-size`. The rendered result is the same.
+
+### Fixed
+- A `mobile` background override that switches a component to a solid colour over a desktop gradient is no longer dropped when the template is saved and loaded again. The solid colour still applied in exported email, but the editor and Preview fell back to the desktop gradient on mobile.
+- MJML export: a top-level row with a border and no radius wrote its border and padding on the `<td>` and again on the `<div>` inside it, so the border was drawn twice and the padding applied twice. They are now written once, on the `<div>`, as in the HTML export.
+- MJML export: a nested column wrote its border on its `<td>` and again on a wrapper `<div>` around its content. They are now written once, on the `<td>`, and the wrapper `<div>` is gone.
+- MJML export: a nested row with a border lost its background and ignored its corner radius, because the radius was written as a bare number inside the `border` rule and broke the declaration after it. Both now apply.
+- Number sliders no longer write a value when you click into the number box and out again without typing. In Mobile mode that created an override equal to the desktop value, with its badge and Reset button. On Desktop nothing showed, but it still added an undo step that changed nothing and fired `onChange`. Text that is not a number, such as `abc` or an empty box, is now replaced by the current value when the box loses focus. A value outside the slider's range is still brought back into it.
+
+### Removed
+- `wrapWithContainerDiv` and `wrapWithContainerDivReact` (`export/shared/containers.ts`), the old row wrappers. The three exporters build rows with the shared row box now, and nothing else used them. They were internal and not part of the public API.
+
+## 0.4.12
+
+API change.
+
+### Fixed
+- The **Image component** no longer shows extra space below the image, and linked images now size the same as unlinked ones. Alignment (left, center, right) still works.
+
+## 0.4.11
+
+API changes.
+
+### Changed
++ Moved Button and Anchor padding from the container `<div>` to the clickable `<a>` / `<Link>` element.
++ Updated HTML, MJML, and React Email renderers to consistently apply padding to the link element.
++ Updated generated styles so Button and Anchor padding targets the .{uid}-link selector.
+
+## 0.4.10
+
+API change.
+
+### Changed
+- Reduced the **Image** panel minimum width from `8px` to `1px`.
+
+## 0.4.9
+
+API change.
+
+### Changed
+- The **Content** tab is now the default tab in the left-hand panel.
+
+## 0.4.8
+
+API changes.
+
+### Changed
+- The **Layout** tab is now the default tab in the left-hand panel.
+
+### Removed
+- Unused code in `CanvasRowDropZone`.
+
 ## 0.4.7
 
 Public API surface. No runtime change.
