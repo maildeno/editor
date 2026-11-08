@@ -2,6 +2,16 @@
 
 ## 0.4.15
 
+### Added
+
+**You can set a column's width from the Column panel.** Select a column and open the Column tab: the new **Width** section has a slider and a number box, a strip that shows every column's share of the row, and an **Equalize** button. When a row has several columns, the others share what is left in proportion to their widths, so the row always adds up to 100%. A single column always fills the row. The Column 1, Column 2 and Column 3 tabs show each width under their name, and a nested row's columns work the same way.
+
+Widths are whole percentages, and a column can be as narrow as 5% and as wide as the others leave it (90% in a row of three). Typing a number outside that range is corrected when you leave the box. One drag of the slider is one undo step. A row with decimal widths (from Custom widths in the Layout tab) is rounded to whole percentages the first time you change one of its columns. Width is a desktop setting, so the Mobile tab shows a note instead of controls: a row that stacks shows its columns at full width on mobile.
+
+A row whose columns do not add up to 100%, such as one from an older template, shows a note with a **Fix to 100%** button, because the canvas and the exported email lay such a row out differently. Changing any of its columns repairs it too.
+
+Inside the editor, `useEmailBuilder()` has a new `setColumnWidths(rowId, widths, debounced?)`. It takes one width per column, repairs them to whole percentages that add up to 100, and returns whether the row changed. The rules are in `core/columnWidths.ts`.
+
 ### Fixed
 
 **The Merge Tag and Link Tag tabs no longer clear when you switch to another tab.** The tag names and preview values you had typed, the Preview switch and which sections were open or collapsed were lost as soon as you opened another tab: Merge Tag to Link Tag, Tags to Styles, or General to Content. Preview could also be left on with nothing to turn it off. After you came back, the switch said "Preview OFF" and was disabled, while the canvas was still showing the preview values.

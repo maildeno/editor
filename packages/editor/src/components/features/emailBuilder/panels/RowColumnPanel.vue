@@ -160,6 +160,115 @@
       </template>
     </PropertySection>
 
+    <!-- Width -->
+    <PropertySection v-if="row && columnCount > 0" title="Width">
+      <!-- Width is one number per column and has no mobile override, so the
+           Mobile tab has nothing to set. It says what happens there instead. -->
+      <p
+        v-if="editMode === 'mobile'"
+        class="text-[11px] text-(--md-text-subtle)"
+      >
+        {{ mobileWidthNote }}
+      </p>
+
+      <template v-else>
+        <!-- A row from before widths were kept to 100 -->
+        <Message v-if="widthsOff" severity="warn">
+          <p>
+            This row's columns add up to {{ formatWidth(total) }}%, so the
+            canvas and the export can differ.
+          </p>
+          <button
+            type="button"
+            class="mt-1 text-xs font-medium underline underline-offset-2 hover:opacity-80"
+            @click="fixWidths"
+          >
+            Fix to 100%
+          </button>
+        </Message>
+
+        <p
+          v-if="columnCount === 1 && !widthsOff"
+          class="text-[11px] text-(--md-text-subtle)"
+        >
+          A single column always fills the row (100%).
+        </p>
+
+        <template v-else-if="columnCount > 1">
+          <PropertyNumberSlider
+            label="Column width"
+            :model-value="draftWidth"
+            :min="MIN_COLUMN_WIDTH"
+            :max="maxWidth"
+            :step="1"
+            unit="%"
+            @update:model-value="onWidthInput"
+          />
+
+          <!-- Every column's share of the row. The selected one is outlined. -->
+          <div
+            class="flex h-7 rounded-md border border-(--md-border)"
+            role="img"
+            :aria-label="stripLabel"
+          >
+            <div
+              v-for="(seg, i) in strip"
+              :key="seg.id"
+              class="relative group/column flex shrink-0 items-center justify-center text-[10px] font-medium"
+              :class="[
+                i > 0 ? 'border-l border-(--md-surface)' : '',
+                seg.selected
+                  ? 'bg-(--md-selection-bg) text-(--md-selection-fg) rounded-md ring-1 ring-inset ring-(--md-selection)'
+                  : 'bg-(--md-surface-muted) text-(--md-text-subtle) rounded-md',
+              ]"
+              :style="{ width: `${seg.width}%` }"
+            >
+              <div
+                class="flex h-full w-full items-center justify-center overflow-hidden"
+              >
+                <span v-if="seg.width >= 12">{{ formatWidth(seg.width) }}</span>
+              </div>
+
+              <div
+                class="pointer-events-none absolute bottom-full mb-1.5 px-2 py-1 bg-(--md-tooltip-bg) text-(--md-tooltip-text) text-xs font-medium rounded-md whitespace-nowrap opacity-0 translate-y-1 group-hover/column:opacity-100 group-hover/column:translate-y-0 transition-all duration-150 z-50"
+                :class="{
+                  'left-0': i === 0,
+                  'right-0 left-auto': i === strip.length - 1,
+                  'left-1/2 -translate-x-1/2': i > 0 && i < strip.length - 1,
+                }"
+              >
+                Column {{ i + 1 }}: {{ formatWidth(seg.width) }}%
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <p
+              class="min-w-0 text-[11px] tabular-nums"
+              :class="
+                widthsOff ? 'text-(--md-warning-fg)' : 'text-(--md-text-subtle)'
+              "
+            >
+              {{ percentList(" + ") }}
+              <span class="whitespace-nowrap">= {{ formatWidth(total) }}%</span>
+            </p>
+            <button
+              type="button"
+              class="shrink-0 rounded-md border border-(--md-border) px-2.5 py-1 text-[11px] font-medium text-(--md-text-muted) transition-colors hover:bg-(--md-surface-hover) disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+              :disabled="isEqualSplit"
+              @click="equalize"
+            >
+              Equalize
+            </button>
+          </div>
+
+          <p class="text-[11px] text-(--md-text-subtle)">
+            The other columns share the rest, so the row always adds up to 100%.
+          </p>
+        </template>
+      </template>
+    </PropertySection>
+
     <!-- Layout -->
     <PropertySection title="Layout">
       <PropertySelect
@@ -277,14 +386,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch, type PropType } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useImageUploader } from "@/composables/system/useImageUpload";
 import { useNodeStyleEditor } from "@/composables/emailBuilder/components/useNodeStyleEditor";
 import type { EditMode } from "@/composables/emailBuilder/components/useComponentStyleEditor";
+import {
+  MIN_COLUMN_WIDTH,
+  equalWidths,
+  formatWidth,
+  maxColumnWidth,
+  normalizeWidths,
+  readWidths,
+  setColumnWidth,
+  widthsAreOff,
+  widthsTotal,
+} from "@/composables/emailBuilder/core/columnWidths";
 
 import InputText from "@/components/ui/primitives/InputText.vue";
 import Select from "@/components/ui/primitives/Select.vue";
+import Message from "@/components/ui/primitives/Message.vue";
 import Icon from "@/components/ui/Icon.vue";
 
 import Loading from "@/components/ui/Loading.vue";
@@ -299,11 +420,21 @@ import PropertyGradientColor from "./ui/PropertyGradientColor.vue";
 
 // ─── Setup ────────────────────────────────────────────────────────────────────
 
-const { saveToHistory, previewMode } = useEmailBuilder();
+const { saveToHistory, previewMode, setColumnWidths } = useEmailBuilder();
 const { handleImageUploadFlow, swapOnLoad } = useImageUploader();
+
+// The part of a row this panel needs. `row` is how it sees the column's
+// siblings, which a width cannot do without: the widths in a row always add up
+// to 100. It is optional; without it the Width section is left out.
+interface WidthRow {
+  id: string;
+  mobileStack?: boolean;
+  columns: Array<{ id: string; width?: unknown }>;
+}
 
 const props = defineProps({
   column: { type: Object, required: true },
+  row: { type: Object as PropType<WidthRow | null>, default: null },
 });
 
 // ─── Desktop / Mobile ─────────────────────────────────────────────────────────
@@ -343,6 +474,75 @@ const {
 // The picker's value for the current mode. setBackground writes the gradient
 // object and the plain `backgroundColor` fallback together, in one history step.
 const background = computed(() => displayBackground());
+
+// ─── Width ────────────────────────────────────────────────────────────────────
+
+// Everything shown is read from the row. Writing goes through setColumnWidths,
+// which keeps the row at 100 (the rules are in columnWidths.ts), so the panel
+// keeps no copy of its own that could drift from the canvas.
+const widths = computed(() => (props.row ? readWidths(props.row.columns) : []));
+const columnCount = computed(() => widths.value.length);
+const columnIndex = computed(() =>
+  props.row ? props.row.columns.findIndex((c) => c.id === props.column.id) : -1,
+);
+const currentWidth = computed(() => widths.value[columnIndex.value] ?? 0);
+const total = computed(() => widthsTotal(widths.value));
+// A row from before widths were kept to 100: an old template, or one edited by hand.
+const widthsOff = computed(() => widthsAreOff(widths.value));
+const maxWidth = computed(() => maxColumnWidth(columnCount.value));
+const isEqualSplit = computed(() =>
+  equalWidths(columnCount.value).every((w, i) => w === widths.value[i]),
+);
+
+const percentList = (sep: string) =>
+  widths.value.map((w) => `${formatWidth(w)}%`).join(sep);
+const stripLabel = computed(() => `Column widths: ${percentList(", ")}`);
+const strip = computed(() =>
+  (props.row?.columns ?? []).map((c, i) => ({
+    id: c.id,
+    width: widths.value[i],
+    selected: i === columnIndex.value,
+  })),
+);
+
+const mobileWidthNote = computed(() =>
+  props.row?.mobileStack
+    ? "Column width is a desktop setting. On mobile this row stacks, so the column is full width."
+    : "Column width is set on the Desktop tab. It applies on mobile too, because this row does not stack.",
+);
+
+// The number box can hold text the row cannot take: "3" on the way to "30", or
+// "95" when 90 is the most a three-column row allows. That text is kept in
+// `draftWidth` and only a width the row can take is written. The box clamps
+// what is left when it loses focus, which arrives here as one more input, so
+// "3" ends up as 5 and "95" as 90.
+const draftWidth = ref<number>(currentWidth.value);
+watch([currentWidth, () => props.column.id], () => {
+  draftWidth.value = currentWidth.value;
+});
+
+const onWidthInput = (value: number) => {
+  draftWidth.value = value;
+  const index = columnIndex.value;
+  if (!props.row || index < 0) return;
+  if (!(value >= MIN_COLUMN_WIDTH && value <= maxWidth.value)) return;
+  // Debounced, so one drag (or one typed number) is one undo step.
+  setColumnWidths(
+    props.row.id,
+    setColumnWidth(widths.value, index, value),
+    true,
+  );
+  // A decimal was rounded to a whole percentage; show the width the row has.
+  draftWidth.value = currentWidth.value;
+};
+
+const equalize = () => {
+  if (props.row) setColumnWidths(props.row.id, equalWidths(columnCount.value));
+};
+
+const fixWidths = () => {
+  if (props.row) setColumnWidths(props.row.id, normalizeWidths(widths.value));
+};
 
 // ─── Inline prop mutation handlers (each calls saveToHistory) ─────────────────
 

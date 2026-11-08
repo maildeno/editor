@@ -227,11 +227,16 @@
                 "
               >
                 Column {{ Number(i) + 1 }}
+                <span
+                  class="block text-[10px] font-normal tabular-nums opacity-70"
+                  >{{ formatWidth(col.width) }}%</span
+                >
               </button>
             </div>
             <RowColumnPanel
               v-if="activeColumnObject"
               :column="activeColumnObject"
+              :row="selectedRow"
             />
             <p v-else class="text-sm text-(--md-text-subtle)">
               Select a column to edit its properties
@@ -298,6 +303,7 @@ import { ref, computed, watch } from "vue";
 import { useConfirm } from "@/composables/ui/useConfirm";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { getBlock } from "@/blocks/registry";
+import { formatWidth } from "@/composables/emailBuilder/core/columnWidths";
 import LayersPanel from "./LayersPanel.vue";
 import RowPanel from "../../panels/RowPanel.vue";
 import RowSpacerPanel from "../../panels/RowSpacerPanel.vue";
