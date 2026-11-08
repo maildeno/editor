@@ -1138,6 +1138,7 @@ function createEmailBuilderInstance(
     addRow: operations.addRow,
     addNestedRow: operations.addNestedRow,
     findRow: operations.findRow,
+    setColumnWidths: operations.setColumnWidths,
     deleteRow: deleteRowWrapper,
     moveRow: operations.moveRow,
     moveNestedRow: operations.moveNestedRow,

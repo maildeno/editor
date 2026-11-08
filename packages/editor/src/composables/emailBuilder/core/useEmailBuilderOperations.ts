@@ -26,6 +26,7 @@
 //     the speedup for that call. Misses also lazily re-cache the node.
 
 import { createDefaultVisibility } from "./config/componentConfig";
+import { normalizeWidths } from "./columnWidths";
 import { generateId } from "@/utils/generateId";
 
 // ─── Row name helpers ─────────────────────────────────────────────────────────
@@ -496,6 +497,43 @@ export const useEmailBuilderOperations = (
     const found = findRowAnywhere(rows.value, id);
     if (found) idRegistry.set(key, found);
     return found;
+  };
+
+  // ─── Column widths ───────────────────────────────────────────────────────────
+  /**
+   * Set the width of every column in a row, top-level or nested, in one step.
+   * `widths` has one entry per column, in column order. It is repaired before
+   * it is stored (whole percentages, none under the minimum, adding up to
+   * 100), so a row can never be left invalid, whatever the caller passes.
+   * The rules and the maths are in columnWidths.ts.
+   *
+   * @param debounced  true for a slider drag or typing: one drag becomes one
+   *                   undo step. false (the default) for a button press.
+   * @returns          true if the row changed. false, with nothing written
+   *                   and no history entry, if the row is not found, is a
+   *                   spacer, `widths` does not match its column count, or
+   *                   the repaired widths equal the ones already there.
+   *
+   * Uses `findRow`, the lookup the Column panel reads its row with, so the
+   * object changed here is the one on screen.
+   */
+  const setColumnWidths = (
+    rowId: string,
+    widths: number[],
+    debounced = false,
+  ): boolean => {
+    const row = findRow(rowId);
+    if (!row || row.type !== "row" || !Array.isArray(row.columns)) return false;
+    if (!Array.isArray(widths) || widths.length !== row.columns.length) {
+      return false;
+    }
+    const next = normalizeWidths(widths);
+    if (next.every((w, i) => w === row.columns[i].width)) return false;
+    next.forEach((w, i) => {
+      row.columns[i].width = w;
+    });
+    (debounced ? saveToHistoryDebouncedFn : saveToHistoryFn)("column-width");
+    return true;
   };
 
   /**
@@ -1030,6 +1068,7 @@ export const useEmailBuilderOperations = (
     addRow,
     addNestedRow,
     findRow,
+    setColumnWidths,
     deleteRow,
     moveRow,
     moveNestedRow,
