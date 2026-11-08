@@ -26,10 +26,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { toRef } from "vue";
+import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import MergeTagTab from "./merge-tags/MergeTagTab.vue";
 import LinkTagTab from "./merge-tags/LinkTagTab.vue";
 
 const tabs = ["Merge Tag", "Link Tag"];
-const activeTab = ref("Merge Tag");
+// Kept in the editor instance so the open tab survives this component being
+// removed and re-created when the sidebar switches to another tab.
+const { sidebarUi } = useEmailBuilder();
+const activeTab = toRef(sidebarUi, "tagsTab");
 </script>

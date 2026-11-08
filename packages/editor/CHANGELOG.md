@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.15
+
+### Fixed
+
+**The Merge Tag and Link Tag tabs no longer clear when you switch to another tab.** The tag names and preview values you had typed, the Preview switch and which sections were open or collapsed were lost as soon as you opened another tab: Merge Tag to Link Tag, Tags to Styles, or General to Content. Preview could also be left on with nothing to turn it off. After you came back, the switch said "Preview OFF" and was disabled, while the canvas was still showing the preview values.
+
+They now stay for as long as the editor is open. The sidebar also remembers which tab you were on at each level, so coming back to General opens Tags where you left it. The values are sample data for previewing, so they are not saved in the template and are gone when the page is reloaded. Two editors on one page do not share them.
+
+The cause was that each tab is removed from the page while another one is open, and the two tag tabs kept their data in the component, so it went with it. The data now lives in the editor instance, next to the other preview state (`sidebarUi`, on what `useEmailBuilder()` returns), and a tab opened while the preview is on starts with the switch on.
+
 ## 0.4.14
 
 ### Fixed

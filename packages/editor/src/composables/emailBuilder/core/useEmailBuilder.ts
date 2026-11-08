@@ -35,6 +35,7 @@ import { useConfirm } from "@/composables/ui/useConfirm";
 import { useInfoDialog } from "@/composables/ui/useInfoDialog";
 import { useEmailBuilderDefaults } from "../core/useEmailBuilderDefault";
 import { useEmailBuilderOperations } from "../core/useEmailBuilderOperations";
+import { createSidebarUiState } from "../core/useSidebarUiState";
 import { useEmailBuilderHistory } from "../history/useEmailBuilderHistory";
 import { useEmailBuilderPersistence } from "../persistence/useEmailBuilderPersistence";
 import { htmlGenerator } from "../export/generators/html";
@@ -169,6 +170,12 @@ function createEmailBuilderInstance(
   const mergeTagPreviewActive = ref<boolean>(false);
   const linkTagPreviewContext = ref<Record<string, string>>({});
   const linkTagPreviewActive = ref<boolean>(false);
+
+  // Sidebar UI state: the open tab at each level, and the sample data typed
+  // into the Merge Tag and Link Tag tabs. Held here rather than in those
+  // components because v-if unmounts them whenever another tab is open, and
+  // their local state went with them. See useSidebarUiState.ts.
+  const sidebarUi = createSidebarUiState();
 
   // Cross-file canvas UI state — drag/hover flags that used to be independent
   // useState(key, ...) calls in every consuming file (CanvasRow, CanvasColumn,
@@ -1117,6 +1124,7 @@ function createEmailBuilderInstance(
     mergeTagPreviewActive,
     linkTagPreviewContext,
     linkTagPreviewActive,
+    sidebarUi,
     isBuilderReady,
     linksActive,
     espConfig,

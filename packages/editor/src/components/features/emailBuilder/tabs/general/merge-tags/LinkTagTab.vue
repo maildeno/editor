@@ -293,7 +293,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from "vue";
+import { ref, computed, watch, nextTick, toRef } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import {
   extractMergeTags,
@@ -309,21 +309,26 @@ import Icon from "@/components/ui/Icon.vue";
 // they resolve inside the shadow root as well as the light DOM.
 const rootEl = ref<HTMLElement | null>(null);
 
-const { linkTagPreviewContext, linkTagPreviewActive, rows, espConfig } =
-  useEmailBuilder();
+const {
+  linkTagPreviewContext,
+  linkTagPreviewActive,
+  rows,
+  espConfig,
+  sidebarUi,
+} = useEmailBuilder();
 
 // ─── Persistent state ─────────────────────────────────────────────────────────
+// This component is removed whenever another tab is open, so anything the user
+// typed lives in the editor instance (sidebarUi) and survives that. See
+// useSidebarUiState.ts.
 
-interface TagEntry {
-  tag: string;
-  value: string;
-  default: string;
-}
-
-const tagEntries = ref<TagEntry[]>([]);
-const isPreviewActive = ref<boolean>(false);
-const showDetectedSummary = ref<boolean>(true);
-const showESPPreview = ref<boolean>(true);
+const tagEntries = toRef(sidebarUi.linkTags, "entries");
+const showDetectedSummary = toRef(sidebarUi.linkTags, "showDetectedSummary");
+const showESPPreview = toRef(sidebarUi.linkTags, "showESPPreview");
+// Starts from the editor's flag, not false: the preview can still be on when
+// this tab is reopened, and a switch that says OFF while the canvas is
+// previewing cannot be used (the entries are what enable it).
+const isPreviewActive = ref<boolean>(linkTagPreviewActive.value);
 
 // ─── ESP display helpers ──────────────────────────────────────────────────────
 

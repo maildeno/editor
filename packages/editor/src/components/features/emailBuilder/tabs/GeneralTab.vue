@@ -30,12 +30,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { toRef } from "vue";
+import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import StylesTab from "./general/StylesTab.vue";
 import MergeTagsTab from "./general/MergeTagsTab.vue";
 import VisibilityTab from "./general/VisibilityTab.vue";
 import VisibilityWrapESPTab from "./general/VisibilityWrapESPTab.vue";
 
 const tabs = ["Styles", "Tags", "Visibility", "ESP"];
-const activeTab = ref("Styles");
+// The open tab is kept in the editor instance, so it is still there after this
+// component is removed (when the sidebar shows Content or Layout) and re-created.
+const { sidebarUi } = useEmailBuilder();
+const activeTab = toRef(sidebarUi, "generalTab");
 </script>
