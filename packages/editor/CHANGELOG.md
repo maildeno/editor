@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.16
+
+### Fixed
+
+**Long words no longer overflow the email body.** A long unbroken token — a URL, a tracking ID, a hash — ran past the edge of the body in all three exports and made the message scroll sideways on narrow screens. The body now breaks long words, in HTML, MJML and React Email alike.
+
+Each output needed its own fix. In HTML the rule goes on the body element. In MJML it goes in an `<mj-style>` block, because `mj-body` drops an inline `style` attribute. In React Email it goes on the container's style object as `wordBreak: "break-all"`.
+
+`word-break: break-all` breaks wherever a line runs out of room, so a long word is split mid-word rather than pushed past the edge. The catch is that it applies to every word, not only the ones that would overflow: a normal word at the end of a full line may now be split too. Outlook desktop ignores the property, so there a long token can still overflow — nothing changes for that client.
+
 ## 0.4.15
 
 ### Added
