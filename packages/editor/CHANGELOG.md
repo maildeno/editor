@@ -10,6 +10,8 @@ Each output needed its own fix. In HTML the rule goes on the body element. In MJ
 
 `word-break: break-all` breaks wherever a line runs out of room, so a long word is split mid-word rather than pushed past the edge. The catch is that it applies to every word, not only the ones that would overflow: a normal word at the end of a full line may now be split too. Outlook desktop ignores the property, so there a long token can still overflow — nothing changes for that client.
 
+**Removed unused padding from the divider container in the editor.** The container already has its margin explicitly controlled, so applying component padding introduced unnecessary spacing around the divider when selected.
+
 ## 0.4.15
 
 ### Added
