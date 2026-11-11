@@ -428,7 +428,8 @@ ${fontHeadJsx}
             width:"100%",
             maxWidth:"${canvasStyles.value.width}px",
             backgroundColor:"${canvasStyles.value.backgroundColor}",
-            padding:"${canvasStyles.value.padding?.top ?? 0}px ${canvasStyles.value.padding?.right ?? 0}px ${canvasStyles.value.padding?.bottom ?? 0}px ${canvasStyles.value.padding?.left ?? 0}px"
+            padding:"${canvasStyles.value.padding?.top ?? 0}px ${canvasStyles.value.padding?.right ?? 0}px ${canvasStyles.value.padding?.bottom ?? 0}px ${canvasStyles.value.padding?.left ?? 0}px",
+            wordBreak: "break-all",
           }}
         >
 ${rowsJsx}

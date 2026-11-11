@@ -231,6 +231,7 @@ export const mjmlGenerator = () => {
 
     // Base non-responsive styles — mirrors exportHTML's desktop-hide rule.
     const baseStyleTag = `<mj-style inline="false">
+body, .email-body, .email-body div, .email-body p, .email-body a { word-break: break-all; }
 .desktop-hide { display: none !important; }
 ul li:last-child, ol li:last-child { margin-bottom: 0 !important; }
     </mj-style>`;
@@ -284,7 +285,7 @@ ${mobileOverridesCss}
     ${backgroundStyleTag}
     ${overrideStyleTag}
   </mj-head>
-  <mj-body background-color="${bodyBg}" width="${canvasStyles.width ?? 600}px">
+  <mj-body css-class="email-body" background-color="${bodyBg}" width="${canvasStyles.width ?? 600}px">
   <mj-wrapper full-width="full-width" ${bodyBgImageAttrs} padding="0">
     <mj-section background-color="${containerBg}" padding="${canvasPad}">
 ${rowsMjml}

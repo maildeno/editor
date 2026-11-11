@@ -334,6 +334,7 @@ ${rowContent}
     const bodyStyles = [
       `margin:0`,
       `padding:0`,
+      `word-break:break-all`,
       canvasStyles.value.bodyBackgroundColor
         ? `background-color:${canvasStyles.value.bodyBackgroundColor}`
         : "",
