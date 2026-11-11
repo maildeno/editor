@@ -133,7 +133,7 @@
                   (value) => onUrlInput(value, Number(index))
                 "
                 type="url"
-                placeholder="https://…"
+                :placeholder="URL_PLACEHOLDER"
                 class="w-full text-xs"
               />
             </div>
@@ -343,6 +343,9 @@ import PropertyVisibility from "./ui/PropertyVisibility.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
 import PropertyToggle from "./ui/PropertyToggle.vue";
 import TextStylePanel from "./ui/PropertyTextStylePanel.vue";
+
+// Kept in script: a literal "//" in a static template attribute breaks vue-tsc scoping
+const URL_PLACEHOLDER = "https://…";
 
 const { rows, findComponent, selectedId, previewMode, saveToHistory } =
   useEmailBuilder();

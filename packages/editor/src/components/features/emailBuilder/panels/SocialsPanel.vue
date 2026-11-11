@@ -190,7 +190,7 @@
                 @update:model-value="
                   (value) => onPlatformLinkInput(value, Number(index))
                 "
-                placeholder="https://…"
+                :placeholder="URL_PLACEHOLDER"
                 class="w-full text-xs"
               />
             </div>
@@ -330,6 +330,9 @@ import PropertyAlignment from "./ui/PropertyAlignment.vue";
 import PropertyToggle from "./ui/PropertyToggle.vue";
 import PropertyVisibility from "./ui/PropertyVisibility.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
+
+// Kept in script: a literal "//" in a static template attribute breaks vue-tsc scoping
+const URL_PLACEHOLDER = "https://…";
 
 const { rows, findComponent, selectedId, previewMode, saveToHistory } =
   useEmailBuilder();
