@@ -2,7 +2,6 @@ import {
   safeUrl,
   escapeHtml,
   escapeAttr,
-  normalizeRichTextContent,
 } from "../helpers/generatorHelpers";
 import { getBlock } from "@/blocks/registry";
 

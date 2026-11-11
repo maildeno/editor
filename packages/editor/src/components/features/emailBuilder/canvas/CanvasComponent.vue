@@ -328,7 +328,6 @@ const {
   moveComponentBetweenColumns,
   addComponentAtIndex,
   duplicateComponent,
-  previewMode,
   isRowDragActive,
   layerHoveredId,
   selectedRowId,

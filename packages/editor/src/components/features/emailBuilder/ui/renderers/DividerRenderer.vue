@@ -21,7 +21,7 @@ const containerStyles = computed(() => {
   const p = resolveMobileProps(props.component.props, previewMode);
   return {
     margin: `${p.margin.top}px ${p.margin.right}px ${p.margin.bottom}px ${p.margin.left}px`,
-    padding: `${p.padding.top}px ${p.padding.right}px ${p.padding.bottom}px ${p.padding.left}px`,
+    // padding: `${p.padding.top}px ${p.padding.right}px ${p.padding.bottom}px ${p.padding.left}px`, Not using, container already has its margin explicitly controlled
     textAlign: p.align,
   };
 });
