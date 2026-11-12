@@ -1345,7 +1345,7 @@ onBeforeUnmount(() => {
    writes only one text node at a time. */
 :deep(.merge-tag-node) {
   display: inline;
-  white-space: nowrap;
+  white-space: wrap;
   vertical-align: baseline;
   cursor: default;
   border-radius: 3px;

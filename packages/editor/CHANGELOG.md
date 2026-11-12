@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.4.18
+
+### Fixed
+
+**Text now wraps instead of overflowing on a single line.** Changed `white-space` from `nowrap` to `wrap`, allowing text to flow naturally within its container rather than forcing it to remain on one line.
+
 ## 0.4.17
 
 ### Fixed
 
-Removed an unnecessary 2px border hack on table cells. The <td> border carried an extra 2px that was no longer needed. With the hack gone, the border no longer clips past the corners.
+**Removed an unnecessary 2px border hack on table cells.** The <td> border carried an extra 2px that was no longer needed. With the hack gone, the border no longer clips past the corners.
 
 ## 0.4.16
 
