@@ -127,9 +127,7 @@ export const buildRowBox = (row: RowLike): RowBox => {
   const td: Layer = {
     classes: hooks.root,
     decls: [
-      // The td rounds two pixels wider than the border so the background does
-      // not bleed past the corners.
-      ...(r > 0 ? [["border-radius", `${r + 2}px`] as Decl] : []),
+      ...(r > 0 ? [["border-radius", `${r}px`] as Decl] : []),
       ["overflow", "hidden"],
     ],
   };
