@@ -406,7 +406,7 @@ export default function ${componentName}() {
 ${fontHeadJsx}
       </Head>
       <Preview>${canvasStyles.value.preheaderText}</Preview>
-      <Body style={{ margin:0, padding:0, backgroundColor:"${canvasStyles.value.bodyBackgroundColor}" }}>
+      <Body style={{ margin:0, padding:0, wordBreak: "break-all", backgroundColor:"${canvasStyles.value.bodyBackgroundColor}" }}>
       <Container  style={{
     margin: 0,
     padding: 0,
@@ -428,8 +428,7 @@ ${fontHeadJsx}
             width:"100%",
             maxWidth:"${canvasStyles.value.width}px",
             backgroundColor:"${canvasStyles.value.backgroundColor}",
-            padding:"${canvasStyles.value.padding?.top ?? 0}px ${canvasStyles.value.padding?.right ?? 0}px ${canvasStyles.value.padding?.bottom ?? 0}px ${canvasStyles.value.padding?.left ?? 0}px",
-            wordBreak: "break-all",
+            padding:"${canvasStyles.value.padding?.top ?? 0}px ${canvasStyles.value.padding?.right ?? 0}px ${canvasStyles.value.padding?.bottom ?? 0}px ${canvasStyles.value.padding?.left ?? 0}px"
           }}
         >
 ${rowsJsx}
