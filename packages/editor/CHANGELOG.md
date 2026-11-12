@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.17
+
+### Fixed
+
+Removed an unnecessary 2px border hack on table cells. The <td> border carried an extra 2px that was no longer needed. With the hack gone, the border no longer clips past the corners.
+
 ## 0.4.16
 
 ### Fixed
