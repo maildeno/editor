@@ -107,6 +107,10 @@ import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder
 import { useLayoutDrag } from "@/composables/emailBuilder/core/ui/useLayoutDrag";
 import { useProductRows } from "@/composables/emailBuilder/components/useProductRows";
 import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
+import {
+  boxShadowValue,
+  clipsOverflow,
+} from "@/composables/emailBuilder/core/boxShadow";
 import CanvasElement from "./CanvasElement.vue";
 
 const props = defineProps({
@@ -303,8 +307,13 @@ const getColumnStyles = (): Record<string, string> => {
     background: backgroundValue,
     border: `${c.border.width}px ${c.border.style} ${c.border.color}`,
     borderRadius: `${c.border.radius}px`,
-    overflow: "hidden",
   };
+
+  // Same rule as the row: clip, unless a shadow inside it would be cut off and
+  // no rounded corner needs the clip. Its own shadow is never clipped by it.
+  if (clipsOverflow(props.column)) styles.overflow = "hidden";
+  const shadow = boxShadowValue(c.boxShadow);
+  if (shadow) styles.boxShadow = shadow;
 
   if (c.backgroundImage) {
     styles.backgroundImage = `url(${c.backgroundImage})`;

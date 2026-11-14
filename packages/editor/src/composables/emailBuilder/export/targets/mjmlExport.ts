@@ -19,6 +19,11 @@ import type { Ref } from "vue";
 import { useGoogleFonts } from "../../../system/useGoogleFonts";
 import { useEmailExportMobileStyles } from "../useEmailExportMobileStyles";
 import { useEmailBuilderVisibility } from "../../core/useEmailBuilderVisibility";
+import {
+  boxShadowValue,
+  clipsOverflow,
+  columnsHaveShadow,
+} from "../../core/boxShadow";
 import { mjmlGenerator } from "../generators/mjml";
 
 import {
@@ -217,6 +222,7 @@ export const mjmlExport = (deps: Deps) => {
 
       const colWidthPct = columnPercentages[index];
       const colBgStyles = buildBackgroundStyles(col);
+      const colShadow = boxShadowValue(col.boxShadow);
       // Everything the column needs lives on the <td>, as in the HTML and
       // React Email exports. There is no wrapper div.
       const colTdStyles = [
@@ -227,7 +233,8 @@ export const mjmlExport = (deps: Deps) => {
         ...colBgStyles,
         `border:${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
         `border-radius:${col.border?.radius ?? 0}px`,
-        `overflow:hidden`,
+        ...(clipsOverflow(col) ? [`overflow:hidden`] : []),
+        ...(colShadow ? [`box-shadow:${colShadow}`] : []),
         `line-height:0`,
         `font-size:0`,
         `padding:${col.padding?.top ?? 0}px ${col.padding?.right ?? 0}px ${col.padding?.bottom ?? 0}px ${col.padding?.left ?? 0}px`,
@@ -250,7 +257,8 @@ ${componentsHtml}
     const hasColumnRadius = row.columns.some(
       (col: any) => (col.border?.radius ?? 0) > 0,
     );
-    const needsSeparate = (row.gap ?? 0) > 0 || hasColumnRadius;
+    const needsSeparate =
+      (row.gap ?? 0) > 0 || hasColumnRadius || columnsHaveShadow(row);
     return `<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:${needsSeparate ? "separate" : "collapse"};">
 <tr>
 ${columnsTd}</tr>

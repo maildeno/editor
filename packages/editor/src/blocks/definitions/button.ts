@@ -1,6 +1,7 @@
 import AnchorRenderer from "@/components/features/emailBuilder/ui/renderers/AnchorRenderer.vue";
 import ButtonPanel from "@/components/features/emailBuilder/panels/ButtonPanel.vue";
 import type { BlockDefinition, BlockRenderContext } from "../types";
+import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
 
 /**
  * Extracted verbatim from the "button" case in each of the three generators
@@ -60,10 +61,12 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
     `font-family:'${props.fontFamily}', Arial, sans-serif; ` +
     `${letterSpacingStyle}`;
 
+  const shadow = boxShadowValue(props.boxShadow);
   const linkShellStyles =
     `${paddingStyle} display:inline-block; ${bgInlineStyle} ` +
     `border-radius:${props.borderRadius}px; ` +
     `border:${props.border.width}px ${props.border.style} ${props.border.color}; ` +
+    (shadow ? `box-shadow:${shadow}; ` : "") +
     `text-decoration:none; ` +
     (hasIcon
       ? `line-height:0; font-size:0;`
@@ -148,10 +151,12 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
     `font-family:'${props.fontFamily}', Arial, sans-serif; ` +
     `${letterSpacingStyle}`;
 
+  const shadow = boxShadowValue(props.boxShadow);
   const linkShellStyles =
     `${paddingStyle} display:inline-block; ${bgInlineStyle} ` +
     `border-radius:${props.borderRadius}px; ` +
     `border:${props.border.width}px ${props.border.style} ${props.border.color}; ` +
+    (shadow ? `box-shadow:${shadow}; ` : "") +
     `text-decoration:none; ` +
     (hasIcon
       ? `line-height:0; font-size:0;`
@@ -238,6 +243,9 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
     ...(bgInlineStyle ? react.parseCssString(bgInlineStyle) : {}),
     borderRadius: `${props.borderRadius}px`,
     border: `${props.border.width}px ${props.border.style} ${props.border.color}`,
+    ...(boxShadowValue(props.boxShadow) && {
+      boxShadow: boxShadowValue(props.boxShadow),
+    }),
     textDecoration: "none",
     ...(hasIcon
       ? { lineHeight: 0, fontSize: 0 }

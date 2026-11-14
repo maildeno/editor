@@ -1,5 +1,6 @@
 // composables/useColor.ts
 import { ref, computed } from "vue";
+import { parseCssColor } from "../emailBuilder/core/cssColor";
 
 type RGB = [number, number, number];
 
@@ -137,6 +138,28 @@ export function useColor(initial = "#ff0000") {
     return true;
   };
 
+  /**
+   * Sets the colour AND the alpha from any CSS colour string the editor writes:
+   * `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb()` and `rgba()`. Returns true if the
+   * string could be read, false otherwise (nothing changes then).
+   *
+   * setFromHex above stays for the HEX input, which edits the colour and leaves
+   * the alpha slider alone. This is for putting a whole value into the picker:
+   * the colour it opens on, "revert", and a swatch from the recent colours.
+   * Opening on `rgba(0, 0, 0, 0.15)` used to fall through setFromHex and show
+   * the default red at full opacity.
+   */
+  const setFromColor = (value: string) => {
+    const parsed = parseCssColor(value);
+    if (!parsed) return false;
+    const hsv = rgbToHsv(parsed.r, parsed.g, parsed.b);
+    h.value = hsv.h;
+    s.value = hsv.s;
+    v.value = hsv.v;
+    a.value = parsed.a;
+    return true;
+  };
+
   const setFromRgb = (r: number, g: number, b: number) => {
     const hsv = rgbToHsv(clamp(r, 0, 255), clamp(g, 0, 255), clamp(b, 0, 255));
     h.value = hsv.h;
@@ -159,8 +182,9 @@ export function useColor(initial = "#ff0000") {
     v.value = clamp(bb, 0, 100) / 100;
   };
 
-  // Initialise
-  setFromHex(initial);
+  // Initialise. A bare `ff0000` (no #) is not a CSS colour but hexToRgb has
+  // always accepted it, so keep that as the fallback.
+  if (!setFromColor(initial)) setFromHex(initial);
 
   return {
     h,
@@ -174,6 +198,7 @@ export function useColor(initial = "#ff0000") {
     hsl,
     hsb,
     setFromHex,
+    setFromColor,
     setFromRgb,
     setFromHsl,
     setFromHsb,

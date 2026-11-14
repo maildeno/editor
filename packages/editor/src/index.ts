@@ -76,6 +76,10 @@ export type { EditorWriteApi, AssistantMount } from "./types/assistant";
 //
 // `RowMobile`, `ColumnMobile` and `RowSpacerMobile` are the shapes of the
 // `mobile` override object on `NestedRow`, `Column` and `RowSpacer`.
+//
+// `BoxShadow` is the shape of `boxShadow` on a `NestedRow`, a `Column`, and
+// the `props` of an image or a button (and of their `mobile` override).
+export type { BoxShadow } from "./composables/emailBuilder/types/emailBuilder";
 export type {
   Canvas,
   NestedRow,

@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.4.19
+
+### Added
+
+**Rows, columns, images and buttons have a Shadow control.** Select one and open its panel: the new **Shadow** section, above Spacing, has a **Box shadow** switch, presets (Soft, Medium, Strong, Hard and Inner, which an image does not get), sliders for Offset X, Offset Y, Blur and Spread, a colour with opacity, and an Inset switch. A small preview box shows the shadow as you change it. Switching it off keeps the values, so switching it back on gives the shadow you had.
+
+A shadow can be different on mobile. In the Mobile tab the control starts from the desktop shadow; change it and the section shows the overridden badge and a Reset link, as other settings do. A mobile shadow replaces the desktop one as a whole, so switching it off on mobile removes the shadow on small screens and leaves the desktop one alone. A mobile shadow that draws the same thing as the desktop one is not kept as an override.
+
+The shadow shows on the canvas and in Preview, and is exported to HTML, MJML and React Email: on the row's `<td>` (or `<Section>`), the column's `<td>`, the `<img>` and the button's link. An image draws its shadow outside its box, so Inset is not offered there. Email clients that ignore `box-shadow` show the block without it. Classic Outlook for Windows, Gmail (on the web, and in its apps for Google accounts), Yahoo and AOL are the main ones.
+
+`BoxShadow` is a new exported type, `{ enabled, offsetX, offsetY, blur, spread, color, inset }`. Rows and columns save it as `boxShadow` on the node and under `mobile`; images and buttons keep it in `props.boxShadow` and `props.mobile.boxShadow`. A block with no shadow saves without the key, so a template that does not use shadows saves exactly as before; one with the shadow switched off but changed from the defaults keeps its values. `schema_version` stays `"1.0"` and there is nothing to migrate. Values are clamped on the way in (offsets and spread to -50 to 50, blur to 0 to 100) and the colour is checked, so a hand-edited template cannot put anything but a colour into the email's inline style.
+
+### Changed
+
+**Rows and columns stop clipping when a shadow inside them needs the room.** Rows and columns cut off anything that sticks out of them (`overflow: hidden`), which is what keeps a background inside a rounded corner. It also cuts off a shadow inside them: the glow of an image, a button, a column or a nested row, for a row a column's shadow included. A row or column now clips only when it has to: when nothing inside it has a shadow, as before, or when it is rounded and its content can reach a corner, meaning the padding on both sides of that corner is too small to keep the content inside the curve. A square row or column, and a rounded one with enough padding, lets the shadow draw in full. A rounded one with no padding keeps clipping, so its backgrounds stay inside the corners and a shadow inside it is cut off at its edge. To keep that shadow, give the row or column some padding, or put the shadow on the row or column itself, which its own clip never cuts. The rule looks at the desktop and the mobile radius, border and padding together, because the clip is a single declaration, and it is the one rule used by the canvas, the Source pane and the HTML, MJML and React Email export, including the extra element a row gets to carry a border or a mobile border. A template with no shadows exports exactly as it did before.
+
+A row with a column shadow is laid out with `border-collapse: separate`, as it already was for a gap or a rounded column, so the shadow draws the same in every browser engine. A later column is drawn over an earlier column's shadow where they touch, as in any table; add a gap to the row or some padding to keep it clear.
+
+**A row's own shadow is drawn in the HTML and MJML exports.** The row's `<td>` carried both the row's shadow and its clip, and a table cell that clips is drawn without its own shadow when the table's borders are collapsed, which is how the email's tables are laid out (seen in Chrome). So the row's glow went missing in the exported HTML and MJML, and in the Preview panes that show the exported HTML, apart from the bits outside the rounded corners, while the canvas and the Source pane showed it. The clip now sits on a `<div>` inside the cell, the one that draws the row's border when it has one and otherwise the one that holds its padding, so the shadow stays on the cell and the corners still trim whatever the row holds. It applies the same way to a row whose shadow is set for mobile only. A row without a shadow of its own exports exactly as it did before, and React Email, where a row is a `<Section>` table, was not affected.
+
+**Preview now matches caniemail for `box-shadow`.** The Gmail (web, Android and iOS), Yahoo and AOL previews remove shadows, because those clients drop `box-shadow` (the Gmail apps keep it only for accounts that are not Google accounts, and the preview shows the usual Google-account case), and the Samsung Email preview keeps them. The capability badge no longer says "Only modern WebKit clients". The preview also removes only the `box-shadow` declaration from the mobile stylesheet, not the text that follows it.
+
+**The Source pane of the Inbox preview shows a row's shadow.** Its paper card clipped everything outside the email's width to round its own corners, which hid a shadow around a full-width row. The card now stops clipping when a row has a shadow, or something inside it does; without shadows it is unchanged.
+
+### Fixed
+
+**The colour picker now opens on `rgba()` colours and restores their opacity.** It could only read hex when it opened: an `rgba(0, 0, 0, 0.15)` colour, the form a colour with opacity is saved in, showed as solid red, and **Revert** left the opacity slider wherever it had been dragged. It now reads hex with or without alpha, and `rgb()` and `rgba()` in either syntax, opens on the right colour and opacity, and Revert puts both back. A swatch in Recent colours is applied exactly as it was saved, opacity included; a solid swatch used to take on whatever opacity the slider was at.
+
 ## 0.4.18
 
 ### Fixed

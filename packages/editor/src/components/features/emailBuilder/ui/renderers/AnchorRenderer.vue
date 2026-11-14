@@ -58,6 +58,7 @@ import { computed } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
 import { resolveString } from "@/composables/emailBuilder/core/merge-tags/mergeTagDefinitions";
+import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -208,6 +209,7 @@ const innerStyles = computed(() => {
       background: resolveBackground(p.value),
       borderRadius: p.value.borderRadius + "px",
       border: `${p.value.border.width}px ${p.value.border.style} ${p.value.border.color}`,
+      boxShadow: boxShadowValue(p.value.boxShadow) || undefined,
     };
   }
 

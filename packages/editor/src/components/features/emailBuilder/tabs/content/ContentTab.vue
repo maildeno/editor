@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full md-surface-sidebar-inner flex flex-col h-[calc(100vh-7.5rem)]"
+    class="w-full md-surface-sidebar-inner flex flex-col h-[calc(100vh-7.5rem)] 2xl:h-[calc(70vh-7.5rem)]"
   >
     <!-- Tab bar -->
     <div class="md-tabstrip flex gap-4 px-2 pt-2 shrink-0">

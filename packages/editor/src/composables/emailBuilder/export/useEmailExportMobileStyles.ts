@@ -1,4 +1,5 @@
 import { hasNodeMobile } from "./shared/nodeBox";
+import { boxShadowMobileRule } from "../core/boxShadow";
 
 /* ================================
    BACKGROUND RESOLVER
@@ -127,6 +128,9 @@ export const emailNodeMobileStyles = (
     if (m.border?.radius != null) {
       td.push(`border-radius: ${m.border.radius + 2}px !important`);
     }
+    // An override that is switched off writes `none`, which is how a row drops
+    // its desktop shadow on small screens.
+    if (m.boxShadow != null) td.push(boxShadowMobileRule(m.boxShadow));
     if (td.length) blocks.push(`.${uid} { ${td.join("; ")} }`);
     if (m.padding) {
       blocks.push(
@@ -149,6 +153,7 @@ export const emailNodeMobileStyles = (
     const td = [...bg];
     if (m.padding) td.push(`padding: ${spacingCss(m.padding)} !important`);
     if (m.border) td.push(...borderRules(m.border));
+    if (m.boxShadow != null) td.push(boxShadowMobileRule(m.boxShadow));
     if (m.verticalAlign != null) {
       td.push(`vertical-align: ${m.verticalAlign} !important`);
     }
@@ -329,6 +334,10 @@ export const useEmailExportMobileStyles = () => {
       if (m.borderRadius != null) {
         elementRules.push(`border-radius: ${m.borderRadius}px !important`);
       }
+      // Only a button has a shadow; the inline link (anchor) does not.
+      if (compType === "button" && m.boxShadow != null) {
+        elementRules.push(boxShadowMobileRule(m.boxShadow));
+      }
 
       // ── Icon-button text cell ────────────────────────────────────────────
       // When a button has an icon, the visible text lives inside a <td> with
@@ -402,6 +411,12 @@ export const useEmailExportMobileStyles = () => {
         elementRules,
         m.border != null &&
           `border: ${m.border.width}px ${m.border.style} ${m.border.color} !important`,
+      );
+      // An image has no inside to draw an inset shadow in: see image.ts.
+      addRule(
+        elementRules,
+        m.boxShadow != null &&
+          boxShadowMobileRule(m.boxShadow, { allowInset: false }),
       );
     }
 

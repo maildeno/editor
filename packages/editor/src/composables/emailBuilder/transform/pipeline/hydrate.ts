@@ -14,6 +14,7 @@ import {
   createDefaultVisibility,
   createDefaultHide,
 } from "../../core/config/componentConfig";
+import { DEFAULT_BOX_SHADOW } from "../../core/boxShadow";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -109,6 +110,7 @@ const ROW_DEFAULTS = {
   backgroundRepeat: "no-repeat",
   padding: { top: 0, right: 0, bottom: 0, left: 0 },
   border: { width: 0, style: "solid", color: "#000000", radius: 0 },
+  boxShadow: { ...DEFAULT_BOX_SHADOW },
   minHeight: 0,
   gap: 12,
   mobileStack: true,
@@ -119,6 +121,7 @@ const ROW_DEFAULTS = {
     backgroundGradient: null,
     padding: null,
     border: null,
+    boxShadow: null,
     minHeight: null,
     gap: null,
   },
@@ -166,12 +169,14 @@ const COLUMN_DEFAULTS = {
   backgroundRepeat: "no-repeat",
   padding: { top: 0, right: 0, bottom: 0, left: 0 },
   border: { width: 0, style: "solid", color: "#000000", radius: 0 },
+  boxShadow: { ...DEFAULT_BOX_SHADOW },
   verticalAlign: "top",
   mobile: {
     backgroundColor: null,
     backgroundGradient: null,
     padding: null,
     border: null,
+    boxShadow: null,
     verticalAlign: null,
   },
 } as const;

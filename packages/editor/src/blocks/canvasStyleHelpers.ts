@@ -35,6 +35,7 @@ const NODE_MOBILE_KEYS = new Set([
   "backgroundGradient",
   "padding",
   "border",
+  "boxShadow",
   "minHeight",
   "gap",
   "verticalAlign",

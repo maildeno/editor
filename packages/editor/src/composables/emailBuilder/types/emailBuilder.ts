@@ -13,6 +13,28 @@ export interface Border {
   color: string;
   radius: number;
 }
+/**
+ * One drop (or inner) shadow on a row, column, image or button. `enabled` is a
+ * switch, not the presence of the object: a shadow that is turned off keeps its
+ * values, and a mobile override with `enabled: false` removes the desktop
+ * shadow on small screens. See core/boxShadow.ts for the range of each field,
+ * the presets and the CSS it becomes.
+ */
+export interface BoxShadow {
+  enabled: boolean;
+  /** px. Positive moves the shadow right. */
+  offsetX: number;
+  /** px. Positive moves the shadow down. */
+  offsetY: number;
+  /** px, never negative. 0 is a hard edge. */
+  blur: number;
+  /** px. Positive grows the shadow, negative shrinks it. */
+  spread: number;
+  /** `#rrggbb`, or `rgba(r, g, b, a)` when it has transparency. */
+  color: string;
+  /** Draws the shadow inside the element. Not used on images. */
+  inset: boolean;
+}
 export interface GradientStop {
   color: string;
   position: number;
@@ -43,6 +65,7 @@ export interface CanvasRowMobile {
   backgroundGradient?: BackgroundGradient | null;
   padding?: Padding | null;
   border?: Border | null;
+  boxShadow?: BoxShadow | null;
   minHeight?: number | null;
   gap?: number | null;
 }
@@ -51,6 +74,7 @@ export interface CanvasColumnMobile {
   backgroundGradient?: BackgroundGradient | null;
   padding?: Padding | null;
   border?: Border | null;
+  boxShadow?: BoxShadow | null;
   verticalAlign?: CanvasColumn["verticalAlign"] | null;
 }
 export interface CanvasSpacerMobile {
@@ -87,6 +111,8 @@ export interface CanvasRowNode {
   backgroundRepeat?: string;
   padding: Padding;
   border: Border;
+  /** Missing on rows made before 0.4.19 and on new rows until it is edited. */
+  boxShadow?: BoxShadow;
   minHeight: number;
   gap: number;
   mobileStack: boolean;
@@ -119,6 +145,8 @@ export interface CanvasColumn {
   backgroundRepeat?: string;
   padding: Padding;
   border: Border;
+  /** Missing on columns made before 0.4.19 and until it is edited. */
+  boxShadow?: BoxShadow;
   verticalAlign: "top" | "middle" | "bottom";
   mobile?: CanvasColumnMobile;
 }

@@ -24,6 +24,7 @@
 import { computed, type CSSProperties } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { resolveString } from "@/composables/emailBuilder/core/merge-tags/mergeTagDefinitions";
+import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
 
 const props = defineProps<{
   component: {
@@ -93,6 +94,9 @@ const imageStyles = computed<CSSProperties>(() => ({
   objectFit: "cover",
   borderRadius: `${p.value.borderRadius}px`,
   border: `${p.value.border.width}px ${p.value.border.style} ${p.value.border.color}`,
+  // An <img> has no inside to draw an inset shadow in, so it is drawn outside.
+  boxShadow:
+    boxShadowValue(p.value.boxShadow, { allowInset: false }) || undefined,
   display: "inline-block",
   verticalAlign: "top", // or "middle" / "bottom"
 }));

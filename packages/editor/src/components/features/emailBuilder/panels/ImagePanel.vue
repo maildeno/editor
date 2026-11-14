@@ -231,6 +231,18 @@
       </div>
     </PropertySection>
 
+    <!-- Shadow -->
+    <PropertySection title="Shadow">
+      <PropertyBoxShadow
+        :model-value="shadow"
+        :is-mobile="editMode === 'mobile'"
+        :is-overridden="isShadowOverridden"
+        :allow-inset="false"
+        @update:model-value="setShadow"
+        @reset="resetShadow"
+      />
+    </PropertySection>
+
     <!-- Spacing -->
     <PropertySection title="Spacing">
       <SpacingControl
@@ -284,6 +296,7 @@
 import { computed, ref } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useComponentStyleEditor } from "@/composables/emailBuilder/components/useComponentStyleEditor";
+import { useBoxShadowEditor } from "@/composables/emailBuilder/components/useBoxShadowEditor";
 import { useLinkTagInsert } from "@/composables/emailBuilder/core/link-tags/useLinkTagInsert";
 import { resolveString } from "@/composables/emailBuilder/core/merge-tags/mergeTagDefinitions";
 import { useImageUploader } from "@/composables/system/useImageUpload";
@@ -300,6 +313,7 @@ import PropertySection from "./ui/PropertySection.vue";
 import PropertyNumberSlider from "./ui/PropertyNumberSlider.vue";
 import PropertyAlignment from "./ui/PropertyAlignment.vue";
 import PropertyColor from "./ui/PropertyColor.vue";
+import PropertyBoxShadow from "./ui/PropertyBoxShadow.vue";
 import PropertyToggle from "./ui/PropertyToggle.vue";
 import PropertyVisibility from "./ui/PropertyVisibility.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
@@ -346,6 +360,19 @@ const {
   toggleDesktopHide,
   toggleMobileHide,
 } = useComponentStyleEditor(component, editMode);
+
+// ─── Shadow ───────────────────────────────────────────────────────────────────
+// One object per layer (desktop, mobile), written whole: see useBoxShadowEditor.
+const {
+  shadow,
+  isOverridden: isShadowOverridden,
+  setShadow,
+  resetShadow,
+} = useBoxShadowEditor(
+  computed(() => component.value?.props ?? null),
+  editMode,
+  { allowInset: false },
+);
 
 // ─── Props mutation handlers (each calls saveToHistory) ─────────────────
 

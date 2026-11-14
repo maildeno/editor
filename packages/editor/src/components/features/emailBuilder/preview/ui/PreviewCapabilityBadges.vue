@@ -139,7 +139,8 @@ const TITLES: Record<keyof ClientCapabilities, string> = {
     "border-radius on <td>. Outlook desktop ignores; buttons (on <a>) are fine.",
   buttonBorderRadius:
     "border-radius on <a> button. Works in Outlook desktop too (since 2016).",
-  boxShadow: "box-shadow rendering. Only modern WebKit clients.",
+  boxShadow:
+    "box-shadow rendering (row, column, image and button shadows). Classic Outlook for Windows, Gmail, Yahoo and AOL drop it.",
   bgImageOnTd: "background-image on <td>. Outlook desktop needs VML.",
   vml: "Microsoft VML (used as fallback for gradients/bg images in Outlook desktop).",
   msoConditionals:

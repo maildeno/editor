@@ -6,6 +6,9 @@
  * Supports both new `children` shape and legacy `components` shape per column.
  */
 
+import type { BoxShadow } from "../../types/emailBuilder";
+import { DEFAULT_BOX_SHADOW, boxShadowEquals } from "../../core/boxShadow";
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface VisibilityConfig {
@@ -43,6 +46,7 @@ export interface RowMobile {
   backgroundGradient?: GradientConfig | null;
   padding?: Record<string, number> | null;
   border?: BorderConfig | null;
+  boxShadow?: BoxShadow | null;
   minHeight?: number | null;
   gap?: number | null;
 }
@@ -52,6 +56,7 @@ export interface ColumnMobile {
   backgroundGradient?: GradientConfig | null;
   padding?: Record<string, number> | null;
   border?: BorderConfig | null;
+  boxShadow?: BoxShadow | null;
   verticalAlign?: string | null;
 }
 
@@ -87,6 +92,7 @@ export interface Column {
   backgroundRepeat?: string;
   padding?: Record<string, number>;
   border?: BorderConfig;
+  boxShadow?: BoxShadow;
   verticalAlign?: string;
   mobile?: ColumnMobile | null;
   [key: string]: unknown;
@@ -99,6 +105,7 @@ export interface NestedRow {
   columns?: Column[];
   visibility?: VisibilityConfig;
   border?: BorderConfig;
+  boxShadow?: BoxShadow;
   backgroundImage?: string;
   backgroundSize?: string;
   backgroundPosition?: string;
@@ -161,6 +168,15 @@ const isDefaultBorder = (b: unknown): boolean => {
     (border.radius === undefined || border.radius === 0)
   );
 };
+
+/**
+ * True when there is no shadow to keep: absent, or exactly the default (off,
+ * default values), which hydrate.ts puts back. A shadow that is OFF but has
+ * been tuned is kept, so toggling it on after a reload gives the values the
+ * user chose, not the defaults.
+ */
+const isDefaultBoxShadow = (s: unknown): boolean =>
+  !s || typeof s !== "object" || boxShadowEquals(s, DEFAULT_BOX_SHADOW);
 
 const isDefaultGradient = (g: unknown): boolean => {
   if (!g || typeof g !== "object") return true;
@@ -301,6 +317,7 @@ const optimizeComponent = (comp: Component): Component => {
   if (isAllZeroPadding(comp.props.padding)) delete optimized.padding;
   if (isDefaultGradient(comp.props.backgroundGradient))
     delete optimized.backgroundGradient;
+  if (isDefaultBoxShadow(comp.props.boxShadow)) delete optimized.boxShadow;
   if (isDefaultLetterSpacing(comp.props.letterSpacing))
     delete optimized.letterSpacing;
 
@@ -365,6 +382,7 @@ const optimizeColumn = (col: Column): Partial<Column> => {
   const optimized: Record<string, unknown> = { ...rest };
 
   if (isDefaultBorder(col.border)) delete optimized.border;
+  if (isDefaultBoxShadow(col.boxShadow)) delete optimized.boxShadow;
   if (isDefaultGradient(col.backgroundGradient))
     delete optimized.backgroundGradient;
   if (isAllZeroPadding(col.padding)) delete optimized.padding;
@@ -421,6 +439,8 @@ const optimizeRow = (row: Row): Partial<Row> => {
   if (isDefaultVisibility((row as NestedRow).visibility))
     delete optimized.visibility;
   if (isDefaultBorder((row as NestedRow).border)) delete optimized.border;
+  if (isDefaultBoxShadow((row as NestedRow).boxShadow))
+    delete optimized.boxShadow;
   if (isDefaultGradient((row as NestedRow).backgroundGradient))
     delete optimized.backgroundGradient;
   if (isAllZeroPadding((row as NestedRow).padding)) delete optimized.padding;

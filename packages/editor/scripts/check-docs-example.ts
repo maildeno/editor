@@ -161,6 +161,7 @@ check(
       "backgroundColor",
       "backgroundGradient",
       "border",
+      "boxShadow",
       "gap",
       "minHeight",
       "padding",
@@ -169,6 +170,7 @@ check(
       "backgroundColor",
       "backgroundGradient",
       "border",
+      "boxShadow",
       "padding",
       "verticalAlign",
     ]);

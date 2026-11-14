@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[calc(100vh-7.5rem)] overflow-y-auto">
+  <div class="h-[calc(100vh-7.5rem)] 2xl:h-[calc(70vh-7.5rem)] overflow-y-auto">
     <div class="p-4 space-y-5">
       <!-- Header -->
       <div>

@@ -342,11 +342,27 @@ What each block can override on mobile:
 
 | Block | `mobile` keys |
 | --- | --- |
-| Row | `backgroundColor`, `backgroundGradient`, `padding`, `border`, `minHeight`, `gap` |
-| Column | `backgroundColor`, `backgroundGradient`, `padding`, `border`, `verticalAlign` |
+| Row | `backgroundColor`, `backgroundGradient`, `padding`, `border`, `boxShadow`, `minHeight`, `gap` |
+| Column | `backgroundColor`, `backgroundGradient`, `padding`, `border`, `boxShadow`, `verticalAlign` |
 | Row spacer | `height`, `backgroundColor`, `backgroundGradient` |
 
 A mobile `padding` or `border` replaces the desktop one as a whole. Sides you leave out are not filled in from desktop, so write all four sides and the complete border. A row's mobile `gap` only applies while the row stacks on mobile (`mobileStack`) and has a desktop `gap` above 0. `schema_version` stays `"1.0"` and there is nothing to migrate: templates saved before 0.4.13 load as they are.
+
+Rows, columns, images and buttons can have a shadow, saved as one `boxShadow` object. A block with no shadow saves without the key, so a template that does not use shadows saves exactly as it did before. A shadow that is switched off keeps its values, so they are there when it is switched back on:
+
+```json
+"boxShadow": {
+  "enabled": true,
+  "offsetX": 0,
+  "offsetY": 4,
+  "blur": 12,
+  "spread": 0,
+  "color": "rgba(0, 0, 0, 0.15)",
+  "inset": false
+}
+```
+
+`offsetX`, `offsetY` and `spread` run from -50 to 50 px and `blur` from 0 to 100 px; a value outside that range is clamped. A row, column or button can set `inset`; an image draws its shadow outside, so `inset` has no effect there. A mobile `boxShadow` replaces the desktop one as a whole, and `"enabled": false` removes the shadow on small screens. Email clients that do not support `box-shadow`, such as classic Outlook for Windows, Gmail, Yahoo and AOL, show the block without it. Templates saved before 0.4.19 load as they are.
 
 ### Storage adapter
 

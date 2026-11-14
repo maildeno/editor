@@ -17,6 +17,12 @@
 // overrides keeps exactly the markup it had before.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import {
+  boxShadowValue,
+  clipsOverflow,
+  hasActiveShadow,
+} from "../../core/boxShadow";
+
 /** One CSS declaration: property in kebab-case, value as a string. */
 export type Decl = [prop: string, value: string];
 
@@ -27,8 +33,9 @@ export interface Layer {
 
 export interface RowBox {
   /**
-   * The background element (<td> or <Section>). Holds the radius, the clip
-   * and the hook class; the exporter adds the background itself.
+   * The background element (<td> or <Section>). Holds the radius, the shadow
+   * and the hook class; the exporter adds the background itself. It also holds
+   * the clip, except when the row has a shadow of its own (see buildRowBox).
    */
   td: Layer;
   /**
@@ -37,7 +44,10 @@ export interface RowBox {
    * to attach to.
    */
   outer: Layer | null;
-  /** Padding, and the simple border when there is no outer element. */
+  /**
+   * Padding, and the simple border when there is no outer element. When the row
+   * has a shadow of its own and no outer element, it also holds the clip.
+   */
   inner: Layer;
   /** HTML and MJML put it on the td; React does not emit it today. */
   minHeight: number;
@@ -69,17 +79,22 @@ interface RowMobileLike {
   backgroundGradient?: unknown;
   padding?: unknown;
   border?: BorderLike | null;
+  boxShadow?: unknown;
   minHeight?: number | null;
   gap?: number | null;
 }
 
 export interface RowLike extends MobileNode {
   border?: BorderLike | null;
+  /** A BoxShadow, or nothing. Read through boxShadowValue, so any value is safe. */
+  boxShadow?: unknown;
   padding?: SpacingLike | null;
   minHeight?: number;
   mobileStack?: boolean;
   gap?: number;
   mobile?: RowMobileLike | null;
+  /** Read to find out whether a shadow inside the row needs room (clipsOverflow). */
+  columns?: unknown[];
 }
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
@@ -124,11 +139,28 @@ export const buildRowBox = (row: RowLike): RowBox => {
   // when the desktop row has no border.
   const needsOuter = (r > 0 && w > 0) || !!row.mobile?.border;
 
+  // The shadow goes on the <td> (or <Section>), the element that carries the
+  // background and the radius, so it follows the row's rounded corners. The
+  // row clips its contents (overflow:hidden) unless a shadow inside it would be
+  // cut off and no rounded corner needs the clip: see clipsOverflow in
+  // core/boxShadow.ts. Every element that can clip follows that one rule.
+  //
+  // One more rule decides which element clips. A table cell that has an overflow
+  // does not show its own shadow when its table is border-collapse:collapse,
+  // which is where every nested row sits (browsers cut the shadow off at the
+  // cell's edge). So a row with a shadow of its own, on desktop or on mobile,
+  // leaves the clip to a div inside the cell: the outer div, or the inner div
+  // when there is no outer one. The curve they clip is the same one, and the
+  // shadow is drawn by the cell, outside both.
+  const shadow = boxShadowValue(row.boxShadow);
+  const clips = clipsOverflow(row);
+  const cellClips = clips && !hasActiveShadow(row);
   const td: Layer = {
     classes: hooks.root,
     decls: [
       ...(r > 0 ? [["border-radius", `${r}px`] as Decl] : []),
-      ["overflow", "hidden"],
+      ...(cellClips ? [["overflow", "hidden"] as Decl] : []),
+      ...(shadow ? [["box-shadow", shadow] as Decl] : []),
     ],
   };
   const pad: Decl = ["padding", spacing(row.padding)];
@@ -149,6 +181,13 @@ export const buildRowBox = (row: RowLike): RowBox => {
         decls: [
           pad,
           ...(w > 0 && r === 0 && row.border ? [borderDecl(row.border)] : []),
+          // The clip the cell gave up (see above), with the cell's curve.
+          ...(clips && !cellClips
+            ? [
+                ...(r > 0 ? [["border-radius", `${r}px`] as Decl] : []),
+                ["overflow", "hidden"] as Decl,
+              ]
+            : []),
           ...clip,
         ],
       },
@@ -162,7 +201,7 @@ export const buildRowBox = (row: RowLike): RowBox => {
       classes: hooks.outer,
       decls: [
         ["border-radius", `${r}px`],
-        ["overflow", "hidden"],
+        ...(clips ? [["overflow", "hidden"] as Decl] : []),
         ...clip,
         ...(w > 0 && row.border ? [borderDecl(row.border)] : []),
       ],

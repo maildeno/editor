@@ -3,6 +3,7 @@
 // Every component that renders a background surface carries both
 // `backgroundColor` (solid fallback) and `backgroundGradient` (GradientPicker value).
 import { createDefaultBaseConfig } from "./config/componentConfig";
+import { createDefaultBoxShadow } from "./boxShadow";
 // ─── Gradient factory helpers ─────────────────────────────────────────────────
 
 /** Default gradient shape for a coloured component (button, divider, etc.) */
@@ -122,6 +123,7 @@ export const useEmailBuilderDefaults = () => {
       padding: { top: 0, right: 0, bottom: 0, left: 0 },
       borderRadius: 0,
       border: { width: 0, color: "transparent", style: "solid" },
+      boxShadow: createDefaultBoxShadow(),
       mobile: {
         width: null,
         height: null,
@@ -130,6 +132,7 @@ export const useEmailBuilderDefaults = () => {
         padding: null,
         borderRadius: null,
         border: null,
+        boxShadow: null,
       },
       ...createDefaultBaseConfig(),
     },
@@ -204,6 +207,7 @@ export const useEmailBuilderDefaults = () => {
       padding: { top: 12, right: 24, bottom: 12, left: 24 },
       borderRadius: 4,
       border: { width: 0, color: "transparent", style: "solid" },
+      boxShadow: createDefaultBoxShadow(),
       align: "center",
       // ── Icon ──────────────────────────────────────────────────────────────
       icon: "",
@@ -223,6 +227,7 @@ export const useEmailBuilderDefaults = () => {
         margin: null,
         borderRadius: null,
         border: null,
+        boxShadow: null,
         align: null,
       },
       ...createDefaultBaseConfig(),

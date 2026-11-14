@@ -94,7 +94,8 @@
         <!-- Email container -->
         <div
           v-else
-          class="mx-auto shadow-sm rounded-md overflow-hidden"
+          class="mx-auto shadow-sm rounded-md"
+          :class="{ 'overflow-hidden': paperClips }"
           :style="{
             width: effectiveWidth + 'px',
             maxWidth: '100%',
@@ -186,6 +187,12 @@ import PreviewComponent from "./PreviewComponent.vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useEmailBuilderVisibility } from "@/composables/emailBuilder/core/useEmailBuilderVisibility";
 import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
+import {
+  boxShadowValue,
+  clipsOverflow,
+  hasActiveShadow,
+  hasShadowInside,
+} from "@/composables/emailBuilder/core/boxShadow";
 
 const props = defineProps<{
   rows: any[];
@@ -210,6 +217,18 @@ const { evaluateVisibility } = useEmailBuilderVisibility();
 const bodyBg = computed(() => props.canvas?.bodyBackgroundColor ?? "#f9fafb");
 
 const hasContent = computed(() => (props.rows ?? []).length > 0);
+
+// The paper card rounds its own corners with overflow:hidden. A shadow around a
+// full-width row sits outside that card, so the card lets it through when any
+// row has a shadow. The email itself has no such frame, and the client panes
+// beside this one show the shadow either way.
+const paperClips = computed(
+  () =>
+    !(props.rows ?? []).some(
+      (r: any) =>
+        r?.type === "row" && (hasActiveShadow(r) || hasShadowInside(r)),
+    ),
+);
 
 // Effective rendered width. Mirrors Canvas.vue:previewWidth — desktop uses
 // canvas.width, mobile uses min(360, mobileBreakpoint).
@@ -290,6 +309,9 @@ function rowStyles(node: any): Record<string, string> {
     styles.borderRadius = `${row.border.radius ?? 0}px`;
   }
 
+  const shadow = boxShadowValue(row.boxShadow);
+  if (shadow) styles.boxShadow = shadow;
+
   if ((row.gap ?? 0) > 0) {
     styles.gap = `${row.gap}px`;
   }
@@ -338,7 +360,10 @@ function columnStyles(node: any, row: any): Record<string, string> {
   // square columns, we omit `overflow` so the flex+radius+overflow rendering
   // quirk that hides backgrounds doesn't apply. Same behavior as the real
   // CanvasColumn (which never sets overflow).
-  if (radius > 0) {
+  // The one exception is a column with a shadow inside it whose padding keeps
+  // the content clear of the corners: see clipsOverflow, which the canvas and
+  // the export use too.
+  if (radius > 0 && clipsOverflow(node)) {
     styles.overflow = "hidden";
   }
 
@@ -346,6 +371,9 @@ function columnStyles(node: any, row: any): Record<string, string> {
     styles.border = `${col.border.width ?? 0}px ${col.border.style ?? "solid"} ${col.border.color ?? "transparent"}`;
     styles.borderRadius = `${radius}px`;
   }
+
+  const shadow = boxShadowValue(col.boxShadow);
+  if (shadow) styles.boxShadow = shadow;
 
   if (col.backgroundImage) {
     styles.backgroundImage = `url(${col.backgroundImage})`;

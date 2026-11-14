@@ -368,6 +368,18 @@
       </div>
     </PropertySection>
 
+    <!-- Shadow -->
+    <PropertySection title="Shadow">
+      <PropertyBoxShadow
+        :model-value="shadow"
+        :is-mobile="editMode === 'mobile'"
+        :is-overridden="isShadowOverridden"
+        :allow-inset="true"
+        @update:model-value="setShadow"
+        @reset="resetShadow"
+      />
+    </PropertySection>
+
     <!-- Spacing -->
     <PropertySection title="Spacing">
       <SpacingControl
@@ -390,6 +402,7 @@ import { ref, computed, watch, type PropType } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useImageUploader } from "@/composables/system/useImageUpload";
 import { useNodeStyleEditor } from "@/composables/emailBuilder/components/useNodeStyleEditor";
+import { useBoxShadowEditor } from "@/composables/emailBuilder/components/useBoxShadowEditor";
 import type { EditMode } from "@/composables/emailBuilder/components/useComponentStyleEditor";
 import {
   MIN_COLUMN_WIDTH,
@@ -415,6 +428,7 @@ import PropertySection from "./ui/PropertySection.vue";
 import PropertyNumberSlider from "./ui/PropertyNumberSlider.vue";
 import PropertySelect from "./ui/PropertySelect.vue";
 import PropertyColor from "./ui/PropertyColor.vue";
+import PropertyBoxShadow from "./ui/PropertyBoxShadow.vue";
 import SpacingControl from "./ui/SpacingControl.vue";
 import PropertyGradientColor from "./ui/PropertyGradientColor.vue";
 
@@ -468,6 +482,15 @@ const {
   isBackgroundOverridden,
   resetBackground,
 } = useNodeStyleEditor(node, editMode);
+
+// ─── Shadow ───────────────────────────────────────────────────────────────────
+// One object per layer (desktop, mobile), written whole: see useBoxShadowEditor.
+const {
+  shadow,
+  isOverridden: isShadowOverridden,
+  setShadow,
+  resetShadow,
+} = useBoxShadowEditor(node, editMode, { allowInset: true });
 
 // ─── Background ───────────────────────────────────────────────────────────────
 

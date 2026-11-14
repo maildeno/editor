@@ -12,6 +12,7 @@ import type { Ref } from "vue";
 import { useGoogleFonts } from "../../../system/useGoogleFonts";
 import { useEmailExportMobileStyles } from "../useEmailExportMobileStyles";
 import { useEmailBuilderVisibility } from "../../core/useEmailBuilderVisibility";
+import { boxShadowValue, clipsOverflow } from "../../core/boxShadow";
 
 import { buildBackgroundStylesReact } from "../shared/styles";
 import {
@@ -229,6 +230,7 @@ export const reactEmailExport = (deps: Deps) => {
 
       const colWidthPercentage = columnPercentages[index];
       const colBackgroundStylesReact = buildBackgroundStylesReact(col);
+      const colShadow = boxShadowValue(col.boxShadow);
 
       const colStyleObj: Record<string, string> = {
         width: `${colWidthPercentage}%`,
@@ -236,7 +238,8 @@ export const reactEmailExport = (deps: Deps) => {
         verticalAlign: col.verticalAlign ?? "middle",
         border: `${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
         borderRadius: `${col.border?.radius ?? 0}px`,
-        overflow: "hidden",
+        ...(clipsOverflow(col) && { overflow: "hidden" }),
+        ...(colShadow && { boxShadow: colShadow }),
         lineHeight: "0",
         fontSize: "0",
         padding: `${col.padding?.top ?? 0}px ${col.padding?.right ?? 0}px ${col.padding?.bottom ?? 0}px ${col.padding?.left ?? 0}px`,

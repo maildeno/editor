@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[calc(100vh-7.5rem)] overflow-y-auto">
+  <div class="h-[calc(100vh-7.5rem)] 2xl:h-[calc(70vh-7.5rem)] overflow-y-auto">
     <div class="px-4 pt-3 pb-4">
       <!-- Tabs - Minimal Pill Style -->
       <div class="flex gap-1 p-0.5 bg-(--md-surface-muted) rounded-lg">

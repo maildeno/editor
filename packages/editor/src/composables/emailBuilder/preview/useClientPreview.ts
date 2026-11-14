@@ -63,7 +63,11 @@ export interface ClientCapabilities {
   /** border-radius on <a> elements styled as inline-block buttons.
    *  Outlook desktop SUPPORTS this (since 2016 webkit). */
   buttonBorderRadius: boolean;
-  /** box-shadow on <td> or <div>. Rare — only modern WebKit clients. */
+  /** box-shadow on <td>, <div>, <a> and <img>: the Shadow control of rows,
+   *  columns, images and buttons. Drawn by Apple Mail, Samsung Email,
+   *  Thunderbird, Proton Mail, Outlook.com and the new Outlook. Dropped by
+   *  classic Outlook for Windows (Word engine), by Gmail, and by Yahoo and
+   *  AOL (caniemail.com/features/css-box-shadow, tested 2023-12). */
   boxShadow: boolean;
   /** background-image / `background="..."` attribute on <td>. */
   bgImageOnTd: boolean;
@@ -155,7 +159,7 @@ const GMAIL_WEB: ClientCapabilities = {
   gradients: true,
   tdBorderRadius: true,
   buttonBorderRadius: true,
-  boxShadow: true,
+  boxShadow: false, // Gmail on the web drops it (caniemail, tested 2023-12)
   bgImageOnTd: true,
   vml: false,
   msoConditionals: false,
@@ -173,6 +177,10 @@ const GMAIL_WEB: ClientCapabilities = {
 const GMAIL_MOBILE: ClientCapabilities = {
   ...GMAIL_WEB,
   webFonts: false, // Android app uses system fonts; iOS app is webkit-ish but treat as system for safety
+  // The Gmail apps draw box-shadow only for accounts that are not Google
+  // accounts. Preview shows the common case, so no shadow. Samsung Mail
+  // inherits this preset and turns it back on below.
+  boxShadow: false,
   darkModeStrategy: "partial-transparent",
 };
 
@@ -243,7 +251,7 @@ const YAHOO_AOL: ClientCapabilities = {
   gradients: true,
   tdBorderRadius: true,
   buttonBorderRadius: true,
-  boxShadow: true,
+  boxShadow: false, // Yahoo and AOL drop it (caniemail, tested 2023-12)
   bgImageOnTd: true,
   vml: false,
   msoConditionals: false,
@@ -434,6 +442,7 @@ const CLIENTS: EmailClient[] = [
     logoText: "S",
     capabilities: {
       ...GMAIL_MOBILE,
+      boxShadow: true,
       darkModeStrategy: "none",
     } as ClientCapabilities,
     viewportWidth: 360,
@@ -695,8 +704,11 @@ export function useClientPreview() {
     }
 
     // Box-shadow: Word engine ignores. Browser would still render it.
+    // The value stops at `;`, a quote, `}` or `<`: the mobile CSS in <style>
+    // ends a rule with `box-shadow: none !important }`, and this must not
+    // eat the rest of the stylesheet.
     if (!c.boxShadow) {
-      out = out.replace(/box-shadow:\s*[^;"']+;?/gi, "");
+      out = out.replace(/box-shadow:\s*[^;"'}<]+;?/gi, "");
     }
 
     // bg-image on <td>: Word engine ignores entirely (no VML fallback in our

@@ -341,13 +341,18 @@ const {
   hsl,
   hsb,
   setFromHex,
+  setFromColor,
   setFromRgb,
   setFromHsl,
   setFromHsb,
 } = useColor(props.modelValue);
 
 const initialColor = ref(props.modelValue);
-const revertToInitial = () => setFromHex(initialColor.value);
+// setFromColor restores the alpha as well. The old setFromHex left the alpha
+// slider where the user had dragged it, and could not read an rgba() value.
+const revertToInitial = () => {
+  if (!setFromColor(initialColor.value)) setFromHex(initialColor.value);
+};
 
 watch(cssColor, (val) => emit("update:modelValue", val));
 
@@ -402,19 +407,11 @@ const onRecentSelect = (color: string) => {
     emit("update:modelValue", "transparent");
     return;
   }
-  const rgbaMatch = color.match(
-    /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/,
-  );
-  if (rgbaMatch) {
-    setFromRgb(
-      Number(rgbaMatch[1]),
-      Number(rgbaMatch[2]),
-      Number(rgbaMatch[3]),
-    );
-    a.value = rgbaMatch[4] !== undefined ? clamp(rgbaMatch[4], 0, 1) : 1;
-    return;
-  }
-  setFromHex(color);
+  // A recent colour is applied exactly as it was saved, opacity included
+  // (setFromColor reads hex, with or without alpha, and rgb()/rgba()). A solid
+  // swatch used to leave the opacity slider wherever it was, so a shadow set at
+  // 15% turned any swatch picked after it into 15% too.
+  if (!setFromColor(color)) setFromHex(color);
 };
 
 const tabs = ["HEX", "RGB", "HSL", "HSB"];

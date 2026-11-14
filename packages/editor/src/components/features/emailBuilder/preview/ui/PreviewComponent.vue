@@ -188,6 +188,10 @@ import {
   applyMobileOverrides,
   applyNodeMobileOverrides,
 } from "@/blocks/canvasStyleHelpers";
+import {
+  boxShadowValue,
+  clipsOverflow,
+} from "@/composables/emailBuilder/core/boxShadow";
 
 const props = defineProps<{
   component: any;
@@ -300,6 +304,8 @@ const nestedRowStyle = computed(() => {
     styles.border = `${row.border.width ?? 0}px ${row.border.style ?? "solid"} ${row.border.color ?? "transparent"}`;
     styles.borderRadius = `${row.border.radius ?? 0}px`;
   }
+  const rowShadow = boxShadowValue(row.boxShadow);
+  if (rowShadow) styles.boxShadow = rowShadow;
   if ((row.gap ?? 0) > 0) styles.gap = `${row.gap}px`;
   if (row.backgroundImage) {
     styles.backgroundImage = `url(${row.backgroundImage})`;
@@ -337,13 +343,17 @@ function nestedColumnStyle(node: any): Record<string, string> {
     // (which hides backgrounds in some engines) doesn't apply. Matches real
     // CanvasColumn behavior.
   };
-  if (radius > 0) {
+  // Except for a column with a shadow inside it whose padding keeps the content
+  // clear of the corners: see clipsOverflow, which the canvas and export use.
+  if (radius > 0 && clipsOverflow(node)) {
     styles.overflow = "hidden";
   }
   if (col.border) {
     styles.border = `${col.border.width ?? 0}px ${col.border.style ?? "solid"} ${col.border.color ?? "transparent"}`;
     styles.borderRadius = `${radius}px`;
   }
+  const colShadow = boxShadowValue(col.boxShadow);
+  if (colShadow) styles.boxShadow = colShadow;
   if (col.backgroundImage) {
     styles.backgroundImage = `url(${col.backgroundImage})`;
     styles.backgroundSize = col.backgroundSize ?? "cover";
@@ -457,6 +467,8 @@ const imageStyle = computed(() => {
     border: x.border
       ? `${x.border.width ?? 0}px ${x.border.style ?? "solid"} ${x.border.color ?? "transparent"}`
       : "none",
+    // An <img> has no inside to draw an inset shadow in: drawn outside.
+    boxShadow: boxShadowValue(x.boxShadow, { allowInset: false }) || undefined,
     display: "inline-block",
   };
 });
@@ -539,6 +551,7 @@ const buttonStyle = computed(() => {
     border: x.border
       ? `${x.border.width ?? 0}px ${x.border.style ?? "solid"} ${x.border.color ?? "transparent"}`
       : "none",
+    boxShadow: boxShadowValue(x.boxShadow) || undefined,
     display: hasIcon ? "inline-flex" : "inline-block",
     alignItems: hasIcon ? "center" : undefined,
     verticalAlign: hasIcon ? "middle" : undefined,

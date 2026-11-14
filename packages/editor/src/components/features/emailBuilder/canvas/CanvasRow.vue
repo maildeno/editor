@@ -456,6 +456,10 @@ import { useProductRowActions } from "@/composables/emailBuilder/components/useP
 import { useSavedRowCapabilities } from "@/adapters";
 import { displayName } from "@/composables/emailBuilder/core/useEmailBuilderOperations";
 import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
+import {
+  boxShadowValue,
+  clipsOverflow,
+} from "@/composables/emailBuilder/core/boxShadow";
 import CanvasColumn from "./CanvasColumn.vue";
 import DropZone from "../ui/canvas/DropZone.vue";
 import {
@@ -723,8 +727,14 @@ const rowStyles = computed(() => {
     alignItems: "stretch",
     border: `${r.border.width}px ${r.border.style} ${r.border.color}`,
     borderRadius: `${r.border.radius}px`,
-    overflow: "hidden",
   };
+
+  // The row clips what it holds, unless a shadow inside it would be cut off and
+  // no rounded corner needs the clip (see clipsOverflow). Its own shadow is
+  // never clipped by it.
+  if (clipsOverflow(props.row)) styles.overflow = "hidden";
+  const shadow = boxShadowValue(r.boxShadow);
+  if (shadow) styles.boxShadow = shadow;
 
   if (r.gap > 0) styles.gap = `${r.gap}px`;
 
