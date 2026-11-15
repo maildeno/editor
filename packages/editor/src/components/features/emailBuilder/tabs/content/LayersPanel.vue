@@ -367,6 +367,7 @@ const {
   saveToHistory,
   moveRow,
   moveNestedRow,
+  canMoveNestedRow,
   moveComponent,
   moveComponentBetweenColumns,
   reorderRows,
@@ -705,13 +706,28 @@ const totalComponents = computed(() =>
 // ─── Empty column drop zone ───────────────────────────────────────────────────
 // When a column has NO children, the per-item dragover/drop handlers never fire
 // because there are no items to hover over. These dedicated handlers make the
-// "Empty" placeholder itself a valid drop target so components can be moved
-// into any column regardless of whether it already contains items.
+// "Empty" placeholder itself a valid drop target so components, rows and
+// spacers can be moved into any column regardless of whether it already
+// contains items.
 
 const emptyColumnDragOver = ref<string | null>(null);
 
-const handleEmptyColumnDragOver = (e: DragEvent, columnId: string) => {
-  if (!drag.value || drag.value.kind !== "component") return;
+const handleEmptyColumnDragOver = (
+  e: DragEvent,
+  columnId: string,
+  parentRowId: string,
+) => {
+  const d = drag.value;
+  if (!d) return;
+  // A row or spacer only lights the placeholder if it may go there.
+  if (
+    d.kind !== "component" &&
+    !canMoveNestedRow(d.id, parentRowId, columnId)
+  ) {
+    if (emptyColumnDragOver.value === columnId)
+      emptyColumnDragOver.value = null;
+    return;
+  }
   e.preventDefault();
   emptyColumnDragOver.value = columnId;
 };
@@ -733,12 +749,16 @@ const handleEmptyColumnDrop = (
   e.preventDefault();
   emptyColumnDragOver.value = null;
   const d = drag.value;
-  if (!d || d.kind !== "component") {
+  if (!d) {
     handleDragEnd();
     return;
   }
   // Insert at index 0 — the column is empty so there's only one valid position
-  moveComponentBetweenColumns(d.id, parentRowId, columnId, 0);
+  if (d.kind === "component") {
+    moveComponentBetweenColumns(d.id, parentRowId, columnId, 0);
+  } else {
+    moveNestedRow(d.id, parentRowId, columnId, 0);
+  }
   handleDragEnd();
 };
 
@@ -751,8 +771,10 @@ const handleEmptyColumnDrop = (
 //     (drop into). We show a thin <LayerDropLine> indicator in the gap between
 //     items rather than styling the item itself — cleaner UX, less visual noise.
 //   • Type safety rules: components can only land inside columns (not rows),
-//     rows can land between top-level rows or inside columns as nested rows.
-//     An incompatible drop is silently ignored.
+//     rows and spacers — top-level or nested — can land between top-level rows
+//     or inside any column as nested rows, except inside themselves or past the
+//     nesting limit (canMoveNestedRow). An incompatible drop is silently
+//     ignored.
 
 interface DragMeta {
   id: string;
@@ -833,7 +855,7 @@ const handleDragOver = (
   targetId: string,
   kind: DragMeta["kind"],
   containerId: string | null,
-  _parentRowId: string | null,
+  parentRowId: string | null,
   itemIndex: number,
 ) => {
   if (!drag.value) return;
@@ -847,10 +869,20 @@ const handleDragOver = (
   // Type guard: components can only move within/between columns, not to top-level
   if (drag.value.kind === "component" && kind === "top-level-row") return;
 
-  // Type guard: top-level rows can only be reordered at top-level
-  if (drag.value.kind === "top-level-row" && kind !== "top-level-row") return;
-
   const scope = kind === "top-level-row" ? "top-level" : "child";
+
+  // A row or spacer dropped inside a column becomes a nested row there. That is
+  // refused for a column inside the row itself (it would cut the row off from
+  // the page) and for one that would push the row past the nesting limit.
+  if (
+    drag.value.kind !== "component" &&
+    scope === "child" &&
+    !canMoveNestedRow(drag.value.id, parentRowId, containerId)
+  ) {
+    dropTarget.value = null;
+    return;
+  }
+
   dropTarget.value = { containerId, index: insertIndex, scope };
 };
 
@@ -890,8 +922,12 @@ const handleDrop = (
       if (fromIndex !== toIndex) {
         reorderRows(fromIndex, toIndex);
       }
-    } else if (d.kind === "nested-row" && scope === "child") {
-      // Move nested row to another column (or reorder within same column)
+    } else if (
+      (d.kind === "top-level-row" || d.kind === "nested-row") &&
+      scope === "child"
+    ) {
+      // Move a row or spacer into a column (or reorder within a column),
+      // from the top level as well as from another column
       const targetColId = dropTarget.value.containerId;
       if (!targetColId || !parentRowId) return;
       moveNestedRow(d.id, parentRowId, targetColId, targetIndex);

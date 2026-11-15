@@ -187,7 +187,32 @@ function createEmailBuilderInstance(
   const nestedRowDragId = ref<string | null>(null);
   const isRowDragActive = ref<boolean>(false);
   const isTopLevelRowDragActive = ref<boolean>(false);
+  // The row or spacer being dragged on the canvas, at any depth. dragover can't
+  // read dataTransfer, so the columns read it from here to decide whether they
+  // can take it.
+  const rowDragId = ref<string | null>(null);
+  // The one column that would take that row if it were dropped now.
+  const rowDropColumnId = ref<string | null>(null);
   const layerHoveredId = ref<string | null>(null);
+
+  const startRowDrag = (id: string | number, topLevel: boolean) => {
+    isRowDragActive.value = true;
+    isTopLevelRowDragActive.value = topLevel;
+    nestedRowDragId.value = topLevel ? null : String(id);
+    rowDragId.value = String(id);
+    rowDropColumnId.value = null;
+  };
+
+  // Called from the drop handlers as well as from dragend: when a drop moves
+  // the dragged row, its element is removed from the page and some browsers
+  // never send dragend to it, which would leave the flags set.
+  const endRowDrag = () => {
+    isRowDragActive.value = false;
+    isTopLevelRowDragActive.value = false;
+    nestedRowDragId.value = null;
+    rowDragId.value = null;
+    rowDropColumnId.value = null;
+  };
 
   // Shared with the export engine and three tab components (LinkTagTab,
   // MergeTagTab, VisibilityWrapESPTab) that previously each independently
@@ -1103,6 +1128,10 @@ function createEmailBuilderInstance(
     nestedRowDragId,
     isRowDragActive,
     isTopLevelRowDragActive,
+    rowDragId,
+    rowDropColumnId,
+    startRowDrag,
+    endRowDrag,
     layerHoveredId,
 
     // Row operations
@@ -1113,6 +1142,7 @@ function createEmailBuilderInstance(
     deleteRow: deleteRowWrapper,
     moveRow: operations.moveRow,
     moveNestedRow: operations.moveNestedRow,
+    canMoveNestedRow: operations.canMoveNestedRow,
     reorderRows: operations.reorderRows,
     addSpacer: operations.addSpacer,
     duplicateRow: operations.duplicateRow,

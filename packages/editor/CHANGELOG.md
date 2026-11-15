@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.21
+
+### Fixed
+
+**A top-level row or spacer can be dragged into a column.** Only a row that already sat inside a column could be moved into another one. A top-level row or spacer dragged over a column was refused: on the canvas a nested row's column showed no drop target and a top-level row's column could only reorder, and the Layers panel showed no drop line. Both places take it now. On the canvas the innermost column that can take the drag lights up with "Drop here" and the row or spacer lands at the end of it; a column that cannot take it, such as one that is too deep (see below), lets the drag pass to the next column out. In the Layers panel the drop line shows the exact place, between the entries of a column or inside an empty one.
+
+Reordering on the canvas works as before, with one change: dropping on the middle of another top-level row used to reorder, and now puts the row inside that row's column. Over a top-level row's own columns the row is split in thirds. The top and bottom third reorder, with the line before or after the row, and the middle third goes into the column under the pointer. The columns of rows nested inside it take the drag wherever the pointer is, except along the row's top and bottom edge (up to 24px), which always reorder, so a row that is mostly nested content can still be moved around the page. A row or spacer that is already nested is not split in thirds: any column takes it.
+
+**A spacer inside a column can be moved on the canvas.** Dragging one from its toolbar was handled as dragging a top-level row. The strips between rows did not offer it and no column took it, and dropping it on a top-level row reordered the page, moving the top-level row that stood at the spacer's position in its column. It now moves like a nested row: into another column, or out to the top level through the strips between rows.
+
+**A row can no longer be dropped into itself.** Dropping a row on one of its own columns, or on a row nested inside it, took the row out of the page and put it back at the very end. The drop is refused now and leaves the page as it was; the canvas does not light the column up and the Layers panel shows no drop line there.
+
+**A row can no longer be dropped deeper than the canvas draws.** The canvas draws rows nested five levels deep, a top-level row and four more inside it, plus a spacer in the last of them, and nothing below that. A drop that took a row, or the rows nested in it, past that left their content undrawn. Those drops are refused now. A page that already has rows too deep can still be tidied: a move is refused only if it takes a row further past the limit, not if it keeps the row as deep as it was or brings it up.
+
+**Moving a nested row down within its own column no longer lands one place too low.** In the Layers panel, dropping a row on the line below its next sibling put it after the sibling beyond that. It lands where the drop line showed now, and a drop that leaves the row where it already is adds no undo step.
+
+**The Layers panel takes rows and spacers into an empty column.** A column shown as "Empty" took components but not rows or spacers. It takes them now.
+
 ## 0.4.20
 
 ### Fixed

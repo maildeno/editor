@@ -4,6 +4,11 @@
     @click.stop="selectRow(row.id)"
     @mouseenter.stop="handleMouseEnter"
     @mouseleave.stop="handleMouseLeave"
+    @dragover.capture="handleDragOverCapture"
+    @drop.capture="handleDropCapture"
+    @dragover="handleDragOver"
+    @dragleave="handleDragLeave"
+    @drop="handleDrop"
     :data-layer-id="row.id"
     :class="[
       'relative group',
@@ -26,13 +31,14 @@
       ]"
     />
 
-    <!-- Drop indicators -->
+    <!-- Drop indicators (reorder). Hidden while a nested column is the
+         target: the row would go into it, not next to this row. -->
     <DropZone
-      :is-active="isDragOver && dropPosition === 'before'"
+      :is-active="isDragOver && !rowDropColumnId && dropPosition === 'before'"
       position="before"
     />
     <DropZone
-      :is-active="isDragOver && dropPosition === 'after'"
+      :is-active="isDragOver && !rowDropColumnId && dropPosition === 'after'"
       position="after"
     />
 
@@ -95,14 +101,14 @@
       />
     </div>
 
-    <!-- Row drag overlay (top-level row reorder only — NOT during nested-row drags) -->
-    <div
-      v-if="isTopLevelRowDragActive && depth === 0"
-      class="absolute inset-0 z-30"
-      @dragover.prevent="handleDragOver"
-      @dragleave="handleDragLeave"
-      @drop.stop="handleDrop"
-    />
+    <!-- No drag overlay: a top-level row dragged over this one is handled by
+         the row's own dragover/drop on the root element above (reorder). It
+         used to be an absolutely positioned layer covering the whole row,
+         which swallowed drops meant for the nested columns inside it. Now
+         those columns see the drag first (CanvasColumn) and the row only gets
+         what they don't take — plus its top and bottom edge, see
+         REORDER_EDGE_PX. A top-level row's own columns take it over the middle
+         third of the row only; the top and bottom third stay with the row. -->
 
     <!-- ── Row Action Bar ────────────────────────────────────────────────────
          Modern Canva / Postcards-by-Designmodo style:
@@ -487,11 +493,12 @@ const {
   selectedRowId,
   selectedId,
   selectedColumn,
-  isRowDragActive,
   isTopLevelRowDragActive,
+  rowDropColumnId,
+  startRowDrag,
+  endRowDrag,
   layerHoveredId,
   canvasHoveredId,
-  nestedRowDragId,
 } = useEmailBuilder();
 
 // ── Descendant selection elevation ────────────────────────────────────────────
@@ -626,29 +633,30 @@ async function confirmSave() {
 
 const handleDragStart = (e: DragEvent) => {
   isDragging.value = true;
-  isRowDragActive.value = true;
+  startRowDrag(props.row.id, props.depth === 0);
   e.dataTransfer!.effectAllowed = "move";
+  e.dataTransfer!.setData("rowId", props.row.id.toString());
   if (props.depth === 0) {
-    isTopLevelRowDragActive.value = true;
-    nestedRowDragId.value = null;
     e.dataTransfer!.setData("dragType", "row");
     e.dataTransfer!.setData("rowIndex", props.index.toString());
   } else {
-    nestedRowDragId.value = String(props.row.id);
     e.dataTransfer!.setData("dragType", "nested-row");
-    e.dataTransfer!.setData("rowId", props.row.id.toString());
   }
 };
 
 const handleDragEnd = () => {
   isDragging.value = false;
-  isRowDragActive.value = false;
-  isTopLevelRowDragActive.value = false;
-  nestedRowDragId.value = null;
+  endRowDrag();
   isDragOver.value = false;
 };
 
+// Reordering is the top-level row's business; a nested row never is the target
+// of one (the events from inside it still pass through it on their way up).
+const isReorderTarget = () =>
+  props.depth === 0 && isTopLevelRowDragActive.value;
+
 const handleDragOver = (e: DragEvent) => {
+  if (!isReorderTarget()) return;
   e.preventDefault();
   e.dataTransfer!.dropEffect = "move";
 
@@ -665,17 +673,44 @@ const handleDragOver = (e: DragEvent) => {
 };
 
 const handleDragLeave = (e: DragEvent) => {
+  if (props.depth !== 0) return;
   if (!(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node)) {
     isDragOver.value = false;
   }
 };
 
+// Over a row's nested columns a dragged top-level row or spacer goes INTO
+// them (CanvasColumn). A row that is mostly nested content would then have no
+// room left to be reordered around, so its top and bottom edge stay reorder
+// territory: they are handled here on the way down (capture phase), before the
+// columns get to see the event. (The row's own columns split it by thirds
+// instead, and decide that themselves: see inMiddleOfRow in CanvasColumn.)
+const REORDER_EDGE_PX = 24;
+
+const inReorderEdge = (e: DragEvent) => {
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+  const edge = Math.min(REORDER_EDGE_PX, rect.height / 3);
+  return e.clientY < rect.top + edge || e.clientY > rect.bottom - edge;
+};
+
+const handleDragOverCapture = (e: DragEvent) => {
+  if (!isReorderTarget() || !inReorderEdge(e)) return;
+  rowDropColumnId.value = null; // the edge wins over a column just left
+  handleDragOver(e);
+  e.stopPropagation();
+};
+
+const handleDropCapture = (e: DragEvent) => {
+  if (!isReorderTarget() || !inReorderEdge(e)) return;
+  handleDrop(e);
+};
+
 const handleDrop = (e: DragEvent) => {
+  if (!isReorderTarget()) return;
   e.preventDefault();
   e.stopPropagation();
   isDragOver.value = false;
-  isRowDragActive.value = false;
-  isTopLevelRowDragActive.value = false;
+  endRowDrag();
   if (e.dataTransfer!.getData("dragType") !== "row") return;
   const fromIndex = parseInt(e.dataTransfer!.getData("rowIndex"));
   if (isNaN(fromIndex) || fromIndex === props.index) return;
@@ -687,6 +722,14 @@ const handleDrop = (e: DragEvent) => {
   if (fromIndex < (props.index as number)) (toIndex as number)--;
   reorderRows(fromIndex, toIndex);
 };
+
+// Leaving the row or dropping on it clears the hover it shows while a top-level
+// row or spacer is dragged over it. A drop that one of its nested columns takes
+// does neither, nor does a drag that ends somewhere else: the end of the drag
+// clears the hover on every row.
+watch(isTopLevelRowDragActive, (active) => {
+  if (!active) isDragOver.value = false;
+});
 
 // ── Row styles ─────────────────────────────────────────────────────────────────
 

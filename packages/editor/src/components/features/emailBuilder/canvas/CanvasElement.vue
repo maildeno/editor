@@ -33,6 +33,7 @@
       :index="index"
       :is-first="isFirst"
       :is-last="isLast"
+      :depth="(depth ?? 0) + 1"
       v-show="evaluateVisibility(element.visibility, visibilityPreviewContext)"
     />
 

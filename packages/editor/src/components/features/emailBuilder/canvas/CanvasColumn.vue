@@ -6,7 +6,7 @@
     @dragenter="handleDragEnter"
     @dragover="handleDragOver"
     @dragleave="handleDragLeave"
-    @drop.stop="handleDrop"
+    @drop="handleDrop"
     :style="getColumnStyles()"
     :class="[
       'canvas-column last:border-r-0 min-h-auto cursor-pointer relative outline outline-offset-0 rounded-sm',
@@ -29,7 +29,7 @@
       class="h-full flex items-center justify-center text-(--md-text-subtle) text-xs text-center pb-3"
       style="min-height: 120px"
     >
-      <div :class="{ 'opacity-0': isOver }">
+      <div :class="{ 'opacity-0': showsDropOverlay }">
         <svg
           class="w-7 h-7 mx-auto mb-1.5 opacity-50"
           fill="none"
@@ -69,11 +69,13 @@
            • Column is EMPTY + any compatible drag is active
            • Column is NON-EMPTY but a layout-tab drag (row / nested-row /
              product-row) is active — insertion happens as a nested row
-         Never shown during top-level row reorders.
+           • A row or spacer dragged on the canvas would land in this column
+             (rowDropColumnId) — empty or not
+         Never shown while a top-level row is being reordered.
     -->
     <Transition name="fade">
       <div
-        v-if="isOver && (children.length === 0 || isLayoutDragForColumn)"
+        v-if="showsDropOverlay"
         class="absolute inset-0 flex items-center justify-center pointer-events-none text-(--md-text-subtle) bg-opacity-70 border-2 border-dashed border-(--md-selection) rounded z-10"
       >
         <div class="bg-(--md-surface) px-3 py-1.5 rounded-lg shadow-md">
@@ -130,6 +132,7 @@ const {
   previewMode,
   moveComponentBetweenColumns,
   moveNestedRow,
+  canMoveNestedRow,
   addComponent,
   addNestedRow,
   saveToHistoryImmediate,
@@ -138,6 +141,9 @@ const {
   selectedId,
   isRowDragActive,
   isTopLevelRowDragActive,
+  rowDragId,
+  rowDropColumnId,
+  endRowDrag,
   canvasHoveredId,
   layerHoveredId,
 } = useEmailBuilder();
@@ -193,14 +199,35 @@ const handleMouseLeave = () => {
 // ── Drag state ───────────────────────────────────────────────────────────────
 const hoveredColumnId = ref<string | null>(null);
 const isOver = computed(() => hoveredColumnId.value === props.column.id);
+// A row or spacer dragged on the canvas would land in this column. One column
+// at a time holds this, so nested columns never light up together.
+const isRowDropTarget = computed(
+  () => rowDropColumnId.value === props.column.id,
+);
+
+// The "Drop here" overlay. For a row or spacer drag only the one target column
+// shows it; the per-column hover flag still serves component and layout drags.
+const showsDropOverlay = computed(
+  () =>
+    isRowDropTarget.value ||
+    (!rowDragId.value &&
+      isOver.value &&
+      (children.value.length === 0 || isLayoutDragForColumn.value)),
+);
 
 const resetDrag = () => {
   if (hoveredColumnId.value === props.column.id) {
     hoveredColumnId.value = null;
   }
+  if (rowDropColumnId.value === props.column.id) {
+    rowDropColumnId.value = null;
+  }
 };
 onMounted(() => document.addEventListener("dragend", resetDrag));
-onUnmounted(() => document.removeEventListener("dragend", resetDrag));
+onUnmounted(() => {
+  document.removeEventListener("dragend", resetDrag);
+  resetDrag();
+});
 
 // ─── Selection ────────────────────────────────────────────────────────────────
 const selectColumn = (rowId: any, columnId: any) => {
@@ -223,23 +250,65 @@ const isLayoutDragForColumn = computed(
       layoutDragPayload.value?.type === "product-row"),
 );
 
-const isBlocked = () =>
-  isTopLevelRowDragActive.value ||
+// A row or spacer dragged on the canvas (top level or nested) goes into any
+// column that can hold it. Not accepted: a column inside the row itself (it
+// would cut the row off from the page) and a column that would push the row
+// past the nesting limit — see canMoveNestedRow.
+//
+// One more case: a top-level row or spacer over a column of a top-level row.
+// Dropping on a top-level row also means "reorder", so the top and bottom third
+// of that row are left to the row (CanvasRow), which draws the before/after
+// line and does the reordering; only over the middle third does the column take
+// the drag. Nested columns take it wherever the pointer is.
+const inMiddleOfRow = (e: DragEvent): boolean => {
+  const row = (e.currentTarget as HTMLElement).closest("[data-layer-id]");
+  if (!row) return false;
+  const r = row.getBoundingClientRect();
+  const third = r.height / 3;
+  return e.clientY >= r.top + third && e.clientY <= r.bottom - third;
+};
+
+const acceptsRowDrag = (e: DragEvent): boolean => {
+  const id = rowDragId.value;
+  if (!isRowDragActive.value || !id) return false;
+  const overTopLevelRow = isTopLevelRowDragActive.value && props.depth === 0;
+  if (overTopLevelRow && !inMiddleOfRow(e)) return false;
+  return canMoveNestedRow(id, props.rowId, props.column.id);
+};
+
+const isBlocked = (e: DragEvent) =>
+  (isRowDragActive.value && !acceptsRowDrag(e)) ||
   (isLayoutDragActive.value && !isLayoutDragForColumn.value);
 
+// A top-level row or spacer this column won't take is a reorder: the event is
+// left to bubble up to the row.
+const fallsThroughToReorder = (e: DragEvent) =>
+  isTopLevelRowDragActive.value && !acceptsRowDrag(e);
+
 const handleDragEnter = (e: DragEvent) => {
-  if (isBlocked()) return;
+  if (isBlocked(e)) return;
   e.preventDefault();
   e.stopPropagation();
   hoveredColumnId.value = props.column.id;
+  if (rowDragId.value) rowDropColumnId.value = props.column.id;
 };
 
 const handleDragOver = (e: DragEvent) => {
-  if (isBlocked()) return;
+  if (isBlocked(e)) {
+    // From the middle of a top-level row to its top or bottom third while still
+    // over this column: let go, so the row can show the reorder line.
+    if (rowDropColumnId.value === props.column.id) {
+      rowDropColumnId.value = null;
+    }
+    return;
+  }
   e.preventDefault();
   e.stopPropagation();
   if (hoveredColumnId.value !== props.column.id) {
     hoveredColumnId.value = props.column.id;
+  }
+  if (rowDragId.value && rowDropColumnId.value !== props.column.id) {
+    rowDropColumnId.value = props.column.id;
   }
   if (e.dataTransfer) {
     const allowed = e.dataTransfer.effectAllowed;
@@ -249,12 +318,30 @@ const handleDragOver = (e: DragEvent) => {
 };
 
 const handleDragLeave = (e: DragEvent) => {
-  if (isBlocked()) return;
+  // What this column holds decides, not where the pointer is now: it may be
+  // leaving from a third of the row that the column does not take.
+  const holdsDrop = rowDropColumnId.value === props.column.id;
+  if (!holdsDrop && isBlocked(e)) return;
   const el = e.currentTarget as HTMLElement;
   const to = e.relatedTarget as Node | null;
   if (to && el.contains(to)) return;
   if (hoveredColumnId.value === props.column.id) {
     hoveredColumnId.value = null;
+  }
+  // Chrome leaves relatedTarget empty on dragleave, so a null `to` can't tell
+  // moving between this column's children from leaving it. Where the pointer
+  // is can: a few px of overlay flicker per child otherwise.
+  if (rowDropColumnId.value === props.column.id && !to) {
+    const r = el.getBoundingClientRect();
+    const inside =
+      e.clientX >= r.left &&
+      e.clientX <= r.right &&
+      e.clientY >= r.top &&
+      e.clientY <= r.bottom;
+    if (inside) return;
+  }
+  if (rowDropColumnId.value === props.column.id) {
+    rowDropColumnId.value = null;
   }
 };
 
@@ -327,9 +414,10 @@ const getColumnStyles = (): Record<string, string> => {
 
 // ─── Drop ──────────────────────────────────────────────────────────────────────
 const handleDrop = (e: DragEvent) => {
-  if (isBlocked()) return;
-  e.preventDefault();
+  if (fallsThroughToReorder(e)) return;
   e.stopPropagation();
+  if (isBlocked(e)) return;
+  e.preventDefault();
   hoveredColumnId.value = null;
 
   const layoutDragType = e.dataTransfer?.getData("layoutDragType");
@@ -382,14 +470,17 @@ const handleDrop = (e: DragEvent) => {
     return;
   }
 
-  // ── Nested row dragged from another column → move into this column ───────
+  // ── Row or spacer dragged on the canvas → move into this column ──────────
+  // "nested-row": one that already lives in a column. "row": a top-level row
+  // or spacer (the ones in a column that can take it; see acceptsRowDrag).
   const dragType = e.dataTransfer?.getData("dragType");
-  if (dragType === "nested-row") {
-    const rowId = e.dataTransfer?.getData("rowId");
+  if (dragType === "nested-row" || dragType === "row") {
+    const rowId = e.dataTransfer?.getData("rowId") || rowDragId.value;
     if (rowId) {
       moveNestedRow(rowId, props.rowId, props.column.id, children.value.length);
-      isRowDragActive.value = false;
     }
+    // Not left to dragend: the move can remove the dragged row's element.
+    endRowDrag();
     return;
   }
 

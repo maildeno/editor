@@ -233,6 +233,58 @@ const findRowAnywhere = (topLevelRows: any[], id: any): any => {
   return null;
 };
 
+// ─── Moving rows: nesting limit and tree facts ───────────────────────────────
+// Mirrors MAX_DEPTH in CanvasElement and the exporters. A row's contents are
+// only drawn and exported while the row's own depth (top level = 0) is below
+// the limit, so the deepest row that can still hold anything sits one level
+// above it. moveNestedRow refuses moves that would push a row past that,
+// because the content would silently disappear from the canvas and the export.
+const MAX_NESTING_DEPTH = 5;
+
+/**
+ * How many levels of rows sit below `node`, not counting `node` itself: 0 for
+ * a row with no nested rows. A spacer or a component holds no rows: -1.
+ */
+const nestedRowLevels = (node: any): number => {
+  if (node?.type !== "row" || !Array.isArray(node.columns)) return -1;
+  let levels = 0;
+  for (const col of node.columns) {
+    for (const child of getChildren(col)) {
+      if (child?.type === "row") {
+        levels = Math.max(levels, 1 + nestedRowLevels(child));
+      }
+    }
+  }
+  return levels;
+};
+
+/** True when `id` is `node` itself or a row anywhere inside it. */
+const containsRowId = (node: any, id: string): boolean => {
+  if (String(node?.id) === id) return true;
+  if (node?.type !== "row" || !Array.isArray(node.columns)) return false;
+  return node.columns.some((col: any) =>
+    getChildren(col).some((child: any) => containsRowId(child, id)),
+  );
+};
+
+/**
+ * Where a node sits: the list that holds it, its slot in that list, and the
+ * depth of the row that owns the list (-1 for the top-level list).
+ */
+type NodeLocation = {
+  siblings: any[];
+  index: number;
+  node: any;
+  parentDepth: number;
+};
+
+type MoveRefusal =
+  "missing-source" | "missing-target" | "inside-itself" | "too-deep";
+
+type MoveResolution =
+  | { ok: true; source: NodeLocation; targetColumn: any | null }
+  | { ok: false; reason: MoveRefusal };
+
 // ─── ID REGISTRY ──────────────────────────────────────────────────────────────
 // Flat Map<id, nodeRef> for O(1) lookups.
 //
@@ -611,82 +663,132 @@ export const useEmailBuilderOperations = (
     }
   };
 
+  /** Finds a row, spacer or component by id anywhere in the tree. */
+  const locateNode = (id: any): NodeLocation | null => {
+    const wanted = String(id);
+    const walk = (
+      siblings: any[],
+      parentDepth: number,
+    ): NodeLocation | null => {
+      for (let index = 0; index < siblings.length; index++) {
+        const node = siblings[index];
+        if (String(node?.id) === wanted) {
+          return { siblings, index, node, parentDepth };
+        }
+        if (node?.type === "row" && Array.isArray(node.columns)) {
+          for (const col of node.columns) {
+            const found = walk(getChildren(col), parentDepth + 1);
+            if (found) return found;
+          }
+        }
+      }
+      return null;
+    };
+    return walk(rows.value, -1);
+  };
+
   /**
-   * Move a nested row (type='row'|'row-spacer') from its current parent
-   * children[] into a target column's children[] at a given index.
-   * If targetColumnId is null, inserts into top-level rows.value instead.
+   * Checks a move against the tree without touching it. Everything that can
+   * refuse a move is decided here, so moveNestedRow never has to undo one.
+   */
+  const resolveMove = (
+    rowId: any,
+    targetRowId: any,
+    targetColumnId: string | null,
+  ): MoveResolution => {
+    const source = locateNode(rowId);
+    if (!source) return { ok: false, reason: "missing-source" };
+
+    // Top level: any row or spacer fits there, and it can only get shallower.
+    if (targetColumnId === null) {
+      return { ok: true, source, targetColumn: null };
+    }
+
+    const owner = locateNode(targetRowId);
+    const targetColumn =
+      owner?.node?.type === "row"
+        ? owner.node.columns?.find((c: any) => c.id === targetColumnId)
+        : undefined;
+    if (!owner || !targetColumn) return { ok: false, reason: "missing-target" };
+
+    // Dropping a row into itself or into something inside it would cut it off
+    // from the page.
+    if (containsRowId(source.node, String(targetRowId))) {
+      return { ok: false, reason: "inside-itself" };
+    }
+
+    // A row may not end up deeper than MAX_NESTING_DEPTH - 1, counting the
+    // rows nested in it; a spacer is a leaf, so it may sit one level lower.
+    // A tree that is already too deep is not made worse, but moving things
+    // within it, or out of it, stays possible.
+    const isRow = source.node.type === "row";
+    const below = isRow ? nestedRowLevels(source.node) : 0;
+    const deepestNow = source.parentDepth + 1 + below;
+    const deepestAfter = owner.parentDepth + 2 + below;
+    const limit = isRow ? MAX_NESTING_DEPTH - 1 : MAX_NESTING_DEPTH;
+    if (deepestAfter > limit && deepestAfter > deepestNow) {
+      return { ok: false, reason: "too-deep" };
+    }
+
+    return { ok: true, source, targetColumn };
+  };
+
+  /**
+   * Whether moveNestedRow would accept this move. The drag handlers ask it
+   * while the pointer is still moving, to decide if a target lights up.
+   */
+  const canMoveNestedRow = (
+    rowId: any,
+    targetRowId: any,
+    targetColumnId: string | null,
+  ): boolean => resolveMove(rowId, targetRowId, targetColumnId).ok;
+
+  /**
+   * Move a row or spacer, top level or nested, into a column's children[] at
+   * `targetIndex`. With a null targetColumnId it goes into the top-level list.
+   *
+   * `targetIndex` is a slot in the destination as it is when you call: the row
+   * lands before the item now at that index. Moving within one list accounts
+   * for the row leaving its own slot.
+   *
+   * Returns false and changes nothing when the move is refused: the row or the
+   * target is gone, the target is inside the row being moved, or the row (with
+   * what is nested in it) would end up deeper than the nesting limit.
    */
   const moveNestedRow = (
     rowId: any,
     targetRowId: any,
     targetColumnId: string | null,
     targetIndex: number,
-  ) => {
-    // 1. Find and remove the row from wherever it currently lives
-    let extracted: any = null;
-
-    // Try top-level
-    const topIdx = rows.value.findIndex((r: any) => r.id === rowId);
-    if (topIdx !== -1) {
-      extracted = rows.value.splice(topIdx, 1)[0];
+  ): boolean => {
+    const move = resolveMove(rowId, targetRowId, targetColumnId);
+    if (!move.ok) {
+      if (move.reason !== "missing-source") {
+        console.warn(`[moveNestedRow] refused: ${move.reason}`);
+      }
+      return false;
     }
 
-    // Try nested children
-    if (!extracted) {
-      const tryExtract = (children: any[]): boolean => {
-        const idx = children.findIndex((c: any) => c.id === rowId);
-        if (idx !== -1) {
-          extracted = children.splice(idx, 1)[0];
-          return true;
-        }
-        for (const child of children) {
-          if (child.type === "row" && child.columns) {
-            for (const col of child.columns) {
-              if (tryExtract(col.children ?? col.components ?? [])) return true;
-            }
-          }
-        }
-        return false;
-      };
-      for (const row of rows.value) {
-        if (!row.columns) continue;
-        for (const col of row.columns) {
-          if (tryExtract(col.children ?? col.components ?? [])) break;
-        }
-        if (extracted) break;
-      }
+    const { source } = move;
+    const destination = move.targetColumn
+      ? ensureChildren(move.targetColumn)
+      : rows.value;
+
+    let index = Number.isFinite(targetIndex) ? targetIndex : destination.length;
+    index = Math.max(0, Math.min(index, destination.length));
+    if (destination === source.siblings) {
+      if (source.index < index) index -= 1;
+      if (index === source.index) return true; // already there
     }
 
-    if (!extracted) return;
-
-    // 2. Insert into destination
-    if (targetColumnId === null) {
-      // Drop onto top-level canvas
-      const clampedIndex = Math.min(targetIndex, rows.value.length);
-      rows.value.splice(clampedIndex, 0, extracted);
-    } else {
-      const targetParentRow = findRowAnywhere(rows.value, targetRowId);
-      if (!targetParentRow?.columns) {
-        // Rollback — put it back at end of top-level
-        rows.value.push(extracted);
-        return;
-      }
-      const targetCol = targetParentRow.columns.find(
-        (c: any) => c.id === targetColumnId,
-      );
-      if (!targetCol) {
-        rows.value.push(extracted);
-        return;
-      }
-      const kids = ensureChildren(targetCol);
-      const clampedIndex = Math.min(targetIndex, kids.length);
-      kids.splice(clampedIndex, 0, extracted);
-    }
+    source.siblings.splice(source.index, 1);
+    destination.splice(index, 0, source.node);
 
     // Registry: the node reference is unchanged, only its position in the tree
     // moved. All descendant IDs still resolve to the same live references, so
     // no registry mutation is needed here.
     saveToHistoryFn("move-nested-row");
+    return true;
   };
 
   const reorderRows = (fromIndex: any, toIndex: any, silent = false) => {
@@ -1072,6 +1174,7 @@ export const useEmailBuilderOperations = (
     deleteRow,
     moveRow,
     moveNestedRow,
+    canMoveNestedRow,
     reorderRows,
     addSpacer,
     duplicateRow,

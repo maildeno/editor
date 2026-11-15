@@ -95,9 +95,10 @@
       </div>
     </Teleport>
 
-    <!-- Drop overlay -->
+    <!-- Drop overlay: reorder, top-level spacers only. A spacer inside a column
+         is not a reorder target; a row dragged over it goes to its column. -->
     <div
-      v-if="isTopLevelRowDragActive"
+      v-if="isTopLevelRowDragActive && depth === 0"
       class="absolute inset-0 z-30"
       @dragover.prevent="handleDragOver"
       @dragleave="handleDragLeave"
@@ -321,6 +322,8 @@ const props = defineProps({
   index: { type: Number, required: true },
   isFirst: { type: Boolean, default: false },
   isLast: { type: Boolean, default: false },
+  // 0 = a top-level spacer. CanvasElement passes the depth of a spacer inside a column.
+  depth: { type: Number, default: 0 },
 });
 
 const confirm = useConfirm();
@@ -333,8 +336,9 @@ const {
   selectedId,
   selectedRowId,
   selectedColumn,
-  isRowDragActive,
   isTopLevelRowDragActive,
+  startRowDrag,
+  endRowDrag,
   layerHoveredId,
   previewMode,
 } = useEmailBuilder();
@@ -387,19 +391,24 @@ const handleDelete = () => {
 
 const handleDragStart = (e: DragEvent) => {
   isDragging.value = true;
-  isRowDragActive.value = true;
-  isTopLevelRowDragActive.value = true;
+  startRowDrag(props.spacer.id, props.depth === 0);
 
   e.dataTransfer!.effectAllowed = "move";
-  e.dataTransfer!.setData("dragType", "row");
-  e.dataTransfer!.setData("rowIndex", props.index.toString());
+  e.dataTransfer!.setData("rowId", String(props.spacer.id));
+  if (props.depth === 0) {
+    e.dataTransfer!.setData("dragType", "row");
+    e.dataTransfer!.setData("rowIndex", props.index.toString());
+  } else {
+    // In a column it moves like a nested row, by id. Its index is its slot in
+    // the column, which is not a position among the top-level rows.
+    e.dataTransfer!.setData("dragType", "nested-row");
+  }
 };
 
 const handleDragEnd = () => {
   isDragging.value = false;
-  isRowDragActive.value = false;
+  endRowDrag();
   isDragOver.value = false;
-  isTopLevelRowDragActive.value = false;
 };
 
 const handleDragOver = (e: DragEvent) => {
@@ -441,8 +450,7 @@ const handleDrop = (e: DragEvent) => {
   e.stopPropagation();
 
   isDragOver.value = false;
-  isRowDragActive.value = false;
-  isTopLevelRowDragActive.value = false;
+  endRowDrag();
 
   if (e.dataTransfer!.getData("dragType") !== "row") return;
 
@@ -474,6 +482,12 @@ const handleDrop = (e: DragEvent) => {
 
   reorderRows(fromIndex, toIndex);
 };
+
+// A drag that ends anywhere but on this spacer (cancelled, or dropped
+// elsewhere) must not leave its drop indicator showing.
+watch(isTopLevelRowDragActive, (active) => {
+  if (!active) isDragOver.value = false;
+});
 
 const spacerStyles = computed(() => {
   const s = shown.value;

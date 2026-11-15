@@ -127,6 +127,7 @@ const {
   nestedRowDragId,
   isRowDragActive,
   isTopLevelRowDragActive,
+  endRowDrag,
 } = useEmailBuilder();
 const { evaluateVisibility } = useEmailBuilderVisibility();
 const { layoutDragPayload } = useLayoutDrag();
@@ -165,8 +166,7 @@ const handleLayoutDrop = async (insertIndex: number) => {
     nestedRowDragId.value
   ) {
     moveNestedRow(nestedRowDragId.value, null, null, insertIndex);
-    isRowDragActive.value = false;
-    nestedRowDragId.value = null;
+    endRowDrag();
     return;
   }
 

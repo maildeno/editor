@@ -361,7 +361,9 @@
     <!-- Empty column — droppable placeholder -->
     <div
       v-if="getColumnChildren(column).length === 0"
-      @dragover.prevent="handleEmptyColumnDragOver($event, column.id)"
+      @dragover.prevent="
+        handleEmptyColumnDragOver($event, column.id, parentRow.id)
+      "
       @dragleave="handleEmptyColumnDragLeave($event, column.id)"
       @drop.stop="handleEmptyColumnDrop($event, parentRow.id, column.id)"
       :style="rowIndentStyle(depth + (columns.length > 1 ? 1 : 0))"
@@ -436,7 +438,11 @@ defineProps<{
   commitRename: (row: any) => void;
   cancelRename: () => void;
   setHovered: (id: string | null) => void;
-  handleEmptyColumnDragOver: (e: DragEvent, columnId: string) => void;
+  handleEmptyColumnDragOver: (
+    e: DragEvent,
+    columnId: string,
+    parentRowId: string,
+  ) => void;
   handleEmptyColumnDragLeave: (e: DragEvent, columnId: string) => void;
   handleEmptyColumnDrop: (
     e: DragEvent,
