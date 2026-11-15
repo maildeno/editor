@@ -304,7 +304,7 @@ check(
     );
     assert.ok(
       (td[2] as string).endsWith(
-        "border-radius:10px;overflow:hidden;min-height:80px",
+        "border-radius:8px;overflow:hidden;min-height:80px",
       ),
       td[2],
     );
@@ -455,7 +455,7 @@ check(
   "React: an untouched row <Section> has no class, keeps its style order, and never gets min-height",
   () => {
     const section = withOverrides.jsx.match(
-      /<Section( className="[^"]*")? style=\{\{ ([^}]*borderRadius:"10px"[^}]*) \}\}>/,
+      /<Section( className="[^"]*")? style=\{\{ ([^}]*borderRadius:"8px"[^}]*) \}\}>/,
     );
     assert.ok(section, "row Section with a radius not found");
     assert.equal(
@@ -464,7 +464,7 @@ check(
       "an untouched Section must have no className",
     );
     assert.ok(
-      (section[2] as string).endsWith('borderRadius:"10px", overflow:"hidden"'),
+      (section[2] as string).endsWith('borderRadius:"8px", overflow:"hidden"'),
       section[2],
     );
     assert.ok(
@@ -598,7 +598,7 @@ check(
     );
     assert.ok(
       (td[2] as string).endsWith(
-        "border-radius:10px;overflow:hidden;min-height:80px",
+        "border-radius:8px;overflow:hidden;min-height:80px",
       ),
       td[2],
     );

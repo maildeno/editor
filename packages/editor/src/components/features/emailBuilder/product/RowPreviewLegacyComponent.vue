@@ -193,6 +193,7 @@
 
 <script setup lang="ts">
 import { computed, type CSSProperties } from "vue";
+import { toCssFontFamily } from "@/composables/emailBuilder/core/templateFonts";
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -287,7 +288,7 @@ function headingStyle(p: any) {
     fontSize: Math.max(7, p?.fontSize || 24) + "px",
     color: p?.color || "#111111",
     fontWeight: p?.fontWeight || "bold",
-    fontFamily: p?.fontFamily || "Arial, sans-serif",
+    fontFamily: toCssFontFamily(p?.fontFamily || "Arial, sans-serif"),
     textAlign: p?.align || "left",
     lineHeight: String(p?.lineHeight ?? 1.2),
     letterSpacing: `${p?.letterSpacing ?? 0}px`,
@@ -304,7 +305,7 @@ function paragraphStyle(p: any) {
   return {
     fontSize: Math.max(6, p?.fontSize || 16) + "px",
     color: p?.color || "#111111",
-    fontFamily: p?.fontFamily || "Arial, sans-serif",
+    fontFamily: toCssFontFamily(p?.fontFamily || "Arial, sans-serif"),
     fontWeight: p?.fontWeight || "normal",
     fontStyle: p?.fontStyle || "normal",
     textAlign: p?.align || "left",
@@ -407,7 +408,7 @@ function buttonStyle(p: any) {
     color: p?.color || "#ffffff",
     fontSize: Math.max(5, p?.fontSize || 16) + "px",
     fontWeight: p?.fontWeight || "500",
-    fontFamily: p?.fontFamily || "Arial, sans-serif",
+    fontFamily: toCssFontFamily(p?.fontFamily || "Arial, sans-serif"),
     letterSpacing: `${p?.letterSpacing ?? 0}px`,
     padding: `${p?.padding?.top ?? 8}px ${p?.padding?.right ?? 16}px ${p?.padding?.bottom ?? 8}px ${p?.padding?.left ?? 16}px`,
     borderRadius: (p?.borderRadius || 4) + "px",
@@ -463,7 +464,7 @@ function anchorStyle(p: any) {
     color: p?.color || "#007bff",
     fontSize: Math.max(6, p?.fontSize || 16) + "px",
     fontWeight: p?.fontWeight || "normal",
-    fontFamily: p?.fontFamily || "Arial, sans-serif",
+    fontFamily: toCssFontFamily(p?.fontFamily || "Arial, sans-serif"),
     letterSpacing: `${p?.letterSpacing ?? 0}px`,
     textDecoration: p?.textDecoration || "underline",
   };
@@ -475,7 +476,7 @@ function listWrapStyle(p: any) {
     margin: `${p?.margin?.top ?? 0}px ${p?.margin?.right ?? 0}px ${p?.margin?.bottom ?? 0}px ${p?.margin?.left ?? 0}px`,
     padding: `${p?.padding?.top ?? 0}px ${p?.padding?.right ?? 0}px ${p?.padding?.bottom ?? 0}px ${p?.padding?.left ?? 16}px`,
     fontSize: Math.max(6, p?.fontSize || 16) + "px",
-    fontFamily: p?.fontFamily || "Arial, sans-serif",
+    fontFamily: toCssFontFamily(p?.fontFamily || "Arial, sans-serif"),
     lineHeight: String(p?.lineHeight ?? 1.5),
     letterSpacing: `${p?.letterSpacing ?? 0}px`,
     color: p?.color || "#111111",

@@ -124,9 +124,13 @@ export const emailNodeMobileStyles = (
     // Row. (Legacy rows may lack `type`, so detect it by its columns.)
     const td = [...bg];
     if (m.minHeight != null) td.push(`min-height: ${m.minHeight}px !important`);
-    // The exporters round the row <td> two pixels wider than the border.
+    // The row <td> and the element that draws the border share one radius, as
+    // on desktop (shared/nodeBox buildRowBox). The <td> used to be rounded two
+    // pixels wider than the border; 0.4.17 removed that on desktop, and the
+    // mobile rule still added it, so a row with a mobile radius had corners
+    // that did not line up with its border on small screens.
     if (m.border?.radius != null) {
-      td.push(`border-radius: ${m.border.radius + 2}px !important`);
+      td.push(`border-radius: ${m.border.radius}px !important`);
     }
     // An override that is switched off writes `none`, which is how a row drops
     // its desktop shadow on small screens.

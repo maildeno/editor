@@ -35,10 +35,7 @@ import {
 } from "../transformers/tagMapper";
 import { wrapWithReactLogic, type ESPSyntax } from "../transformers/espWrapper";
 import { downloadFile, toFileStem, withModeSuffix } from "../actions/download";
-import {
-  normalizeBrTags,
-  normalizeFontFamily,
-} from "../generators/react-email";
+import { normalizeBrTags, bareFontFamily } from "../generators/react-email";
 import { minifyOutput } from "../transformers/minify";
 import { useExportSettings } from "../useExportSettings";
 
@@ -352,7 +349,7 @@ ${rowWrappedContent}
         .map(
           (f) =>
             `        <Font\n` +
-            `          fontFamily="${normalizeFontFamily(f)}"\n` +
+            `          fontFamily="${bareFontFamily(f)}"\n` +
             `          fallbackFontFamily="Arial"\n` +
             `          webFont={{ url: "${googleFontUrl}", format: "woff2" }}\n` +
             `          fontWeight={400}\n` +

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.20
+
+### Fixed
+
+**A font applied to part of a text still loads after a page refresh.** Select some text, pick a font in the toolbar and it showed correctly; after a refresh the same text drew in a fallback face until you picked the font again. The text had kept its font, which is saved as a `font-family` on a `<span>`, but the editor only asked Google Fonts for the fonts set on whole blocks, and the one request made at the moment you pick a font is not repeated when the page loads. The editor now reads the fonts out of paragraphs, headings and lists as well, the way the export always has, so what the canvas loads is what the exported email embeds.
+
+The font picker had a related slip after a refresh. On text with a multi-word font such as Open Sans it showed the placeholder instead of the font, because the saved `<span>` writes the name in quotes and the picker compared that with the plain name in its list. It now shows the font.
+
+**Exo 2, Source Sans 3 and Source Serif 4 now apply.** A font name can be written in CSS without quotes only if none of its words starts with a digit, so `font-family: Source Sans 3` is invalid and the browser throws the whole declaration away without an error. These three fonts are named that way, and they failed in several places. Picking one for part of a text saved an empty `style`, so nothing was applied and nothing was kept. A block set to one drew in the editor's default font on the canvas, and in the Saved Rows thumbnails. The toolbar's font list previewed them in a fallback face. The React Email export removed the quotes that HTML and MJML had always kept, so the email's `font-family` was invalid and mail clients dropped it.
+
+All of them now write the name in quotes: `"Source Sans 3"` in the toolbar, the canvas and the thumbnails, and `'Source Sans 3'` in React Email. No other font's output changes. Text where one of these three fonts was picked for a selection in an earlier version was saved without a font, so pick it again.
+
+**Saved Rows thumbnails show a font applied to part of a text.** A thumbnail loaded the fonts set on whole blocks but not the ones inside the text, so a saved row with a font of its own on some words drew them in a fallback face in the panel, though they were fine once the row was on the canvas. The thumbnail now loads those fonts too.
+
+**A row's mobile corner radius lines up with its border again.** 0.4.17 removed the 2px added to the row's `<td>` radius, but the mobile styles still added it. A row with a corner radius set for mobile was exported with its `<td>` rounded 2px more than the element that draws its border, so the corners did not line up on small screens. The two now share the radius on mobile, as they do on desktop. This changes the mobile CSS of rows that set a mobile radius (the `<td>`'s `border-radius` is 2px smaller than before) and nothing else. The export checks that still expected the extra 2px were out of date and have been updated.
+
 ## 0.4.19
 
 ### Added

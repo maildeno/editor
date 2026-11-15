@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import RichTextBlock from "@/components/features/emailBuilder/ui/rich-text-editor/RichTextBlock.vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
+import { toCssFontFamily } from "@/composables/emailBuilder/core/templateFonts";
 import {
   resolveMobileProps,
   resolveBackground,
@@ -28,7 +29,8 @@ const styles = computed(() => {
     letterSpacing: p.letterSpacing + "px",
     color: p.color,
     fontWeight: p.fontWeight,
-    fontFamily: p.fontFamily,
+    // Quoted where the name needs it (Source Sans 3, Exo 2, …): templateFonts.
+    fontFamily: toCssFontFamily(p.fontFamily),
     background: resolveBackground(p),
     textTransform: p.textTransform,
     textDecoration: p.textDecoration,

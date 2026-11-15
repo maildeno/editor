@@ -189,7 +189,7 @@
             <template #value="{ value }">
               <span
                 class="text-xs text-(--md-toolbar-text) truncate max-w-22 block"
-                :style="value ? { fontFamily: value } : {}"
+                :style="value ? { fontFamily: toCssFontFamily(value) } : {}"
               >
                 {{ value ?? "Select font" }}
               </span>
@@ -197,7 +197,7 @@
             <template #option="{ option }">
               <span
                 class="text-xs text-(--md-toolbar-text)"
-                :style="{ fontFamily: option }"
+                :style="{ fontFamily: toCssFontFamily(option) }"
               >
                 {{ option }}
               </span>
@@ -398,6 +398,10 @@ import { Underline } from "@tiptap/extension-underline";
 import { ListItem } from "@tiptap/extension-list-item";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
+import {
+  primaryFontFamily,
+  toCssFontFamily,
+} from "@/composables/emailBuilder/core/templateFonts";
 import { useRichTextEditors } from "@/composables/emailBuilder/core/ui/useRichTextEditors";
 import LinkInputDialog from "../LinkInputDialog.vue";
 import RichTextColorPicker from "./pickers/RichTextColorPicker.vue";
@@ -748,21 +752,33 @@ const editorStateTick = ref(0);
 
 // Read the active font family at the current cursor / selection. Returns null
 // when no inline font-family mark is present so the placeholder is shown.
+//
+// primaryFontFamily strips the quotes: TipTap returns the span's raw
+// `font-family` text, and a multi-word family is stored quoted. After a reload
+// that reads back as `"Open Sans"` — quote characters included — which matches
+// nothing in the font list, so the picker went blank for a span that still had
+// its font. (A freshly applied font has no quotes, which is why it only showed
+// up after a refresh.)
 const activeFontFamily = computed(() => {
   editorStateTick.value; // reactive dependency — see above
-  return editor.value?.getAttributes("textStyle").fontFamily ?? null;
+  return primaryFontFamily(editor.value?.getAttributes("textStyle").fontFamily);
 });
 
 // Apply the chosen font via TipTap's FontFamily extension, then ensure the
 // font file is loaded in the browser. loadGoogleFont is a no-op for web-safe
 // fonts and for any family already in the loadedFonts set.
+//
+// The font is loaded by its plain name but written into the span as CSS. The
+// two differ for Exo 2, Source Sans 3 and Source Serif 4: unquoted, the
+// browser rejects `font-family: Source Sans 3` while the span is being built,
+// so the span came out as `style=""` — nothing applied, nothing saved.
 const applyFont = (font: unknown) => {
   if (typeof font !== "string" || !font) {
     editor.value?.chain().focus().unsetFontFamily().run();
     return;
   }
   loadGoogleFont(font);
-  editor.value?.chain().focus().setFontFamily(font).run();
+  editor.value?.chain().focus().setFontFamily(toCssFontFamily(font)).run();
 };
 
 // ── Suppress onUpdate during programmatic content restores ──────────────────

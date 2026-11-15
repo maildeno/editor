@@ -44,6 +44,7 @@ import { mjmlGenerator } from "../export/generators/mjml";
 import { useEmailExportEngine } from "../export/useEmailExportEngine";
 import { hydrateCanvas, hydrateRows } from "../transform/pipeline/hydrate";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
+import { collectFontsForCanvas } from "../core/templateFonts";
 import { useStorageAdapter } from "@/adapters";
 import type { EditorStorageAdapter } from "@/adapters/types";
 
@@ -251,43 +252,13 @@ function createEmailBuilderInstance(
   // • syncFontsForTemplate is idempotent; it diffs against the already-
   // loaded set and only injects a new <link> when the set grows.
   //
-  // Mirrors the font-key extraction rules used by collectFonts() in
-  // useEmailExportEngine — props.fontFamily + props.mobile.fontFamily on
-  // every leaf component. If you add a new font-bearing prop path in the
-  // future, update both walkers to keep canvas and export in sync.
+  // What counts as "a font the template uses" is decided by
+  // collectFontsForCanvas (core/templateFonts.ts): the block-level
+  // props.fontFamily / props.mobile.fontFamily AND any per-selection font
+  // inside rich-text content. It mirrors collectFonts() in useEmailExportEngine
+  // — keep the two in step. Leaving the inline fonts out is what made them
+  // render in a fallback face after a page refresh: nothing re-requested them.
   const { syncFontsForTemplate } = useGoogleFonts();
-
-  const MAX_FONT_WALK_DEPTH = 5;
-  const collectFontsForCanvas = (tree: any[]): string[] => {
-    const found = new Set<string>();
-    const walk = (children: any[], depth: number): void => {
-      if (depth >= MAX_FONT_WALK_DEPTH) return;
-      for (const child of children) {
-        if (!child) continue;
-        const t = child.type;
-        if (t === "row") {
-          for (const col of child.columns ?? []) {
-            walk(col.children ?? col.components ?? [], depth + 1);
-          }
-          continue;
-        }
-        if (t === "row-spacer") continue;
-        // leaf component
-        const props = child.props;
-        if (props?.fontFamily) found.add(props.fontFamily);
-        if (props?.mobile?.fontFamily) found.add(props.mobile.fontFamily);
-      }
-    };
-
-    for (const row of tree) {
-      if (!row) continue;
-      if (row.type === "row-spacer") continue;
-      for (const col of row.columns ?? []) {
-        walk(col.children ?? col.components ?? [], 0);
-      }
-    }
-    return Array.from(found);
-  };
 
   // Debounce font sync — rapid font-picker clicks would otherwise spam
   // syncFontsForTemplate. 200 ms is short enough to feel instant and long

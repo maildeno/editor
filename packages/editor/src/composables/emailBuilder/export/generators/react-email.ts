@@ -5,6 +5,7 @@ import {
   normalizeRichTextContent,
 } from "../helpers/generatorHelpers";
 import { getBlock } from "@/blocks/registry";
+import { needsCssQuotes } from "../../core/templateFonts";
 
 // generators/reactEmailGenerator.ts
 // Generates React Email JSX string output for each component type.
@@ -20,6 +21,7 @@ import { getBlock } from "@/blocks/registry";
 //   2. font-family values that wrap font names in quotes must have those
 //      quotes stripped so the CSS is valid and predictable across clients.
 //      e.g.  font-family: "'Roboto', Arial"  →  font-family: "Roboto, Arial"
+//      (names that are invalid unquoted, like Source Sans 3, keep them.)
 //   3. Rich-text editor HTML emits inline styles as HTML attribute strings
 //      (`style="color: rgb(87, 84, 78)"`), which are invalid in JSX.
 //      normalizeInlineStylesToReact rewrites them to React object syntax
@@ -34,35 +36,56 @@ export const normalizeBrTags = (html: string): string => {
   return html.replace(/<br\s*\/?>/gi, "<br />");
 };
 
+// Each font name of a font-family value, trimmed and without wrapping single quotes.
+const unquoteFontNames = (value: string): string[] =>
+  value.split(",").map((token) =>
+    token
+      .trim()
+      .replace(/^'+|'+$/g, "")
+      .trim(),
+  );
+
 /**
  * Normalize font-family CSS values by stripping wrapping single quotes
- * from individual font names.
+ * from individual font names — except where the name is not valid CSS without
+ * them.
  *
  * Examples:
  *   "'Roboto', Arial"           → "Roboto, Arial"
  *   "'Open Sans', 'Helvetica'"  → "Open Sans, Helvetica"
  *   "Arial, sans-serif"         → "Arial, sans-serif"  (unchanged)
+ *   "'Source Sans 3', Arial"    → "'Source Sans 3', Arial"  (quotes kept)
  *
  * The pattern targets a single quote that either:
  *   - immediately follows a colon+optional-space (start of value), OR
  *   - immediately follows a comma+optional-space (subsequent font name)
  *   - immediately precedes a comma, OR
  *   - is the last character before the end of the string / semicolon
+ *
+ * The exception is a name with a word that starts with a digit — Exo 2,
+ * Source Sans 3, Source Serif 4. `font-family: Source Sans 3` is invalid CSS
+ * (an identifier cannot start with a digit), so with its quotes stripped the
+ * declaration was dropped by every email client and the font never applied.
+ * See needsCssQuotes in core/templateFonts. The kept quotes are single quotes,
+ * which sit safely inside the double-quoted JSX strings styleObj writes.
  */
 export const normalizeFontFamily = (value: string): string => {
   // Remove single-quotes wrapping each font name token in a font-family string.
   // Strategy: split on comma, strip surrounding whitespace and quotes per token,
-  // then rejoin — this is safer than regex on the full string.
-  return value
-    .split(",")
-    .map((token) =>
-      token
-        .trim()
-        .replace(/^'+|'+$/g, "")
-        .trim(),
-    )
+  // put the quotes back on the tokens that need them, then rejoin — this is
+  // safer than regex on the full string.
+  return unquoteFontNames(value)
+    .map((name) => (needsCssQuotes(name) ? `'${name}'` : name))
     .join(", ");
 };
+
+/**
+ * The bare font names of a font-family value, wrapping single quotes removed
+ * and nothing put back. For props that add the quotes themselves, such as
+ * react-email's `<Font fontFamily="…">`; for CSS values use normalizeFontFamily.
+ */
+export const bareFontFamily = (value: string): string =>
+  unquoteFontNames(value).join(", ");
 
 /**
  * Apply all normalizations to a raw CSS string or inline style value.

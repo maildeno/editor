@@ -27,6 +27,7 @@
 import { computed, onMounted, watch } from "vue";
 import RowPreviewChildren from "./RowPreviewChildren.vue";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
+import { extractFontFamiliesFromHtml } from "@/composables/emailBuilder/core/templateFonts";
 
 const props = defineProps<{
   row: Record<string, any>;
@@ -108,14 +109,23 @@ const loadAllFontsInRow = () => {
         }
       } else {
         const p = child.props;
-        if (!p?.fontFamily) continue;
         const compType = child.componentType ?? child.type;
         if (
+          p?.fontFamily &&
           ["heading", "paragraph", "list", "menu", "button", "anchor"].includes(
             compType,
           )
         ) {
           loadGoogleFont(p.fontFamily);
+        }
+        // A font applied to just part of a text is stored in the rich-text
+        // markup (<span style="font-family: …">), not in props.fontFamily. A
+        // saved row can hold one that no block on the canvas uses, and nothing
+        // else loads it, so the thumbnail would draw that text in a fallback.
+        if (typeof p?.content === "string") {
+          for (const family of extractFontFamiliesFromHtml(p.content)) {
+            loadGoogleFont(family);
+          }
         }
       }
     }

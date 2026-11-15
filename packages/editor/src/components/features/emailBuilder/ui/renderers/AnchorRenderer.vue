@@ -56,6 +56,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
+import { toCssFontFamily } from "@/composables/emailBuilder/core/templateFonts";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
 import { resolveString } from "@/composables/emailBuilder/core/merge-tags/mergeTagDefinitions";
 import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
@@ -181,7 +182,8 @@ const innerStyles = computed(() => {
     fontSize: p.value.fontSize + "px",
     letterSpacing: p.value.letterSpacing + "px",
     fontWeight: p.value.fontWeight,
-    fontFamily: p.value.fontFamily,
+    // Quoted where the name needs it (Source Sans 3, Exo 2, …): templateFonts.
+    fontFamily: toCssFontFamily(p.value.fontFamily),
     textDecoration: "none",
     lineHeight: "1",
   };

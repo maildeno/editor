@@ -133,14 +133,14 @@ for (const g of rowBoxGoldens) {
 }
 
 check(
-  "the row <td> carries the radius plus two pixels and clips, with no hook class",
+  "the row <td> carries the radius and clips, with no hook class",
   () => {
     const plain = buildRowBox({ id: "r" });
     assert.deepEqual(plain.td.decls, [["overflow", "hidden"]]);
     assert.deepEqual(plain.td.classes, []);
     const round = buildRowBox({ id: "r", border: { radius: 8 } });
     assert.deepEqual(round.td.decls, [
-      ["border-radius", "10px"],
+      ["border-radius", "8px"],
       ["overflow", "hidden"],
     ]);
     assert.equal(buildRowBox({ id: "r", minHeight: 120 }).minHeight, 120);
@@ -458,11 +458,11 @@ check("row: background and min-height on the td, padding on the box", () => {
 });
 
 check(
-  "row: a border override sets the radius plus two on the td and the border on the outer",
+  "row: a border override sets the same radius on the td and the outer, and the border on the outer",
   () => {
     assert.equal(
       emailNodeMobileStyles(rowOf({ mobile: { border } }), "eb-r"),
-      ".eb-r { border-radius: 14px !important }\n.eb-r-outer { border: 1px solid #333 !important; border-radius: 12px !important }",
+      ".eb-r { border-radius: 12px !important }\n.eb-r-outer { border: 1px solid #333 !important; border-radius: 12px !important }",
     );
   },
 );

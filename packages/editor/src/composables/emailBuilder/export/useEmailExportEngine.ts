@@ -15,6 +15,7 @@ import { ref, computed } from "vue";
 
 import { useInfoDialog } from "../../ui/useInfoDialog";
 import { useEmailBuilderVisibility } from "../core/useEmailBuilderVisibility";
+import { extractFontFamiliesFromHtml } from "../core/templateFonts";
 
 import { buildMobileStackGapCSS } from "./shared/styles";
 import { collectNodeMobileStyles } from "./useEmailExportMobileStyles";
@@ -35,99 +36,6 @@ export type { ExportMode };
 
 // ── Max nesting depth — matches canvas depth guard ──────────────────────────
 const MAX_DEPTH = 5;
-
-// ── Rich-text font extraction ───────────────────────────────────────────────
-//
-// The rich text editor inlines per-selection font overrides as:
-//   <span style="font-family: 'Inter';">…</span>
-//   <span style="font-family:&quot;Lora&quot;, serif;">…</span>
-//   <span style="color:#000; font-family: Merriweather, serif;">…</span>
-//
-// These overrides aren't reflected in `comp.props.fontFamily` (that's only
-// the component-level default), so without parsing the HTML we'd miss them
-// and the exported email would render system fonts where Google Fonts were
-// intended.
-//
-// Regex over DOM:
-//   • collectFonts is SSR-safe — it runs during export and must not assume
-//     `document` exists. DOMParser is browser-only.
-//   • A regex sweep is O(n) over the content string and dramatically cheaper
-//     than constructing a throwaway DOM per leaf component.
-//
-// Capture strategy:
-//   We decode entity-encoded quotes up-front so `&quot;` doesn't introduce
-//   a spurious `;` mid-value. We then capture from `font-family:` up to the
-//   next `;` (end of declaration) or end of decoded input. After capture, we
-//   take only the substring up to the next quote that closes the value, then
-//   the first comma-separated family. This handles every form the editor
-//   emits in practice:
-//     font-family: 'Inter';
-//     font-family: "Inter", Arial, sans-serif;
-//     font-family: &quot;Comic Sans MS&quot;            ← no trailing `;`
-//     font-family: Roboto
-const FONT_FAMILY_RE = /font-family\s*:\s*([^;<]+)/gi;
-
-const decodeQuotesForParsing = (s: string): string =>
-  s
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'");
-
-const extractFontFamiliesFromHtml = (html: string): string[] => {
-  if (!html || typeof html !== "string") return [];
-  // Cheap early-out: skip the regex entirely if the substring isn't present.
-  if (html.indexOf("font-family") === -1) return [];
-
-  // Decode entity-encoded quotes up-front so a `;` inside `&quot;` doesn't
-  // terminate the capture prematurely and yield `&quot` as the family name.
-  const decoded = decodeQuotesForParsing(html);
-
-  const families: string[] = [];
-  let match: RegExpExecArray | null;
-  FONT_FAMILY_RE.lastIndex = 0;
-  while ((match = FONT_FAMILY_RE.exec(decoded)) !== null) {
-    const raw = match[1];
-    if (!raw) continue;
-
-    // After decoding, the captured value looks like one of:
-    //   "Inter", Arial, sans-serif
-    //   "Comic Sans MS"">                         ← editor without trailing `;`
-    //   "Comic Sans MS"" data-x="y                ← editor with more attrs
-    // The value's real end is the FIRST quote that closes the family name.
-    // If the value is quoted, find the closing quote; if not, comma or end.
-    let valueSlice = raw;
-    const firstChar = valueSlice.trimStart()[0];
-    if (firstChar === '"' || firstChar === "'") {
-      const startQuote = valueSlice.indexOf(firstChar);
-      const endQuote = valueSlice.indexOf(firstChar, startQuote + 1);
-      if (endQuote !== -1) {
-        // Keep through the closing quote AND any following comma-separated
-        // fallbacks before the attribute terminator (a stray `"` from the
-        // attribute boundary).
-        const afterClose = valueSlice.slice(endQuote + 1);
-        const stop = afterClose.search(/["<]/);
-        valueSlice =
-          stop === -1 ? valueSlice : valueSlice.slice(0, endQuote + 1 + stop);
-      }
-    } else {
-      // Unquoted: stop at the first `"` or `<` (attribute / tag boundary).
-      const stop = valueSlice.search(/["<]/);
-      if (stop !== -1) valueSlice = valueSlice.slice(0, stop);
-    }
-
-    // Take the first family in the stack — the rest are fallbacks.
-    const first = valueSlice.split(",")[0] ?? "";
-
-    // Strip surrounding quote pair and stray whitespace.
-    const cleaned = first
-      .trim()
-      .replace(/^['"]|['"]$/g, "")
-      .trim();
-
-    if (cleaned) families.push(cleaned);
-  }
-  return families;
-};
 
 // ─────────────────────────────────────────────────────────────────────────────
 
