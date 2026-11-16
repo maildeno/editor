@@ -19,6 +19,7 @@ import type { Ref } from "vue";
 import { useGoogleFonts } from "../../../system/useGoogleFonts";
 import { useEmailExportMobileStyles } from "../useEmailExportMobileStyles";
 import { useEmailBuilderVisibility } from "../../core/useEmailBuilderVisibility";
+import { borderRadiusValue, hasBorderRadius } from "../../core/borderRadius";
 import {
   boxShadowValue,
   clipsOverflow,
@@ -246,7 +247,7 @@ export const htmlExport = (deps: Deps) => {
         `box-sizing:border-box`,
         ...colBackgroundStyles,
         `border:${col.border.width}px ${col.border.style} ${col.border.color}`,
-        `border-radius:${col.border.radius}px`,
+        `border-radius:${borderRadiusValue(col.border?.radius)}`,
         ...(clipsOverflow(col) ? [`overflow:hidden`] : []),
         ...(colShadow ? [`box-shadow:${colShadow}`] : []),
         `line-height:0`,
@@ -276,8 +277,8 @@ ${componentsHtml}
       }
     });
 
-    const hasColumnRadius = row.columns.some(
-      (col: any) => (col.border?.radius ?? 0) > 0,
+    const hasColumnRadius = row.columns.some((col: any) =>
+      hasBorderRadius(col.border?.radius),
     );
     const needsSeparate =
       (row.gap ?? 0) > 0 || hasColumnRadius || columnsHaveShadow(row);

@@ -79,7 +79,17 @@ export type { EditorWriteApi, AssistantMount } from "./types/assistant";
 //
 // `BoxShadow` is the shape of `boxShadow` on a `NestedRow`, a `Column`, and
 // the `props` of an image or a button (and of their `mobile` override).
-export type { BoxShadow } from "./composables/emailBuilder/types/emailBuilder";
+//
+// `BorderRadius` is the shape of a corner radius: `border.radius` on a
+// `NestedRow` or a `Column`, and `borderRadius` in the `props` of an image, a
+// video or a button (and of their `mobile` override). It is a number for the
+// same radius on all four corners, which is what every template saved before
+// 0.4.22 holds, or a `BorderRadiusCorners` object with one number per corner.
+export type {
+  BorderRadius,
+  BorderRadiusCorners,
+  BoxShadow,
+} from "./composables/emailBuilder/types/emailBuilder";
 export type {
   Canvas,
   NestedRow,

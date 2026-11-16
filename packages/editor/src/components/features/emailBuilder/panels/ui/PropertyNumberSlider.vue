@@ -1,7 +1,7 @@
 <!-- PropertyNumberSlider.vue -->
 <template>
   <div class="space-y-1.5">
-    <div class="flex items-center justify-between">
+    <div v-if="!hideHeader" class="flex items-center justify-between">
       <label
         class="flex items-center gap-1.5 text-xs font-medium text-(--md-text-muted)"
       >
@@ -104,6 +104,9 @@ const props = defineProps({
   max: { type: Number, default: 100 },
   unit: { type: String, default: "" },
   isOverridden: { type: Boolean, default: false },
+  // For a control that draws its own label row above the slider (see
+  // PropertyBorderRadius). The label stays required: it is the slider's name.
+  hideHeader: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["update:modelValue", "reset"]);

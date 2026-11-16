@@ -1,4 +1,5 @@
 import { hasNodeMobile } from "./shared/nodeBox";
+import { borderRadiusMobileRule } from "../core/borderRadius";
 import { boxShadowMobileRule } from "../core/boxShadow";
 
 /* ================================
@@ -88,7 +89,7 @@ const spacingCss = (p: Record<string, number>): string =>
 
 const borderRules = (b: Record<string, any>): string[] => [
   `border: ${b.width}px ${b.style} ${b.color} !important`,
-  ...(b.radius != null ? [`border-radius: ${b.radius}px !important`] : []),
+  ...(b.radius != null ? [borderRadiusMobileRule(b.radius)] : []),
 ];
 
 /**
@@ -130,7 +131,7 @@ export const emailNodeMobileStyles = (
     // mobile rule still added it, so a row with a mobile radius had corners
     // that did not line up with its border on small screens.
     if (m.border?.radius != null) {
-      td.push(`border-radius: ${m.border.radius}px !important`);
+      td.push(borderRadiusMobileRule(m.border.radius));
     }
     // An override that is switched off writes `none`, which is how a row drops
     // its desktop shadow on small screens.
@@ -336,7 +337,7 @@ export const useEmailExportMobileStyles = () => {
         );
       }
       if (m.borderRadius != null) {
-        elementRules.push(`border-radius: ${m.borderRadius}px !important`);
+        elementRules.push(borderRadiusMobileRule(m.borderRadius));
       }
       // Only a button has a shadow; the inline link (anchor) does not.
       if (compType === "button" && m.boxShadow != null) {
@@ -408,8 +409,7 @@ export const useEmailExportMobileStyles = () => {
       );
       addRule(
         elementRules,
-        m.borderRadius != null &&
-          `border-radius: ${m.borderRadius}px !important`,
+        m.borderRadius != null && borderRadiusMobileRule(m.borderRadius),
       );
       addRule(
         elementRules,
@@ -433,8 +433,7 @@ export const useEmailExportMobileStyles = () => {
       );
       addRule(
         elementRules,
-        m.borderRadius != null &&
-          `border-radius: ${m.borderRadius}px !important`,
+        m.borderRadius != null && borderRadiusMobileRule(m.borderRadius),
       );
       addRule(
         elementRules,

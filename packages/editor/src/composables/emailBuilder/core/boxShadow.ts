@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { BoxShadow } from "../types/emailBuilder";
+import { normalizeBorderRadius } from "./borderRadius";
 import { formatCssColor, parseCssColor } from "./cssColor";
 
 export type { BoxShadow };
@@ -354,29 +355,35 @@ const side = (v: unknown): number => (typeof v === "number" && v > 0 ? v : 0);
 
 /**
  * Whether content inside a box can touch the curve of one of its rounded
- * corners. The clip follows the padding edge, so the border width comes off the
+ * corners. The clip follows the padding edge, so the border width comes off each
  * radius. Content starts at the padding, and a corner of it is clear of the
  * curve when that point is inside the arc: either side's padding is at least
  * the radius, or both are less but the point is still inside the circle.
+ *
+ * `radius` is a number for all four corners, or one number per corner (see
+ * core/borderRadius.ts). Each corner is judged against its own radius and the
+ * two paddings that meet there, so a box rounded only at the top is clear as
+ * soon as its top corners are, whatever its square bottom holds.
  */
 export const cornersReachContent = (
-  radius: number,
+  radius: unknown,
   borderWidth: number,
   padding?: Sides | null,
 ): boolean => {
-  const r = Math.max(0, (radius || 0) - (borderWidth || 0));
-  if (r === 0) return false;
-  const reaches = (x: number, y: number): boolean =>
-    x < r && y < r && (r - x) ** 2 + (r - y) ** 2 > r * r;
+  const corners = normalizeBorderRadius(radius);
+  const reaches = (cornerRadius: number, x: number, y: number): boolean => {
+    const r = Math.max(0, cornerRadius - (borderWidth || 0));
+    return r > 0 && x < r && y < r && (r - x) ** 2 + (r - y) ** 2 > r * r;
+  };
   const top = side(padding?.top);
   const right = side(padding?.right);
   const bottom = side(padding?.bottom);
   const left = side(padding?.left);
   return (
-    reaches(left, top) ||
-    reaches(right, top) ||
-    reaches(right, bottom) ||
-    reaches(left, bottom)
+    reaches(corners.topLeft, left, top) ||
+    reaches(corners.topRight, right, top) ||
+    reaches(corners.bottomRight, right, bottom) ||
+    reaches(corners.bottomLeft, left, bottom)
   );
 };
 

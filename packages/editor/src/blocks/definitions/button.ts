@@ -1,6 +1,7 @@
 import AnchorRenderer from "@/components/features/emailBuilder/ui/renderers/AnchorRenderer.vue";
 import ButtonPanel from "@/components/features/emailBuilder/panels/ButtonPanel.vue";
 import type { BlockDefinition, BlockRenderContext } from "../types";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
 
 /**
@@ -64,7 +65,7 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
   const shadow = boxShadowValue(props.boxShadow);
   const linkShellStyles =
     `${paddingStyle} display:inline-block; ${bgInlineStyle} ` +
-    `border-radius:${props.borderRadius}px; ` +
+    `border-radius:${borderRadiusValue(props.borderRadius)}; ` +
     `border:${props.border.width}px ${props.border.style} ${props.border.color}; ` +
     (shadow ? `box-shadow:${shadow}; ` : "") +
     `text-decoration:none; ` +
@@ -154,7 +155,7 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
   const shadow = boxShadowValue(props.boxShadow);
   const linkShellStyles =
     `${paddingStyle} display:inline-block; ${bgInlineStyle} ` +
-    `border-radius:${props.borderRadius}px; ` +
+    `border-radius:${borderRadiusValue(props.borderRadius)}; ` +
     `border:${props.border.width}px ${props.border.style} ${props.border.color}; ` +
     (shadow ? `box-shadow:${shadow}; ` : "") +
     `text-decoration:none; ` +
@@ -241,7 +242,7 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
     ...parseMarginPaddingDiscrete(undefined, props.padding),
     display: "inline-block",
     ...(bgInlineStyle ? react.parseCssString(bgInlineStyle) : {}),
-    borderRadius: `${props.borderRadius}px`,
+    borderRadius: `${borderRadiusValue(props.borderRadius)}`,
     border: `${props.border.width}px ${props.border.style} ${props.border.color}`,
     ...(boxShadowValue(props.boxShadow) && {
       boxShadow: boxShadowValue(props.boxShadow),

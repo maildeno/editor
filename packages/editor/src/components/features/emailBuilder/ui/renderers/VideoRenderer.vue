@@ -42,6 +42,7 @@
 import { computed } from "vue";
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { resolveString } from "@/composables/emailBuilder/core/merge-tags/mergeTagDefinitions";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 
 const props = defineProps<{
   component: {
@@ -111,7 +112,7 @@ const containerStyles = computed(() => ({
 const videoStyles = computed(() => ({
   width: "100%",
   height: p.value.height === "auto" ? "auto" : `${p.value.height}px`,
-  borderRadius: `${p.value.borderRadius}px`,
+  borderRadius: borderRadiusValue(p.value.borderRadius),
   border: `${p.value.border.width}px ${p.value.border.style} ${p.value.border.color}`,
   display: "inline-block",
 }));

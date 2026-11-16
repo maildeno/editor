@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.22
+
+### Added
+
+**Rows, columns, images, videos and buttons can have a different radius on each corner.** The **Border Radius** control in their panels keeps its slider, so one radius for all four corners works as before, and gains a corners button at the right of its label. It opens four boxes laid out like the corners of the block, top left and top right above, bottom left and bottom right below, each holding a number of px. Type a number, or press the up and down arrow keys to step by 1 (Shift steps by 10). Numbers run from 0 to 100, as the slider always has. Use it for a card with a flat bottom, a tab, or a button with one sharp corner.
+
+While the four corners differ the boxes stay open and the corners button is switched off, because one slider cannot show four numbers without losing three of them. A link under the boxes, **Use the top left for all four**, sets them all to the top left number. If you edit the boxes until the four are equal they stay open until you press the corners button, so they do not close under your cursor.
+
+A radius can be different on mobile, like other settings. In the Mobile tab the control starts from the desktop radius; change it and the label shows the overridden dot and a Reset link. A mobile radius replaces the desktop one as a whole, so a corner left at 0 on mobile is square on mobile even if it is round on desktop. On a row or column, a mobile radius that draws the same corners as the desktop one is not kept as an override, like the rest of its border.
+
+The radius shows on the canvas, in the Saved Rows thumbnails and in Preview, and is exported to HTML, MJML and React Email in the places a single radius went before: the row's and column's cells, the image, the video, the button's link, and the mobile styles that override them. Four different corners are written as the CSS shorthand, `border-radius: 12px 12px 0px 0px` (top left, top right, bottom right, bottom left). Four equal corners are written as one value, `border-radius: 8px`, byte for byte as before. Email clients that do not draw a rounded table cell, such as classic Outlook for Windows, show a row or column with square corners, and the Preview of that client does the same for a per-corner radius.
+
+`BorderRadius` and `BorderRadiusCorners` are new exported types. A radius is saved as a number while the four corners are equal, which is the form every template saved before 0.4.22 holds, and as an object `{ topLeft, topRight, bottomRight, bottomLeft }` once they differ. Rows and columns save it as `border.radius` (and under `mobile.border`), images, videos and buttons as `props.borderRadius` and `props.mobile.borderRadius`. A template that does not use per-corner radii saves exactly as it did before, `schema_version` stays `"1.0"` and there is nothing to migrate. Values are read defensively: a negative corner is read as 0, a corner that is missing or cannot be read as a number is read as 0, and a value above 9999 is held at 9999, so a hand-edited template can put nothing but a length into the email's inline style.
+
+### Changed
+
+**A rounded row or column decides whether to clip corner by corner.** Since 0.4.19 a rounded row or column clips what sticks out of it only when its content can reach a corner, so a shadow inside it is not cut off when there is room. That test now looks at each corner with its own radius and the padding on both sides of that corner. A block rounded on its top two corners only, with enough padding along the top, no longer clips a shadow inside it at its flat bottom edge, and a square corner never counts. With the same radius on all four corners it behaves as before.
+
+**`radius` is typed `BorderRadius` where it was a `number`.** `BorderConfig.radius`, which types `border.radius` on `NestedRow` and `Column`, is `BorderRadius`, that is `number | BorderRadiusCorners`. TypeScript code that reads a saved radius as a number needs a `typeof radius === "number"` check first. A template that only uses numbers is read and saved as before.
+
 ## 0.4.21
 
 ### Fixed

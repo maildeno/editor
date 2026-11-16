@@ -109,6 +109,7 @@ import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder
 import { useLayoutDrag } from "@/composables/emailBuilder/core/ui/useLayoutDrag";
 import { useProductRows } from "@/composables/emailBuilder/components/useProductRows";
 import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 import {
   boxShadowValue,
   clipsOverflow,
@@ -393,7 +394,7 @@ const getColumnStyles = (): Record<string, string> => {
       : "10px",
     background: backgroundValue,
     border: `${c.border.width}px ${c.border.style} ${c.border.color}`,
-    borderRadius: `${c.border.radius}px`,
+    borderRadius: borderRadiusValue(c.border.radius),
   };
 
   // Same rule as the row: clip, unless a shadow inside it would be cut off and

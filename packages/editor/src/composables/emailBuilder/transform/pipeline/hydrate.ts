@@ -14,6 +14,7 @@ import {
   createDefaultVisibility,
   createDefaultHide,
 } from "../../core/config/componentConfig";
+import type { BorderRadius } from "../../types/emailBuilder";
 import { DEFAULT_BOX_SHADOW } from "../../core/boxShadow";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -28,7 +29,7 @@ interface BorderConfig {
   width: number;
   style: string;
   color: string;
-  radius?: number;
+  radius?: BorderRadius;
 }
 
 interface GradientConfig {

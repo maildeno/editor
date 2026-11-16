@@ -194,6 +194,7 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from "vue";
 import { toCssFontFamily } from "@/composables/emailBuilder/core/templateFonts";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -332,7 +333,7 @@ function imageStyle(p: any) {
   return {
     width: (p?.width || 100) + "%",
     height: p?.height || "auto",
-    borderRadius: (p?.borderRadius || 0) + "px",
+    borderRadius: borderRadiusValue(p?.borderRadius),
     border: `${p?.border?.width || 0}px ${p?.border?.style || "solid"} ${p?.border?.color || "#000000"}`,
     display: "block",
     margin:
@@ -358,7 +359,7 @@ function videoThumbnailStyle(p: any): CSSProperties {
     height: "0",
     position: "relative",
     display: "inline-block",
-    borderRadius: (p?.borderRadius || 0) + "px",
+    borderRadius: borderRadiusValue(p?.borderRadius),
     border: `${p?.border?.width || 0}px ${p?.border?.style || "solid"} ${p?.border?.color || "#000000"}`,
     overflow: "hidden",
     marginLeft: align === "center" ? "auto" : align === "right" ? "auto" : "0",
@@ -411,7 +412,7 @@ function buttonStyle(p: any) {
     fontFamily: toCssFontFamily(p?.fontFamily || "Arial, sans-serif"),
     letterSpacing: `${p?.letterSpacing ?? 0}px`,
     padding: `${p?.padding?.top ?? 8}px ${p?.padding?.right ?? 16}px ${p?.padding?.bottom ?? 8}px ${p?.padding?.left ?? 16}px`,
-    borderRadius: (p?.borderRadius || 4) + "px",
+    borderRadius: borderRadiusValue(p?.borderRadius || 4),
     border: `${p?.border?.width || 0}px ${p?.border?.style || "solid"} ${p?.border?.color || "#000000"}`,
     // Icon branch uses inline-flex so icon + text align cleanly on one row.
     // Plain branch stays inline-block (unchanged behaviour).

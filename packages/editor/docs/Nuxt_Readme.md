@@ -364,6 +364,19 @@ Rows, columns, images and buttons can have a shadow, saved as one `boxShadow` ob
 
 `offsetX`, `offsetY` and `spread` run from -50 to 50 px and `blur` from 0 to 100 px; a value outside that range is clamped. A row, column or button can set `inset`; an image draws its shadow outside, so `inset` has no effect there. A mobile `boxShadow` replaces the desktop one as a whole, and `"enabled": false` removes the shadow on small screens. Email clients that do not support `box-shadow`, such as classic Outlook for Windows, Gmail, Yahoo and AOL, show the block without it. Templates saved before 0.4.19 load as they are.
 
+Rows, columns, images, videos and buttons have a corner radius, which is either one number for all four corners or one number per corner. A radius that is the same on all four corners is saved as a plain number of px, the only form templates saved before 0.4.22 have, and it exports exactly as it did. Once the corners differ it is saved as an object with all four, in the order of the CSS `border-radius` shorthand: top left, top right, bottom right, bottom left:
+
+```json
+"border": {
+  "width": 0,
+  "style": "solid",
+  "color": "#000000",
+  "radius": { "topLeft": 12, "topRight": 12, "bottomRight": 0, "bottomLeft": 0 }
+}
+```
+
+A row or column keeps its radius in `border.radius`, and in `mobile.border.radius` for its mobile override. A button, image or video keeps it in `props.borderRadius` and `props.mobile.borderRadius`. A mobile radius replaces the desktop one as a whole, so write all four corners: a corner you leave out is read as 0 and is not filled in from desktop. The editor's controls run from 0 to 100 px. In a template, a value below 0 is read as 0, a corner that is missing or cannot be read as a number is read as 0, and a value above 9999 is held at 9999, so only a length reaches the email's inline style. The radius is exported to HTML, MJML and React Email as the shorthand, for example `border-radius: 12px 12px 0px 0px`. Email clients that do not draw a rounded table cell, such as classic Outlook for Windows, show a row or column with square corners. Templates saved before 0.4.22 load as they are.
+
 ### Storage adapter
 
 The editor never talks to your backend directly. Implement this and it uses your storage for everything:

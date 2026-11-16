@@ -59,6 +59,7 @@ import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder
 import { toCssFontFamily } from "@/composables/emailBuilder/core/templateFonts";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
 import { resolveString } from "@/composables/emailBuilder/core/merge-tags/mergeTagDefinitions";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -209,7 +210,7 @@ const innerStyles = computed(() => {
       ...displayBlock,
       padding: `${p.value.padding.top}px ${p.value.padding.right}px ${p.value.padding.bottom}px ${p.value.padding.left}px`,
       background: resolveBackground(p.value),
-      borderRadius: p.value.borderRadius + "px",
+      borderRadius: borderRadiusValue(p.value.borderRadius),
       border: `${p.value.border.width}px ${p.value.border.style} ${p.value.border.color}`,
       boxShadow: boxShadowValue(p.value.boxShadow) || undefined,
     };

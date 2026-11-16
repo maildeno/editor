@@ -7,11 +7,25 @@ export interface Padding {
   bottom: number;
   left: number;
 }
+/** The radius of each corner of a box, in px. */
+export interface BorderRadiusCorners {
+  topLeft: number;
+  topRight: number;
+  bottomRight: number;
+  bottomLeft: number;
+}
+/**
+ * A corner radius in px: one number for all four corners, or one number per
+ * corner. A plain number is what a template saved before 0.4.22 holds, and it
+ * stays the saved form of every radius whose corners are equal. See
+ * core/borderRadius.ts for how each form is read and written.
+ */
+export type BorderRadius = number | BorderRadiusCorners;
 export interface Border {
   width: number;
   style: string;
   color: string;
-  radius: number;
+  radius: BorderRadius;
 }
 /**
  * One drop (or inner) shadow on a row, column, image or button. `enabled` is a

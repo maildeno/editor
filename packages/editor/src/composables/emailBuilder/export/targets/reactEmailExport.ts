@@ -12,6 +12,7 @@ import type { Ref } from "vue";
 import { useGoogleFonts } from "../../../system/useGoogleFonts";
 import { useEmailExportMobileStyles } from "../useEmailExportMobileStyles";
 import { useEmailBuilderVisibility } from "../../core/useEmailBuilderVisibility";
+import { borderRadiusValue } from "../../core/borderRadius";
 import { boxShadowValue, clipsOverflow } from "../../core/boxShadow";
 
 import { buildBackgroundStylesReact } from "../shared/styles";
@@ -234,7 +235,7 @@ export const reactEmailExport = (deps: Deps) => {
         boxSizing: "border-box",
         verticalAlign: col.verticalAlign ?? "middle",
         border: `${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
-        borderRadius: `${col.border?.radius ?? 0}px`,
+        borderRadius: borderRadiusValue(col.border?.radius),
         ...(clipsOverflow(col) && { overflow: "hidden" }),
         ...(colShadow && { boxShadow: colShadow }),
         lineHeight: "0",

@@ -462,6 +462,7 @@ import { useProductRowActions } from "@/composables/emailBuilder/components/useP
 import { useSavedRowCapabilities } from "@/adapters";
 import { displayName } from "@/composables/emailBuilder/core/useEmailBuilderOperations";
 import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 import {
   boxShadowValue,
   clipsOverflow,
@@ -769,7 +770,7 @@ const rowStyles = computed(() => {
     minHeight: r.minHeight ? `${r.minHeight}px` : "auto",
     alignItems: "stretch",
     border: `${r.border.width}px ${r.border.style} ${r.border.color}`,
-    borderRadius: `${r.border.radius}px`,
+    borderRadius: borderRadiusValue(r.border.radius),
   };
 
   // The row clips what it holds, unless a shadow inside it would be cut off and

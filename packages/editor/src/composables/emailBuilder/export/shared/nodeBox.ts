@@ -17,6 +17,8 @@
 // overrides keeps exactly the markup it had before.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import type { BorderRadius } from "../../types/emailBuilder";
+import { borderRadiusValue, hasBorderRadius } from "../../core/borderRadius";
 import {
   boxShadowValue,
   clipsOverflow,
@@ -64,7 +66,8 @@ interface BorderLike {
   width?: number;
   style?: string;
   color?: string;
-  radius?: number;
+  /** A number, or one per corner. Read through core/borderRadius. */
+  radius?: BorderRadius;
 }
 
 /** Anything that can carry a sparse `mobile` object: rows, columns, spacers. */
@@ -129,7 +132,8 @@ const borderDecl = (b: BorderLike): Decl => [
 
 export const buildRowBox = (row: RowLike): RowBox => {
   const w = row.border?.width ?? 0;
-  const r = row.border?.radius ?? 0;
+  const rounded = hasBorderRadius(row.border?.radius);
+  const radius = borderRadiusValue(row.border?.radius);
   const hooks = nodeHooks(row);
 
   // The one place that decides the DOM shape: a single div normally, or an
@@ -137,7 +141,7 @@ export const buildRowBox = (row: RowLike): RowBox => {
   // row has both a radius and a border. A mobile border forces the outer
   // element, so a border override always has something to attach to, even
   // when the desktop row has no border.
-  const needsOuter = (r > 0 && w > 0) || !!row.mobile?.border;
+  const needsOuter = (rounded && w > 0) || !!row.mobile?.border;
 
   // The shadow goes on the <td> (or <Section>), the element that carries the
   // background and the radius, so it follows the row's rounded corners. The
@@ -158,7 +162,7 @@ export const buildRowBox = (row: RowLike): RowBox => {
   const td: Layer = {
     classes: hooks.root,
     decls: [
-      ...(r > 0 ? [["border-radius", `${r}px`] as Decl] : []),
+      ...(rounded ? [["border-radius", radius] as Decl] : []),
       ...(cellClips ? [["overflow", "hidden"] as Decl] : []),
       ...(shadow ? [["box-shadow", shadow] as Decl] : []),
     ],
@@ -180,11 +184,11 @@ export const buildRowBox = (row: RowLike): RowBox => {
         classes: [...hooks.box, ...hooks.outer],
         decls: [
           pad,
-          ...(w > 0 && r === 0 && row.border ? [borderDecl(row.border)] : []),
+          ...(w > 0 && !rounded && row.border ? [borderDecl(row.border)] : []),
           // The clip the cell gave up (see above), with the cell's curve.
           ...(clips && !cellClips
             ? [
-                ...(r > 0 ? [["border-radius", `${r}px`] as Decl] : []),
+                ...(rounded ? [["border-radius", radius] as Decl] : []),
                 ["overflow", "hidden"] as Decl,
               ]
             : []),
@@ -200,7 +204,7 @@ export const buildRowBox = (row: RowLike): RowBox => {
     outer: {
       classes: hooks.outer,
       decls: [
-        ["border-radius", `${r}px`],
+        ["border-radius", radius],
         ...(clips ? [["overflow", "hidden"] as Decl] : []),
         ...clip,
         ...(w > 0 && row.border ? [borderDecl(row.border)] : []),

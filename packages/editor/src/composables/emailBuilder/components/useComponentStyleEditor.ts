@@ -13,6 +13,8 @@
 import { computed } from "vue";
 import type { Ref, ComputedRef } from "vue";
 import { useEmailBuilder } from "../core/useEmailBuilder";
+import { borderRadiusEquals } from "../core/borderRadius";
+import type { BorderRadius } from "../types/emailBuilder";
 
 // ─── Gradient types (mirrors GradientPicker.vue) ──────────────────────────────
 
@@ -41,8 +43,21 @@ export interface BorderProps {
   width: number;
   color: string;
   style: "solid" | "dashed" | "dotted";
-  radius?: number;
+  /** A number, or one per corner: see core/borderRadius.ts. */
+  radius?: BorderRadius;
 }
+
+/**
+ * Whether two values of one border field draw the same thing. A radius can be a
+ * number or one number per corner, so it is compared by the corners it rounds,
+ * not by identity: `8` and `{ all four 8 }` are the same radius. Every other
+ * field is a plain value.
+ */
+export const borderFieldEquals = (
+  key: keyof BorderProps,
+  a: unknown,
+  b: unknown,
+): boolean => (key === "radius" ? borderRadiusEquals(a, b) : a === b);
 
 /**
  * Loose-but-honest shape for any component the style editor touches.
@@ -212,7 +227,10 @@ export function useComponentStyleEditor(
     const db = component.value?.props.border;
     const keys: (keyof BorderProps)[] = ["width", "color", "style", "radius"];
     return keys.some(
-      (k) => mb[k] !== undefined && mb[k] !== null && mb[k] !== db?.[k],
+      (k) =>
+        mb[k] !== undefined &&
+        mb[k] !== null &&
+        !borderFieldEquals(k, mb[k], db?.[k]),
     );
   };
 

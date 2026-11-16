@@ -188,6 +188,10 @@ import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder
 import { useEmailBuilderVisibility } from "@/composables/emailBuilder/core/useEmailBuilderVisibility";
 import { applyNodeMobileOverrides } from "@/blocks/canvasStyleHelpers";
 import {
+  borderRadiusValue,
+  hasBorderRadius,
+} from "@/composables/emailBuilder/core/borderRadius";
+import {
   boxShadowValue,
   clipsOverflow,
   hasActiveShadow,
@@ -306,7 +310,7 @@ function rowStyles(node: any): Record<string, string> {
   // Border is optional on the row but CanvasRow always reads it.
   if (row.border) {
     styles.border = `${row.border.width ?? 0}px ${row.border.style ?? "solid"} ${row.border.color ?? "transparent"}`;
-    styles.borderRadius = `${row.border.radius ?? 0}px`;
+    styles.borderRadius = borderRadiusValue(row.border.radius);
   }
 
   const shadow = boxShadowValue(row.boxShadow);
@@ -337,7 +341,7 @@ const VERTICAL_ALIGN_MAP: Record<string, string> = {
 function columnStyles(node: any, row: any): Record<string, string> {
   const isStacked = props.forceMobile && row.mobileStack === true;
   const col = applyNodeMobileOverrides(node, !!props.forceMobile);
-  const radius = col.border?.radius ?? 0;
+  const radius = col.border?.radius;
 
   const styles: Record<string, string> = {
     width: isStacked ? "100%" : `${col.width ?? 100}%`,
@@ -363,13 +367,13 @@ function columnStyles(node: any, row: any): Record<string, string> {
   // The one exception is a column with a shadow inside it whose padding keeps
   // the content clear of the corners: see clipsOverflow, which the canvas and
   // the export use too.
-  if (radius > 0 && clipsOverflow(node)) {
+  if (hasBorderRadius(radius) && clipsOverflow(node)) {
     styles.overflow = "hidden";
   }
 
   if (col.border) {
     styles.border = `${col.border.width ?? 0}px ${col.border.style ?? "solid"} ${col.border.color ?? "transparent"}`;
-    styles.borderRadius = `${radius}px`;
+    styles.borderRadius = borderRadiusValue(radius);
   }
 
   const shadow = boxShadowValue(col.boxShadow);

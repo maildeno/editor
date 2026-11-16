@@ -6,7 +6,8 @@
  * Supports both new `children` shape and legacy `components` shape per column.
  */
 
-import type { BoxShadow } from "../../types/emailBuilder";
+import type { BorderRadius, BoxShadow } from "../../types/emailBuilder";
+import { hasBorderRadius } from "../../core/borderRadius";
 import { DEFAULT_BOX_SHADOW, boxShadowEquals } from "../../core/boxShadow";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -21,7 +22,7 @@ export interface BorderConfig {
   width: number;
   style: string;
   color: string;
-  radius?: number;
+  radius?: BorderRadius;
 }
 
 export interface GradientConfig {
@@ -165,7 +166,7 @@ const isDefaultBorder = (b: unknown): boolean => {
     border.width === 0 &&
     border.style === "solid" &&
     border.color === "#000000" &&
-    (border.radius === undefined || border.radius === 0)
+    !hasBorderRadius(border.radius)
   );
 };
 

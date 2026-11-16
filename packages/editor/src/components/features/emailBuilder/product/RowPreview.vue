@@ -28,6 +28,7 @@ import { computed, onMounted, watch } from "vue";
 import RowPreviewChildren from "./RowPreviewChildren.vue";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
 import { extractFontFamiliesFromHtml } from "@/composables/emailBuilder/core/templateFonts";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 
 const props = defineProps<{
   row: Record<string, any>;
@@ -155,7 +156,7 @@ const rowStyle = computed(() => {
     padding: `${r.padding?.top ?? 0}px ${r.padding?.right ?? 0}px ${r.padding?.bottom ?? 0}px ${r.padding?.left ?? 0}px`,
     alignItems: "stretch",
     border: `${r.border?.width ?? 0}px ${r.border?.style ?? "solid"} ${r.border?.color ?? "transparent"}`,
-    borderRadius: `${r.border?.radius ?? 0}px`,
+    borderRadius: borderRadiusValue(r.border?.radius),
     gap: `${r.gap ?? 0}px`,
   };
 
@@ -198,7 +199,7 @@ function colStyle(col: any, parentRow?: any) {
     background: resolveBackground(col),
     padding: `${col.padding?.top ?? 10}px ${col.padding?.right ?? 10}px ${col.padding?.bottom ?? 10}px ${col.padding?.left ?? 10}px`,
     border: `${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
-    borderRadius: `${col.border?.radius ?? 0}px`,
+    borderRadius: borderRadiusValue(col.border?.radius),
     overflow: "hidden",
     minWidth: "0",
     display: "flex",

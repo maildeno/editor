@@ -234,13 +234,8 @@
         @update:model-value="setBorderProp('width', $event)"
         @reset="resetBorderProp('width')"
       />
-      <PropertyNumberSlider
-        label="Border Radius (px)"
-        :model-value="displayBorderValue('radius') ?? 0"
-        :min="0"
-        :max="100"
-        :step="1"
-        unit="px"
+      <PropertyBorderRadius
+        :model-value="displayBorderValue('radius')"
         :is-overridden="isBorderPropOverridden('radius')"
         @update:model-value="setBorderProp('radius', $event)"
         @reset="resetBorderProp('radius')"
@@ -363,6 +358,7 @@ import DeviceTabs from "./shared/DeviceTabs.vue";
 import OverrideBadge from "./shared/OverrideBadge.vue";
 import PropertySection from "./ui/PropertySection.vue";
 import PropertyNumberSlider from "./ui/PropertyNumberSlider.vue";
+import PropertyBorderRadius from "./ui/PropertyBorderRadius.vue";
 import PropertyColor from "./ui/PropertyColor.vue";
 import PropertyBoxShadow from "./ui/PropertyBoxShadow.vue";
 import PropertyGradientColor from "./ui/PropertyGradientColor.vue";

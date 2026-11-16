@@ -1,6 +1,7 @@
 import ImageRenderer from "@/components/features/emailBuilder/ui/renderers/ImageRenderer.vue";
 import ImagePanel from "@/components/features/emailBuilder/panels/ImagePanel.vue";
 import type { BlockDefinition, BlockRenderContext } from "../types";
+import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
 import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
 
 // An <img> has no inside to draw an inset shadow in, so it is drawn outside.
@@ -23,7 +24,7 @@ function renderHtml(props: any, ctx: BlockRenderContext): string {
   );
 
   const shadow = imageShadow(props);
-  const imgTag = `<img src="${props.src}" alt="${props.alt}" style="width:${props.width}%; height:${props.height}; border-radius:${props.borderRadius}px; border:${props.border.width}px ${props.border.style} ${props.border.color}; display:inline-block;${shadow ? ` box-shadow:${shadow};` : ""}"/>`;
+  const imgTag = `<img src="${props.src}" alt="${props.alt}" style="width:${props.width}%; height:${props.height}; border-radius:${borderRadiusValue(props.borderRadius)}; border:${props.border.width}px ${props.border.style} ${props.border.color}; display:inline-block;${shadow ? ` box-shadow:${shadow};` : ""}"/>`;
 
   const wrappedImage =
     props.enabled && props.link
@@ -52,7 +53,7 @@ function renderMjml(props: any, ctx: BlockRenderContext): string {
   );
 
   const shadow = imageShadow(props);
-  const imgTag = `<img src="${props.src}" alt="${props.alt}" style="width:${props.width}%; height:${props.height}; border-radius:${props.borderRadius}px; border:${props.border.width}px ${props.border.style} ${props.border.color}; display:inline-block;${shadow ? ` box-shadow:${shadow};` : ""}"/>`;
+  const imgTag = `<img src="${props.src}" alt="${props.alt}" style="width:${props.width}%; height:${props.height}; border-radius:${borderRadiusValue(props.borderRadius)}; border:${props.border.width}px ${props.border.style} ${props.border.color}; display:inline-block;${shadow ? ` box-shadow:${shadow};` : ""}"/>`;
 
   const wrappedImage =
     props.enabled && props.link
@@ -87,7 +88,7 @@ function renderReactEmail(props: any, ctx: BlockRenderContext): string {
   const imgJsx = `<Img
     src="${props.src}"
     alt="${props.alt}"
-    style={{ width:"${props.width}%", height:"${props.height}", borderRadius:"${props.borderRadius}px", border:"${props.border.width}px ${props.border.style} ${props.border.color}", display:"inline-block"${shadow ? `, boxShadow:"${shadow}"` : ""} }}
+    style={{ width:"${props.width}%", height:"${props.height}", borderRadius:"${borderRadiusValue(props.borderRadius)}", border:"${props.border.width}px ${props.border.style} ${props.border.color}", display:"inline-block"${shadow ? `, boxShadow:"${shadow}"` : ""} }}
   />`;
 
   const wrappedImage =

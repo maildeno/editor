@@ -189,6 +189,10 @@ import {
   applyNodeMobileOverrides,
 } from "@/blocks/canvasStyleHelpers";
 import {
+  borderRadiusValue,
+  hasBorderRadius,
+} from "@/composables/emailBuilder/core/borderRadius";
+import {
   boxShadowValue,
   clipsOverflow,
 } from "@/composables/emailBuilder/core/boxShadow";
@@ -302,7 +306,7 @@ const nestedRowStyle = computed(() => {
   };
   if (row.border) {
     styles.border = `${row.border.width ?? 0}px ${row.border.style ?? "solid"} ${row.border.color ?? "transparent"}`;
-    styles.borderRadius = `${row.border.radius ?? 0}px`;
+    styles.borderRadius = borderRadiusValue(row.border.radius);
   }
   const rowShadow = boxShadowValue(row.boxShadow);
   if (rowShadow) styles.boxShadow = rowShadow;
@@ -325,7 +329,7 @@ const VERTICAL_ALIGN_MAP: Record<string, string> = {
 function nestedColumnStyle(node: any): Record<string, string> {
   const isStacked = props.forceMobile && props.component.mobileStack === true;
   const col = applyNodeMobileOverrides(node, !!props.forceMobile);
-  const radius = col.border?.radius ?? 0;
+  const radius = col.border?.radius;
   const styles: Record<string, string> = {
     width: isStacked ? "100%" : `${col.width ?? 100}%`,
     boxSizing: "border-box",
@@ -345,12 +349,12 @@ function nestedColumnStyle(node: any): Record<string, string> {
   };
   // Except for a column with a shadow inside it whose padding keeps the content
   // clear of the corners: see clipsOverflow, which the canvas and export use.
-  if (radius > 0 && clipsOverflow(node)) {
+  if (hasBorderRadius(radius) && clipsOverflow(node)) {
     styles.overflow = "hidden";
   }
   if (col.border) {
     styles.border = `${col.border.width ?? 0}px ${col.border.style ?? "solid"} ${col.border.color ?? "transparent"}`;
-    styles.borderRadius = `${radius}px`;
+    styles.borderRadius = borderRadiusValue(radius);
   }
   const colShadow = boxShadowValue(col.boxShadow);
   if (colShadow) styles.boxShadow = colShadow;
@@ -463,7 +467,7 @@ const imageStyle = computed(() => {
     width: typeof x.width === "number" ? x.width + "%" : "100%",
     height: "auto",
     maxWidth: "100%",
-    borderRadius: (x.borderRadius ?? 0) + "px",
+    borderRadius: borderRadiusValue(x.borderRadius),
     border: x.border
       ? `${x.border.width ?? 0}px ${x.border.style ?? "solid"} ${x.border.color ?? "transparent"}`
       : "none",
@@ -499,7 +503,7 @@ const videoFrameStyle = computed(() => {
     width: typeof x.width === "number" ? x.width + "%" : "100%",
     paddingTop: "56.25%",
     overflow: "hidden",
-    borderRadius: (x.borderRadius ?? 0) + "px",
+    borderRadius: borderRadiusValue(x.borderRadius),
   };
 });
 
@@ -547,7 +551,7 @@ const buttonStyle = computed(() => {
       : "Arial, sans-serif",
     letterSpacing: (x.letterSpacing ?? 0) + "px",
     padding: spacingStr(x.padding, "12px 24px"),
-    borderRadius: (x.borderRadius ?? 4) + "px",
+    borderRadius: borderRadiusValue(x.borderRadius, 4),
     border: x.border
       ? `${x.border.width ?? 0}px ${x.border.style ?? "solid"} ${x.border.color ?? "transparent"}`
       : "none",

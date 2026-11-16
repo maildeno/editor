@@ -127,13 +127,8 @@
         @update:model-value="setProp('width', $event)"
         @reset="resetProp('width')"
       />
-      <PropertyNumberSlider
-        label="Border Radius (px)"
+      <PropertyBorderRadius
         :model-value="displayValue('borderRadius')"
-        :min="0"
-        :max="100"
-        :step="1"
-        unit="px"
         :is-overridden="isOverridden('borderRadius')"
         @update:model-value="setProp('borderRadius', $event)"
         @reset="resetProp('borderRadius')"
@@ -291,6 +286,7 @@ import LinkFieldMergeTags from "./shared/LinkFieldMergeTags.vue";
 import PreviewBadge from "./shared/PreviewBadge.vue";
 import PropertySection from "./ui/PropertySection.vue";
 import PropertyNumberSlider from "./ui/PropertyNumberSlider.vue";
+import PropertyBorderRadius from "./ui/PropertyBorderRadius.vue";
 import PropertyAlignment from "./ui/PropertyAlignment.vue";
 import PropertyColor from "./ui/PropertyColor.vue";
 import PropertyToggle from "./ui/PropertyToggle.vue";

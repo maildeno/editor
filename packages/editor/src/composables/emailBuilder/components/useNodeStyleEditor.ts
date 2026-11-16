@@ -37,7 +37,11 @@
 
 import { computed } from "vue";
 import type { ComputedRef, Ref } from "vue";
-import { useComponentStyleEditor } from "./useComponentStyleEditor";
+import { cloneBorderRadius } from "../core/borderRadius";
+import {
+  borderFieldEquals,
+  useComponentStyleEditor,
+} from "./useComponentStyleEditor";
 import type {
   BackgroundValue,
   BorderProps,
@@ -129,14 +133,28 @@ export function useNodeStyleEditor(
     if (!n || !mb) return;
     const db = n.border;
     const redundant = BORDER_KEYS.every(
-      (k) => mb[k] === null || mb[k] === undefined || mb[k] === db?.[k],
+      (k) =>
+        mb[k] === null ||
+        mb[k] === undefined ||
+        borderFieldEquals(k, mb[k], db?.[k]),
     );
     if (redundant) n.mobile.border = null;
   };
 
   const setBorderProp = (key: keyof BorderProps, value: unknown): void => {
-    base.setBorderProp(key, value);
-    if (editMode.value === "mobile") dropBorderOverrideIfRedundant();
+    base.setBorderProp(
+      key,
+      key === "radius" ? cloneBorderRadius(value) : value,
+    );
+    if (editMode.value !== "mobile") return;
+    // The first mobile write copies the whole desktop border. A per-corner
+    // radius in it is an object, which the two layers would then share, so the
+    // copy gets a radius of its own.
+    const mb = node.value?.mobile?.border;
+    if (mb?.radius && typeof mb.radius === "object") {
+      mb.radius = cloneBorderRadius(mb.radius);
+    }
+    dropBorderOverrideIfRedundant();
   };
 
   /** True when this one border field differs from the desktop border. */
@@ -144,7 +162,11 @@ export function useNodeStyleEditor(
     if (editMode.value !== "mobile") return false;
     const n = node.value;
     const v = n?.mobile?.border?.[key];
-    return v !== null && v !== undefined && v !== n?.border?.[key];
+    return (
+      v !== null &&
+      v !== undefined &&
+      !borderFieldEquals(key, v, n?.border?.[key])
+    );
   };
 
   /** Puts one border field back to the desktop value; the rest stay as set. */
