@@ -20,6 +20,18 @@ The radius shows on the canvas, in the Saved Rows thumbnails and in Preview, and
 
 **`radius` is typed `BorderRadius` where it was a `number`.** `BorderConfig.radius`, which types `border.radius` on `NestedRow` and `Column`, is `BorderRadius`, that is `number | BorderRadiusCorners`. TypeScript code that reads a saved radius as a number needs a `typeof radius === "number"` check first. A template that only uses numbers is read and saved as before.
 
+### Fixed
+
+**Saved Rows thumbnails show rows nested more than two levels deep.** A saved row with a row nested in a row nested in a row lost its third nested row, and everything in it, in the thumbnail in the Saved Rows panel, though the row was whole once you inserted it. The thumbnail counted every level twice against the canvas's depth limit and gave up too early. It now goes as deep as the canvas does and stops in the same place: a row nested at the limit is drawn without what it holds (the canvas shows a "Max nesting depth reached" notice in its place, the thumbnail a small gap), and nothing is drawn below it. A row saved with `components` instead of `children`, the older shape, is drawn the same way.
+
+**Saved Rows thumbnails show box shadows.** A row, a column, an image or a button with a shadow was drawn without it in its thumbnail. They show it now, by the rules of the canvas: an image's shadow is never inset, because an image has no inside to draw it in, and a row or column keeps its clip unless a shadow inside it would be cut off and no rounded corner needs the clip (the rule from 0.4.19, which judges each corner with its own radius, see above). A thumbnail is clipped at the edge of its frame, so a shadow that a row casts itself would have been cut off there. A row with an outer shadow is now drawn on a neutral background with room around it for the shadow, up to 40px on each side, which makes it a little smaller. A row without an outer shadow is drawn as before.
+
+**The thumbnail of a top-level row clips what sticks out of it, like the canvas.** It never did, so on a rounded row, which can now have a different radius on each corner, the square corner of a column's background showed past the row's rounded corner. The canvas clips it, and the thumbnail follows the same rule now, for the row and for its columns, nested ones included.
+
+Nothing is saved differently: thumbnails are drawn from the rows as they are stored, so rows saved earlier show correctly straight away.
+
+A new check, `scripts/check-saved-row-preview.ts`, loads the real thumbnail components with Vite's SSR loader, renders them to HTML in Node and reads the result back with jsdom, so it needs no browser. It covers the depth limit for both shapes of a saved row, the shadows, the clip on 150 random rows, and the room a shadow needs. The panel's frame, which leaves that room, still needs a look in the playground: open Layout, then Saved Rows, with a saved row that has a shadow.
+
 ## 0.4.21
 
 ### Fixed

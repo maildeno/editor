@@ -195,6 +195,7 @@
 import { computed, type CSSProperties } from "vue";
 import { toCssFontFamily } from "@/composables/emailBuilder/core/templateFonts";
 import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
+import { boxShadowValue } from "@/composables/emailBuilder/core/boxShadow";
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -335,6 +336,8 @@ function imageStyle(p: any) {
     height: p?.height || "auto",
     borderRadius: borderRadiusValue(p?.borderRadius),
     border: `${p?.border?.width || 0}px ${p?.border?.style || "solid"} ${p?.border?.color || "#000000"}`,
+    // An <img> has no inside to draw an inset shadow in, so it is drawn outside.
+    boxShadow: boxShadowValue(p?.boxShadow, { allowInset: false }) || undefined,
     display: "block",
     margin:
       align === "center" ? "0 auto" : align === "right" ? "0 0 0 auto" : "0",
@@ -414,6 +417,7 @@ function buttonStyle(p: any) {
     padding: `${p?.padding?.top ?? 8}px ${p?.padding?.right ?? 16}px ${p?.padding?.bottom ?? 8}px ${p?.padding?.left ?? 16}px`,
     borderRadius: borderRadiusValue(p?.borderRadius || 4),
     border: `${p?.border?.width || 0}px ${p?.border?.style || "solid"} ${p?.border?.color || "#000000"}`,
+    boxShadow: boxShadowValue(p?.boxShadow) || undefined,
     // Icon branch uses inline-flex so icon + text align cleanly on one row.
     // Plain branch stays inline-block (unchanged behaviour).
     ...(hasIcon

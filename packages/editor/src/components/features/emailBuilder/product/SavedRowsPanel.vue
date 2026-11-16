@@ -183,8 +183,8 @@
                   "
                   class="relative overflow-hidden border-b border-(--md-border)"
                   :style="{
-                    height: previewHeight(entry.id) + 'px',
-                    backgroundColor: entry.row.backgroundColor || '#f9fafb',
+                    height: previewHeight(entry) + 'px',
+                    backgroundColor: previewBackground(entry),
                   }"
                 >
                   <div
@@ -193,9 +193,11 @@
                     "
                     class="absolute top-0 left-0 pointer-events-none"
                     :style="{
-                      width: '600px',
+                      width: previewWidth(entry) + 'px',
+                      padding: shadowRoom(entry) + 'px',
+                      boxSizing: 'border-box',
                       transformOrigin: 'top left',
-                      transform: `scale(${previewScale(entry.id)})`,
+                      transform: `scale(${previewScale(entry)})`,
                     }"
                   >
                     <RowPreview :row="entry.row" />
@@ -346,6 +348,7 @@ import { useSystemRows } from "@/composables/emailBuilder/components/useSystemRo
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useLayoutDrag } from "@/composables/emailBuilder/core/ui/useLayoutDrag";
 import { useSavedRowsPanel } from "@/composables/system/useSavedRowsPanel";
+import { boxShadowReach } from "@/composables/emailBuilder/core/boxShadow";
 import RowPreview from "./RowPreview.vue";
 
 // ─── Composables ──────────────────────────────────────────────────────────────
@@ -521,17 +524,43 @@ const containerWidths = ref<Record<string, number>>({});
 const measuredHeights = ref<Record<string, number>>({});
 const MIN_PREVIEW_HEIGHT = 25;
 
-function previewScale(entryId: string): number {
-  const w = containerWidths.value[entryId];
-  return w && w > 0 ? w / FULL_WIDTH : 0;
+// A thumbnail is clipped at its frame, and a row fills the frame's width, so a
+// shadow that the row itself draws would be cut off entirely. A row with an
+// outer shadow is drawn inset by the shadow's reach, which the preview gets as
+// padding (capped, so that one big shadow does not shrink the whole
+// thumbnail), on a neutral backdrop, so that the shadow shows against
+// something other than the row's own colour. Every other row is drawn as before.
+const MAX_SHADOW_ROOM = 40;
+const NEUTRAL_BACKDROP = "#f9fafb";
+
+type PreviewEntry = { id: string; row: Record<string, any> };
+
+function shadowRoom(entry: PreviewEntry): number {
+  return Math.min(boxShadowReach(entry.row?.boxShadow), MAX_SHADOW_ROOM);
 }
 
-function previewHeight(entryId: string): number {
-  const natural = measuredHeights.value[entryId];
+/** The width the preview is laid out in: the row, and the room around it. */
+function previewWidth(entry: PreviewEntry): number {
+  return FULL_WIDTH + 2 * shadowRoom(entry);
+}
+
+function previewBackground(entry: PreviewEntry): string {
+  return shadowRoom(entry) > 0
+    ? NEUTRAL_BACKDROP
+    : entry.row.backgroundColor || NEUTRAL_BACKDROP;
+}
+
+function previewScale(entry: PreviewEntry): number {
+  const w = containerWidths.value[entry.id];
+  return w && w > 0 ? w / previewWidth(entry) : 0;
+}
+
+function previewHeight(entry: PreviewEntry): number {
+  const natural = measuredHeights.value[entry.id];
   if (!natural) return MIN_PREVIEW_HEIGHT;
   return Math.max(
     MIN_PREVIEW_HEIGHT,
-    Math.round(natural * previewScale(entryId)),
+    Math.round(natural * previewScale(entry)),
   );
 }
 

@@ -56,7 +56,11 @@ const props = defineProps<{
   children: any[];
   /** Preview scale factor forwarded from RowsPanel */
   scale?: number;
-  /** Recursion depth — blocked at 5 */
+  /**
+   * The depth of the row these children are in: 0 for a top-level row, and a
+   * nested row's own depth (1 and up) otherwise. From 5 nothing is drawn: each
+   * child is left as a small gap, where the canvas shows a notice.
+   */
   depth?: number;
 }>();
 

@@ -259,6 +259,28 @@ export const boxShadowMobileRule = (
   options?: BoxShadowCssOptions,
 ): string => `box-shadow: ${boxShadowValue(raw, options) || "none"} !important`;
 
+/**
+ * How far an outer shadow reaches beyond the box it belongs to, in px: the
+ * largest of the four sides, rounded up. 0 when the shadow is not drawn, and
+ * for an inset one, which stays inside the box. A shadow is the box grown by
+ * `spread`, blurred over a further `blur` and moved by its offset, so towards
+ * the right it reaches `spread + blur + offsetX`. A frame that clips, like the
+ * thumbnails of the Saved Rows panel, uses it to leave room for the shadow.
+ */
+export const boxShadowReach = (raw?: unknown): number => {
+  if (!isBoxShadowActive(raw)) return 0;
+  const s = normalizeBoxShadow(raw);
+  if (s.inset) return 0;
+  const edge = s.spread + s.blur;
+  const reach = Math.max(
+    edge + s.offsetX,
+    edge - s.offsetX,
+    edge + s.offsetY,
+    edge - s.offsetY,
+  );
+  return reach > 0 ? Math.ceil(reach) : 0;
+};
+
 // ─── Presets ──────────────────────────────────────────────────────────────────
 
 /** A preset as a switched-on shadow. */

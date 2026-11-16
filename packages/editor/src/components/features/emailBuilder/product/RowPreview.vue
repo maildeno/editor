@@ -4,7 +4,7 @@
       v-for="col in row.columns"
       :key="col.id"
       :style="colStyle(col, row)"
-      class="overflow-hidden shrink-0"
+      class="shrink-0"
     >
       <!-- Delegate to RowPreviewChildren — handles component, nested row, spacer -->
       <RowPreviewChildren
@@ -29,6 +29,10 @@ import RowPreviewChildren from "./RowPreviewChildren.vue";
 import { useGoogleFonts } from "@/composables/system/useGoogleFonts";
 import { extractFontFamiliesFromHtml } from "@/composables/emailBuilder/core/templateFonts";
 import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
+import {
+  boxShadowValue,
+  clipsOverflow,
+} from "@/composables/emailBuilder/core/boxShadow";
 
 const props = defineProps<{
   row: Record<string, any>;
@@ -160,6 +164,13 @@ const rowStyle = computed(() => {
     gap: `${r.gap ?? 0}px`,
   };
 
+  // The canvas's rule: the row clips what it holds, unless a shadow inside it
+  // would be cut off and no rounded corner needs the clip (see clipsOverflow).
+  // Its own shadow is never clipped by it.
+  if (clipsOverflow(r)) style.overflow = "hidden";
+  const shadow = boxShadowValue(r.boxShadow);
+  if (shadow) style.boxShadow = shadow;
+
   if (r.backgroundImage) {
     style.backgroundImage = `url(${r.backgroundImage})`;
     style.backgroundSize = r.backgroundSize || "cover";
@@ -200,12 +211,16 @@ function colStyle(col: any, parentRow?: any) {
     padding: `${col.padding?.top ?? 10}px ${col.padding?.right ?? 10}px ${col.padding?.bottom ?? 10}px ${col.padding?.left ?? 10}px`,
     border: `${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
     borderRadius: borderRadiusValue(col.border?.radius),
-    overflow: "hidden",
     minWidth: "0",
     display: "flex",
     flexDirection: "column",
     justifyContent: verticalAlignMap[col.verticalAlign] || "flex-start",
   };
+
+  // Same rule as the row.
+  if (clipsOverflow(col)) style.overflow = "hidden";
+  const shadow = boxShadowValue(col.boxShadow);
+  if (shadow) style.boxShadow = shadow;
 
   if (col.backgroundImage) {
     style.backgroundImage = `url(${col.backgroundImage})`;

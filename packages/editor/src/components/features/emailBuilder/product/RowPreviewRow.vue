@@ -1,34 +1,40 @@
 <template>
-  <!-- Depth guard -->
-  <template v-if="(depth ?? 0) < 5">
-    <div :style="rowStyle" class="w-full">
-      <div
-        v-for="col in row.columns ?? []"
-        :key="col.id"
-        :style="colStyle(col, row)"
-        class="overflow-hidden shrink-0"
-      >
-        <!-- Recurse into children via RowPreviewChildren dispatcher -->
-        <RowPreviewChildren
-          :children="col.children ?? col.components ?? []"
-          :scale="scale"
-          :depth="(depth ?? 0) + 1"
-        />
+  <div :style="rowStyle" class="w-full">
+    <div
+      v-for="col in row.columns ?? []"
+      :key="col.id"
+      :style="colStyle(col, row)"
+      class="shrink-0"
+    >
+      <!--
+        Recurse into children via the RowPreviewChildren dispatcher. The depth
+        handed on is this row's own: RowPreviewChildren adds one when it makes
+        a nested row, so adding one here too would count every level twice and
+        cut the thumbnail off at the third nested row.
+      -->
+      <RowPreviewChildren
+        :children="col.children ?? col.components ?? []"
+        :scale="scale"
+        :depth="depth ?? 0"
+      />
 
-        <!-- Empty column placeholder -->
-        <div
-          v-if="(col.children ?? col.components ?? []).length === 0"
-          class="w-full border border-dashed border-(--md-border) rounded"
-          style="min-height: 10px"
-        />
-      </div>
+      <!-- Empty column placeholder -->
+      <div
+        v-if="(col.children ?? col.components ?? []).length === 0"
+        class="w-full border border-dashed border-(--md-border) rounded"
+        style="min-height: 10px"
+      />
     </div>
-  </template>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from "vue";
 import { borderRadiusValue } from "@/composables/emailBuilder/core/borderRadius";
+import {
+  boxShadowValue,
+  clipsOverflow,
+} from "@/composables/emailBuilder/core/boxShadow";
 
 // Break circular cycle: RowPreviewChildren → RowPreviewRow → RowPreviewChildren
 const RowPreviewChildren = defineAsyncComponent(
@@ -40,7 +46,11 @@ const RowPreviewChildren = defineAsyncComponent(
 const props = defineProps<{
   row: Record<string, any>;
   scale?: number;
-  /** Recursion depth — blocked at 5 */
+  /**
+   * How deep this row is: 1 for a row in a top-level row's column, 2 for one
+   * in that row's column, and so on. A row at 5 is drawn, and what it holds is
+   * left out (RowPreviewChildren), as on the canvas.
+   */
   depth?: number;
 }>();
 
@@ -79,8 +89,14 @@ const rowStyle = computed(() => {
     border: `${r.border?.width ?? 0}px ${r.border?.style ?? "solid"} ${r.border?.color ?? "transparent"}`,
     borderRadius: borderRadiusValue(r.border?.radius),
     gap: `${r.gap ?? 0}px`,
-    overflow: "hidden",
   };
+
+  // The canvas's rule: the row clips what it holds, unless a shadow inside it
+  // would be cut off and no rounded corner needs the clip (see clipsOverflow).
+  // Its own shadow is never clipped by it.
+  if (clipsOverflow(r)) style.overflow = "hidden";
+  const shadow = boxShadowValue(r.boxShadow);
+  if (shadow) style.boxShadow = shadow;
 
   if (r.backgroundImage) {
     style.backgroundImage = `url(${r.backgroundImage})`;
@@ -124,12 +140,16 @@ function colStyle(col: any, parentRow?: any) {
     padding: `${col.padding?.top ?? 10}px ${col.padding?.right ?? 10}px ${col.padding?.bottom ?? 10}px ${col.padding?.left ?? 10}px`,
     border: `${col.border?.width ?? 0}px ${col.border?.style ?? "solid"} ${col.border?.color ?? "transparent"}`,
     borderRadius: borderRadiusValue(col.border?.radius),
-    overflow: "hidden",
     minWidth: "0",
     display: "flex",
     flexDirection: "column",
     justifyContent: verticalAlignMap[col.verticalAlign] ?? "flex-start",
   };
+
+  // Same rule as the row.
+  if (clipsOverflow(col)) style.overflow = "hidden";
+  const shadow = boxShadowValue(col.boxShadow);
+  if (shadow) style.boxShadow = shadow;
 
   if (col.backgroundImage) {
     style.backgroundImage = `url(${col.backgroundImage})`;
