@@ -3,6 +3,10 @@ import { mountLightDom } from "./lightDom";
 import type { PartialStorageAdapter } from "./adapters/types";
 import type { AssistantMount } from "./types/assistant";
 import type { ThemeOptions } from "./theme";
+import type {
+  ImportHtmlIntoOptions,
+  ImportReport,
+} from "./composables/emailBuilder/import";
 
 /**
  * The ergonomic, no-Vue-knowledge entry point. element.ts already provides
@@ -21,6 +25,12 @@ export interface InitOptions {
   theme?: ThemeOptions;
   capabilities?: {
     export?: Array<"html" | "mjml" | "react" | "json">;
+    /**
+     * Which import entries the Export dropdown offers: a Maildeno JSON file,
+     * or HTML from anywhere. Omit for both. Does not affect
+     * handle.importHtml(), which a host calls on purpose.
+     */
+    import?: Array<"json" | "html">;
   };
   onSendTestEmail?: (payload: {
     to: string;
@@ -152,6 +162,25 @@ export interface EditorHandle {
    * anything the user triggered. Pass "reset" when swapping which document
    * is open, where undoing back into the previous document would be wrong. */
   setJson(data: unknown, opts?: { history?: "undoable" | "reset" }): void;
+  /** Converts HTML into rows, columns and blocks and replaces the canvas with
+   * the result: the same thing the header's "Import HTML" does, without the
+   * dialog.
+   *
+   * The converter reads the document's own CSS (<style> rules, classes, ids,
+   * inline style attributes, legacy attributes) at a desktop and a phone
+   * width and turns the differences into Maildeno's mobile overrides, so
+   * what the HTML did on phones is still there afterwards.
+   *
+   * Resolves with the report: what was kept in another form (`fallbacks`),
+   * what Maildeno has no place for (`dropped`), what may look different
+   * (`warnings`) and what was removed for safety (`safety`). Rejects with an
+   * HtmlImportError, with the canvas untouched, when there is nothing to
+   * import (empty, over the size limit, MJML source, nothing visible).
+   *
+   * history defaults to "undoable", like setJson. For Node, a script or a
+   * test, the pure importHtml() function from "@maildeno/editor/import"
+   * does the conversion with no editor at all. */
+  importHtml(html: string, options?: ImportHtmlIntoOptions): Promise<ImportReport>;
   /** The selected node, or null. `type` is the block type, so a host can
    * branch on it without resolving the id against the tree itself. */
   getSelection(): { id: string; type: string | null } | null;
@@ -176,6 +205,10 @@ export interface EditorHandle {
 function toDomEventName(event: string): string {
   return event;
 }
+
+/** What a promise-returning method does when the editor behind it is not there (yet). */
+const notReady = <T>(): Promise<T> =>
+  Promise.reject(new Error("[maildeno-editor] the editor is not mounted, so there is nothing to import into."));
 
 export async function init(options: InitOptions): Promise<EditorHandle> {
   const container =
@@ -228,6 +261,8 @@ export async function init(options: InitOptions): Promise<EditorHandle> {
       setJson: (data, opts) => {
         call<void>("setJson", data, opts);
       },
+      importHtml: (html, options) =>
+        call<Promise<ImportReport>>("importHtml", html, options) ?? notReady(),
       getSelection: () =>
         call<{ id: string; type: string | null }>("getSelection"),
       setSelection: (id) => call<boolean>("setSelection", id) ?? false,
@@ -259,6 +294,10 @@ export async function init(options: InitOptions): Promise<EditorHandle> {
       data: unknown,
       opts?: { history?: "undoable" | "reset" },
     ) => void;
+    importHtml?: (
+      html: string,
+      options?: ImportHtmlIntoOptions,
+    ) => Promise<ImportReport>;
     getSelection?: () => { id: string; type: string | null } | null;
     setSelection?: (id: string | null) => boolean;
     onChange?: (cb: () => void) => () => void;
@@ -351,6 +390,9 @@ export async function init(options: InitOptions): Promise<EditorHandle> {
     },
     setJson(data, opts) {
       el.setJson?.(data, opts);
+    },
+    importHtml(html, options) {
+      return el.importHtml ? el.importHtml(html, options) : notReady();
     },
     getSelection() {
       return el.getSelection ? el.getSelection() : null;

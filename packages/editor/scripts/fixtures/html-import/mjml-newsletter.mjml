@@ -1,0 +1,76 @@
+<mjml>
+  <mj-head>
+    <mj-title>Acme Weekly</mj-title>
+    <mj-preview>Five things worth reading this week</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="24px" color="#374151" />
+      <mj-button background-color="#2563eb" border-radius="6px" font-size="16px" font-weight="bold" inner-padding="12px 28px" />
+    </mj-attributes>
+    <mj-style>
+      .card { border: 1px solid #e5e7eb; border-radius: 8px; }
+      .muted { color: #6b7280 !important; }
+      @media only screen and (max-width: 479px) { .hero-title div { font-size: 26px !important; line-height: 32px !important; } }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f3f4f6" width="600px">
+    <mj-section padding="24px 0 0 0">
+      <mj-column>
+        <mj-image src="https://cdn.example.com/logo.png" alt="Acme" width="120px" align="center" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#111827" background-url="https://cdn.example.com/hero-bg.jpg" background-size="cover" background-repeat="no-repeat" padding="48px 24px">
+      <mj-column>
+        <mj-text css-class="hero-title" align="center" color="#ffffff" font-size="34px" line-height="40px" font-weight="700" padding="0 0 12px 0">Five things worth reading</mj-text>
+        <mj-text align="center" color="#d1d5db" padding="0 0 24px 0">Our editors pick the best of the week, so you do not have to.</mj-text>
+        <mj-button href="https://example.com/read" align="center">Read the issue</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding="24px">
+      <mj-column width="50%" css-class="card" padding="12px">
+        <mj-image src="https://cdn.example.com/a.jpg" alt="Story A" padding="0 0 12px 0" />
+        <mj-text font-size="18px" font-weight="700" color="#111827" padding="0 0 4px 0">Why small teams ship faster</mj-text>
+        <mj-text css-class="muted" font-size="14px" padding="0">A look at the habits behind fast releases.</mj-text>
+      </mj-column>
+      <mj-column width="50%" css-class="card" padding="12px">
+        <mj-image src="https://cdn.example.com/b.jpg" alt="Story B" padding="0 0 12px 0" />
+        <mj-text font-size="18px" font-weight="700" color="#111827" padding="0 0 4px 0">The case for boring tech</mj-text>
+        <mj-text css-class="muted" font-size="14px" padding="0">Reliable tools beat clever ones.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding="0 24px">
+      <mj-column>
+        <mj-divider border-width="1px" border-color="#e5e7eb" padding="8px 0" />
+        <mj-spacer height="16px" />
+        <mj-text>Hi {{ first_name|'there' }}, here is what else is new:</mj-text>
+        <mj-text padding="0 25px">
+          <ul>
+            <li>Release notes for version 4.2</li>
+            <li>Three tips for faster builds</li>
+            <li>An interview with our CTO</li>
+          </ul>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding="0 24px 24px">
+      <mj-column width="33%"><mj-text align="center" font-weight="700">12k</mj-text><mj-text align="center" css-class="muted" font-size="13px">readers</mj-text></mj-column>
+      <mj-column width="33%"><mj-text align="center" font-weight="700">340</mj-text><mj-text align="center" css-class="muted" font-size="13px">stories</mj-text></mj-column>
+      <mj-column width="34%"><mj-text align="center" font-weight="700">98%</mj-text><mj-text align="center" css-class="muted" font-size="13px">open rate</mj-text></mj-column>
+    </mj-section>
+    <mj-section padding="16px 0">
+      <mj-column>
+        <mj-navbar>
+          <mj-navbar-link href="https://example.com/archive" color="#6b7280" font-size="13px">Archive</mj-navbar-link>
+          <mj-navbar-link href="https://example.com/about" color="#6b7280" font-size="13px">About</mj-navbar-link>
+          <mj-navbar-link href="https://example.com/contact" color="#6b7280" font-size="13px">Contact</mj-navbar-link>
+        </mj-navbar>
+        <mj-social font-size="12px" icon-size="28px" mode="horizontal" align="center">
+          <mj-social-element name="facebook" href="https://facebook.com/acme"></mj-social-element>
+          <mj-social-element name="twitter" href="https://twitter.com/acme"></mj-social-element>
+          <mj-social-element name="linkedin" href="https://linkedin.com/company/acme"></mj-social-element>
+        </mj-social>
+        <mj-text align="center" font-size="12px" color="#9ca3af">Acme Inc, 1 Main Street. <a href="https://example.com/unsubscribe" style="color:#6b7280">Unsubscribe</a></mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

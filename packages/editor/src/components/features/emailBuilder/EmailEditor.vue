@@ -195,6 +195,10 @@ import { setEditorTheme, type ThemeOptions } from "@/theme";
 import { provideCanSave } from "@/adapters";
 import AssistantPanel from "./assistant/AssistantPanel.vue";
 import type { AssistantMount, EditorWriteApi } from "@/types/assistant";
+import {
+  importHtmlInto,
+  type ImportHtmlIntoOptions,
+} from "@/composables/emailBuilder/import/apply";
 
 // No prop passed = true (create page), prop passed = use that value
 const props = withDefaults(
@@ -266,6 +270,13 @@ const props = withDefaults(
     capabilities?: {
       /** Which formats appear in the Export dropdown. Omit for all four. */
       export?: Array<"html" | "mjml" | "react" | "json">;
+      /** Which import entries the Export dropdown offers: a Maildeno JSON
+       * file, or HTML from anywhere (pasted or uploaded, converted into rows,
+       * columns and blocks). Omit for both. A host that does not want
+       * arbitrary HTML landing on its canvas passes `["json"]`; the
+       * `importHtml()` method is not affected, since a host calling it has
+       * already decided. */
+      import?: Array<"json" | "html">;
       /** Which saved-row controls this user gets: the canvas row's bookmark
        * button, and the panel's per-row rename and delete. Omit a key for
        * "allowed", the same as omitting the object. For a host with roles,
@@ -667,6 +678,18 @@ defineExpose({
   getSelection,
   setSelection,
   onChange,
+
+  /**
+   * Converts HTML into rows, columns and blocks and replaces the canvas with
+   * the result, as one undo step unless `history: "reset"` is passed.
+   *
+   * Resolves with the import report: what was kept in another form, what had
+   * no place in Maildeno, what may look different, and what was removed for
+   * safety. Rejects with an HtmlImportError, with the canvas untouched, when
+   * the HTML cannot be imported at all.
+   */
+  importHtml: (html: string, options?: ImportHtmlIntoOptions) =>
+    importHtmlInto(setJson, html, options),
 });
 
 /**

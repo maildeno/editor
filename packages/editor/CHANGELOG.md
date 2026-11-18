@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.23
+
+### Added
+
+**Import HTML.** **Export → Import HTML** in the header turns the HTML of an email into rows, columns and blocks. Paste the HTML or choose a `.html` file; when it finishes, a report lists what was kept in another form, what may look different and what Maildeno has no place for. The whole import is one undo step, and importing over a canvas that already has rows says first that it replaces them.
+
+**What the HTML does on phones becomes mobile settings.** The importer reads the document's own CSS, that is `<style>` rules, classes, ids, inline `style` attributes and legacy attributes such as `bgcolor` and `width`, once at a desktop width and once at a phone width, and every difference becomes a `mobile` override on the row, column or block it belongs to. The width the `@media` rules switch at is read from the HTML (600px when it has none) and shown in the report. Maildeno has one phone layout, so a template with queries at several widths is read at the one that changes the most, everything that applies at phone width is combined into it, and the report lists the widths it found. Columns that stack, smaller type, changed padding and blocks shown on only one device come across the same way. A template with no mobile styling gets no `mobile` keys, like any other template.
+
+**Any email's HTML can be imported, and Maildeno's own export comes back the way it was built.** MJML output, Mailchimp-style templates, Outlook-style Word HTML, ghost-table hybrids and hand-written layouts are read by what a browser would draw rather than by their markup, so nested layout tables and wrapper `div`s that only hold things in place are not copied. Text becomes paragraphs, headings and links, with bold, italic, underline, colour and font spans kept. Lists, buttons, images, videos, dividers, spacers, menus and social icons become their blocks, and the backgrounds (colour, gradient, image), borders, radius and shadows on rows, columns and blocks are kept. Merge tags in Maildeno's syntax keep their defaults; tags from other tools (`*|TAG|*`, `%%tag%%`, `${tag}`, Liquid) are kept as plain text and the report says so. MJML *source* is refused with a message to compile it first, and HTML the editor has no block for is reported, not carried along as a raw block.
+
+**Nothing in the HTML runs.** The HTML is parsed into an inert document and nothing is fetched. Scripts, frames, inline event handlers, `javascript:` and `data:` links and CSS that can run code are removed, and the report says what was removed. Images are kept by address; `data:`, `cid:` and relative image addresses import but are listed, because an email client will not show them.
+
+**`EditorHandle.importHtml(html, options?)`** does the same without the dialog. It resolves with the report and rejects with an `HtmlImportError`, with the canvas untouched, when there is nothing to import (empty, over 5 MB, MJML source, nothing visible). `options.history` is `"undoable"` (default) or `"reset"`, as in `setJson`. **`capabilities.import`**, `Array<"html" | "json">`, restricts which import entries the Export menu shows, the way `capabilities.export` restricts the exports; omit it for both.
+
+**`@maildeno/editor/import`** is a new entry point that holds the converter as a plain function. `importHtml(html, { parseHtml })` returns `{ snapshot, report }` and needs a DOM parser (the browser's, or jsdom in Node) but no editor, so it serves batch migrations and CI. It also exports `formatReport` and `HtmlImportError`, and the types `HtmlImportOptions`, `HtmlImportResult`, `ImportReport`, `ReportEntry`, `ImportFlavour` and `ImportLane`, which the package root exports as types only. The converter loads as its own chunk when an import starts, so an editor that never imports does not pay for it.
+
+`scripts/check-html-import.ts` runs the importer's checks (intake and safety, styles and the cascade, structure, a set of real-world fixtures in `scripts/fixtures/html-import/`, and a round trip through the editor's own exporter) and `scripts/check-html-import-css.ts` covers the CSS reader on its own. Neither needs a browser.
+
 ## 0.4.22
 
 ### Added

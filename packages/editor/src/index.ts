@@ -56,6 +56,24 @@ export type { ThemeOptions, ThemeTokens } from "./theme";
 // "@maildeno/editor/init", and registerMaildenoEditorElement plus
 // MaildenoEditorElement at "@maildeno/editor/element".
 export type { InitOptions, EditorHandle } from "./init";
+
+// ── HTML import ────────────────────────────────────────────────────
+// In the editor: the header's "Import HTML", and handle.importHtml() /
+// the component's exposed importHtml(), which convert and replace the canvas
+// as one undo step. The converter is loaded on demand, so none of it is in
+// this entry's code.
+//
+// The conversion on its own, with no editor — a pure function from HTML text
+// to { snapshot, report }, for batch migrations and CI in Node (with jsdom)
+// as much as for the browser — is at "@maildeno/editor/import". Only the types
+// are re-exported here, because they appear in importHtml()'s signature.
+export type {
+  HtmlImportOptions,
+  HtmlImportResult,
+  ImportHtmlIntoOptions,
+  ImportReport,
+  ReportEntry,
+} from "./composables/emailBuilder/import";
 export type { EditorWriteApi, AssistantMount } from "./types/assistant";
 
 // ── Document model and editor state ────────────────────────────────

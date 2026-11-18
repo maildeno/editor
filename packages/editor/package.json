@@ -1,6 +1,6 @@
 {
   "name": "@maildeno/editor",
-  "version": "0.4.22",
+  "version": "0.4.23",
   "description": "An open-source, framework-agnostic email template editor. Drag-and-drop block editing, HTML/MJML/React Email/JSON export, and a pluggable ESP-conditional-logic engine with zero required backend.",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,6 +18,10 @@
     "./init": {
       "types": "./dist/init.d.ts",
       "import": "./dist/init.js"
+    },
+    "./import": {
+      "types": "./dist/import.d.ts",
+      "import": "./dist/import.js"
     },
     "./style.css": "./dist/editor.css"
   },

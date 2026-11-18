@@ -122,7 +122,10 @@ export default defineConfig({
     minify: "esbuild",
     cssMinify: true,
     lib: {
-      entry: { index: "./src/index.ts" },
+      // "import" is the HTML importer on its own (src/import.ts): a pure
+      // function the editor itself only loads on demand, so it is an entry
+      // of its own rather than part of index.
+      entry: { index: "./src/index.ts", import: "./src/import.ts" },
       formats: ["es"],
     },
     rollupOptions: {

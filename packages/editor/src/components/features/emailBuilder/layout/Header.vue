@@ -17,6 +17,8 @@ import { useTeleportTarget } from "@/composables/ui/useTeleportTarget";
 
 interface ExportCapabilities {
   export?: string[];
+  /** Which import entries the dropdown offers: "json" and/or "html". */
+  import?: string[];
   [key: string]: unknown;
 }
 
@@ -58,6 +60,9 @@ const props = withDefaults(defineProps<HeaderProps>(), {
 const exportFormats = computed(
   () => props.capabilities?.export ?? ["html", "mjml", "react", "json"],
 );
+const importFormats = computed(
+  () => props.capabilities?.import ?? ["json", "html"],
+);
 import { useEmailBuilder } from "@/composables/emailBuilder/core/useEmailBuilder";
 import { useExportSettings } from "@/composables/emailBuilder/export/useExportSettings";
 // Lazy: opened from the header, and drags in the accessibility checker.
@@ -66,6 +71,8 @@ const HealthIndicator = defineAsyncComponent(
 );
 import PreviewScreen from "@/components/features/emailBuilder/preview/PreviewScreen.vue";
 import SendEmail from "@/components/features/emailBuilder/layout/SendEmail.vue";
+import ImportHtmlDialog from "@/components/features/emailBuilder/layout/ImportHtmlDialog.vue";
+import { importHtmlInto } from "@/composables/emailBuilder/import/apply";
 import {
   optimizeCanvas,
   optimizeRows,
@@ -84,6 +91,7 @@ const {
   exportMJML,
   exportJSON,
   importJSON,
+  setJson,
   clearTemplate,
   previewMode,
   undo,
@@ -417,6 +425,17 @@ const isDropdownOpen = ref<boolean>(false);
 const exportTab = ref<"snap" | "master">("snap"); // "snap" | "master"
 const dropdownRef = ref<HTMLElement | null>(null);
 const teleportTarget = useTeleportTarget();
+
+// ── Import HTML ───────────────────────────────────────────────────────────────
+// The dialog owns the form and the report; this is the operation it runs. It goes
+// through setJson, like every other programmatic replacement of the canvas, so
+// the swap is one undo step and hydration and the id registry stay correct.
+const importHtmlOpen = ref<boolean>(false);
+const openImportHtml = (): void => {
+  isDropdownOpen.value = false;
+  importHtmlOpen.value = true;
+};
+const runHtmlImport = (html: string) => importHtmlInto(setJson, html);
 
 // ── Import handler ────────────────────────────────────────────────────────────
 const handleImportFn = (event: Event): void => {
@@ -1009,22 +1028,40 @@ onUnmounted(() => {
 
         <div
           v-if="isDropdownOpen"
-          class="absolute right-0 mt-2 w-72 md-surface-overlay rounded-xl py-1.5 z-50"
+          class="absolute right-0 mt-2 w-72 md-surface-overlay rounded-xl overflow-hidden py-1.5 z-50"
         >
-          <div>
-            <!-- Import -->
-            <label
-              class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) cursor-pointer transition-colors text-sm text-(--md-text-subtle)"
-            >
-              <Icon name="download" class="shrink-0" style="font-size: 13px" />
-              Import JSON
-              <input
-                type="file"
-                accept=".json,application/json"
-                @change="handleImportFn"
-                class="hidden"
-              />
-            </label>
+          <div v-if="importFormats.length">
+            <div class="flex flex-row">
+              <!-- Import JSON -->
+              <label
+                v-if="importFormats.includes('json')"
+                class="flex flex-1 min-w-0 items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) cursor-pointer transition-colors text-sm text-(--md-text-subtle) whitespace-nowrap"
+              >
+                <Icon
+                  name="download"
+                  class="shrink-0"
+                  style="font-size: 13px"
+                />
+                Import JSON
+                <input
+                  type="file"
+                  accept=".json,application/json"
+                  @change="handleImportFn"
+                  class="hidden"
+                />
+              </label>
+
+              <!-- Import HTML -->
+              <button
+                v-if="importFormats.includes('html')"
+                type="button"
+                @click="openImportHtml"
+                class="flex flex-1 min-w-0 items-center gap-2.5 px-3.5 py-2 hover:bg-(--md-surface-hover) cursor-pointer transition-colors text-sm text-(--md-text-subtle) text-left whitespace-nowrap"
+              >
+                <Icon name="code" class="shrink-0" style="font-size: 13px" />
+                Import HTML
+              </button>
+            </div>
 
             <div class="border-t border-(--md-border) mx-3 my-1.5"></div>
           </div>
@@ -1437,6 +1474,16 @@ onUnmounted(() => {
       :get-html="getHtmlForSending"
       :default-subject="templateName"
       :on-send="props.onSendTestEmail"
+    />
+
+    <!-- Import HTML — mounted at the header level for the same reason as the modal
+    above. Only rendered when the host has not taken HTML import out of
+    capabilities.import; the menu entry that opens it is gated the same way. -->
+    <ImportHtmlDialog
+      v-if="importFormats.includes('html')"
+      v-model:visible="importHtmlOpen"
+      :has-content="!!rows?.length"
+      :run="runHtmlImport"
     />
   </header>
 

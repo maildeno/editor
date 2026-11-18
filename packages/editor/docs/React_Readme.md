@@ -120,6 +120,7 @@ export default function Editor({ templateId }: { templateId?: string }) {
 | `getMjml(mode?)` | Current template as MJML. |
 | `getReactEmail(mode?)` | Current template as React Email `.tsx` source. |
 | `getJson()` | Current template as a plain object. |
+| `importHtml(html, opts?)` | Converts an email's HTML into rows, columns and blocks and replaces the canvas. Resolves with a report of what was kept, changed or left out. See [Importing HTML](#importing-html). |
 | `destroy()` | Unmount and clean up. Always call this on unmount. |
 
 ## Light DOM mode
@@ -156,6 +157,7 @@ Everything below is identical across frameworks. Only the mounting differs.
 
 - **Drag-and-drop block editor** — paragraph, heading, image, video, list, button, anchor, divider, spacer, menu, socials, plus custom blocks you register.
 - **Four export formats** — HTML, MJML, React Email (`.tsx`), JSON.
+- **HTML import** — paste any email's HTML or choose a `.html` file. It becomes rows, columns and blocks, and what the HTML does on phones becomes mobile overrides. See [Importing HTML](#importing-html).
 - **ESP-aware conditional logic** — visibility rules compile to the right syntax for Klaviyo, Mailchimp, Braze, SFMC, HubSpot, Iterable, Handlebars and more.
 - **Merge tags** with an in-editor picker.
 - **Saved templates and saved rows** — reusable snippets and full documents.
@@ -170,7 +172,7 @@ Everything below is identical across frameworks. Only the mounting differs.
 | `templateId` | `string` | Load an existing template on mount. Omit to start blank. |
 | `storageAdapter` | `EditorStorageAdapter` | Where templates, rows and images persist. Omit for `localStorage`. |
 | `theme` | `{ primaryColor?, surfaceColor? }` | Brand colour, expanded into a full 50–950 shade scale. |
-| `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json"> }` | Restrict which export formats appear. Omit for all four. |
+| `capabilities` | `{ export?: Array<"html"\|"mjml"\|"react"\|"json">; import?: Array<"html"\|"json"> }` | Restrict which export formats and which import entries appear. Omit for all. |
 | `onSendTestEmail` | `(payload) => Promise<void>` | Enables the "Send test" button. Hidden entirely when omitted. |
 | `brandName` | `string` | Name in the desktop-only notice's "Powered by" line. Omit for the default; pass `""` to hide the line. |
 | `versions` | `boolean` | Replaces the saved-templates panel with version history. Needs the version adapter methods; the built-in localStorage adapter has them. |
@@ -276,6 +278,43 @@ Rows, columns, images, videos and buttons have a corner radius, which is either 
 ```
 
 A row or column keeps its radius in `border.radius`, and in `mobile.border.radius` for its mobile override. A button, image or video keeps it in `props.borderRadius` and `props.mobile.borderRadius`. A mobile radius replaces the desktop one as a whole, so write all four corners: a corner you leave out is read as 0 and is not filled in from desktop. The editor's controls run from 0 to 100 px. In a template, a value below 0 is read as 0, a corner that is missing or cannot be read as a number is read as 0, and a value above 9999 is held at 9999, so only a length reaches the email's inline style. The radius is exported to HTML, MJML and React Email as the shorthand, for example `border-radius: 12px 12px 0px 0px`. Email clients that do not draw a rounded table cell, such as classic Outlook for Windows, show a row or column with square corners. Templates saved before 0.4.22 load as they are.
+
+### Importing HTML
+
+`importHtml(html, options?)`, on the handle (`init()`) or a template ref (Vue component), converts the HTML of an email into rows, columns and blocks and replaces the canvas with the result. It is what **Export → Import HTML** in the header does, without the dialog:
+
+```ts
+try {
+  const report = await handle.importHtml(htmlString);
+  console.log(report.summary);           // rows, columns, nestedRows, components
+  console.log(report.layout.breakpoint); // the width the template's @media rules switch at
+  console.log(report.warnings);          // what may look different
+} catch (error) {
+  if ((error as Error).name === "HtmlImportError") {
+    // error.code is "empty", "too-large", "mjml-source" or "no-content".
+    // The canvas is untouched.
+  }
+}
+```
+
+The importer reads the document's own CSS (`<style>` rules, classes, ids, inline `style` attributes and legacy attributes such as `bgcolor`) at a desktop width and at a phone width, and turns the differences into the `mobile` overrides described above, so what the HTML did on phones is still there afterwards. Anything it could not carry over is in the report: `fallbacks` (kept in another form), `warnings` (may look different), `dropped` (Maildeno has no place for it) and `safety` (removed because it could run code).
+
+- **One undo step.** `options.history` is `"undoable"` (default) or `"reset"`, as in `setJson`.
+- **MJML source is refused.** Compile it to HTML first; the HTML that MJML produces imports like any other.
+- **Choosing the entries.** `capabilities: { import: ["json"] }` leaves only Import JSON in the Export menu, and `["html"]` only Import HTML. Leave `import` out for both.
+
+To convert without an editor, in Node or in CI, use the converter from its own entry point:
+
+```ts
+import { importHtml, formatReport } from "@maildeno/editor/import";
+import { JSDOM } from "jsdom";
+
+const { snapshot, report } = importHtml(html, {
+  parseHtml: (text) => new JSDOM(text).window.document,
+});
+console.log(formatReport(report));
+// `snapshot` is what getJson() returns: pass it to setJson(), or store it
+```
 
 ### Storage adapter
 
